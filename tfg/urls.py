@@ -18,6 +18,6 @@ from analyzerapp import views
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', include('analyzerapp.urls')),
+    url(r'', include('analyzerapp.urls')),
     #url(r'^$', views.holamundo, name='holamundo'),
 ]
