@@ -1,9 +1,10 @@
 from django.db import models
 
 # Create your models here.
+#https://docs.djangoproject.com/en/2.1/topics/db/models/
 
 class Repository(models.Model):
-    identifier = models.CharField(max_length=150, default="Null")
+    identifier = models.CharField(max_length=150, default="Null", primary_key=True)
     full_name = models.TextField(default="Null")
     description = models.TextField(default="Null")
     html_url = models.URLField(max_length=350, default="Null")
