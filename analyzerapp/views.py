@@ -8,7 +8,20 @@ import os
 def holamundo(request):
     return HttpResponse("Hola Mundo")
 
-def githubSearch(arg):
+def storeData(json_data):
+    for item in json_data:
+        try:
+            Repository.objects.get(identifier=item["id"])
+        except Repository.DoesNotExist:
+            repository = Repository()
+            repository.identifier = item["id"]
+            repository.full_name = item["full_name"]
+            if item["description"] is not None:
+                repository.description = item["description"]
+            repository.html_url = item["html_url"]
+            repository.save()
+
+def githubSearch(request):
 
     url = 'https://api.github.com/search/repositories'
     #https://developer.github.com/v3/search/#search-repositories
@@ -25,15 +38,7 @@ def githubSearch(arg):
 
     json_data = r.json()
     json_data = json_data["items"]
-    for item in json_data:
-        repository = Repository()
-        repository.identifier = item["id"]
-        repository.full_name = item["full_name"]
-        if item["description"] is not None:
-            repository.description = item["description"]
-        repository.html_url = item["html_url"]
-        repository.save()
-
+    storeData(json_data)
 
     json_pretty = json.dumps(json_data, sort_keys=True, indent=4)
 
