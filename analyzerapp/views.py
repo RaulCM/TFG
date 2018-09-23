@@ -6,6 +6,7 @@ import os
 # Create your views here.
 
 def holamundo(request):
+    githubClone()
     return HttpResponse("Hola Mundo")
 
 def storeData(json_data):
@@ -20,6 +21,15 @@ def storeData(json_data):
                 repository.description = item["description"]
             repository.html_url = item["html_url"]
             repository.save()
+
+
+def githubClone():
+    datos = Repository.objects.all()
+    #datos = Repository.objects.all().filter(corrected=0)
+    for item in datos:
+        url = item.html_url + ".git"
+        name = item.full_name
+        os.system('git clone ' + url + " /var/tmp/" + name)
 
 def githubSearch(request):
 
