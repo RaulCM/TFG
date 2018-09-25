@@ -6,16 +6,12 @@ from django.db import models
 class Repository(models.Model):
     identifier = models.CharField(max_length=150, default="Null", primary_key=True)
     full_name = models.TextField(default="Null")
+    owner = models.TextField(default="Null")
+    name = models.TextField(default="Null")
     description = models.TextField(default="Null")
     html_url = models.URLField(max_length=350, default="Null")
 
 
-
-    # "id": 145164317,
-    # "full_name": "MUSSLES/sspipeline",
-    # "description": "A pipeline for estimating and characterizing uncertainty in coastal storm surge levels",
-    # "html_url": "https://github.com/MUSSLES/sspipeline",
-    # "name": "sspipeline",
     # "clone_url": "https://github.com/MUSSLES/sspipeline.git",
     # "created_at": "2018-08-17T20:35:11Z",
     # "language": "Python",
