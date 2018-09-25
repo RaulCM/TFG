@@ -1,13 +1,25 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from analyzerapp.models import Repository
+from django.template.loader import get_template
+from django.template import RequestContext
 import requests, json
 import os
 # Create your views here.
 
-def holamundo(request):
-    githubClone()
-    return HttpResponse("Hola Mundo")
+def main(request):
+    #githubClone()
+    #return HttpResponse("Hola Mundo")
+
+    template = get_template("main.html")
+    c = RequestContext(request, {'datos': printData()})
+    response = template.render(c)
+    return HttpResponse(response)
+
+def printData():
+    datos = Repository.objects.all()
+
+    return(datos)
 
 def storeData(json_data):
     for item in json_data:
@@ -17,6 +29,8 @@ def storeData(json_data):
             repository = Repository()
             repository.identifier = item["id"]
             repository.full_name = item["full_name"]
+            repository.owner = item["owner"]["login"]
+            repository.name = item["name"]
             if item["description"] is not None:
                 repository.description = item["description"]
             repository.html_url = item["html_url"]
