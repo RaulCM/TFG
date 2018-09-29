@@ -10,7 +10,6 @@ import os
 def main(request):
     #githubClone()
     #return HttpResponse("Hola Mundo")
-
     template = get_template("main.html")
     c = RequestContext(request, {'datos': printData()})
     response = template.render(c)
@@ -20,6 +19,25 @@ def printData():
     datos = Repository.objects.all()
 
     return(datos)
+
+def update():
+    url = 'https://api.github.com/repos/'
+    datos = Repository.objects.all()
+    for item in datos:
+        full_name = item.full_name
+
+
+
+        r = requests.get(url + full_name + '?access_token=' + token())
+        json_data = r.json()
+        try:
+            item.name = json_data["owner"]["login"]
+            item.owner = json_data["name"]
+            item.save()
+        except KeyError as e:
+            pass
+
+
 
 def storeData(json_data):
     for item in json_data:
@@ -50,7 +68,7 @@ def githubSearch(request):
     url = 'https://api.github.com/search/repositories'
     #https://developer.github.com/v3/search/#search-repositories
     #https://help.github.com/articles/understanding-the-search-syntax/
-    queries = '?q=python3'      #Que contengan el string "python3"
+    queries = 'q=python3'      #Que contengan el string "python3"
     queries += '+language:python'    #Solo lenguaje Python
     queries += '+archived:false'    #Repositorios no archivados
     queries += '+created:>2018-06-01'    #Fecha posterior a YYYY:MM:DD
