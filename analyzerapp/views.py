@@ -9,7 +9,7 @@ import os
 
 def main(request):
     #githubClone()
-    #return HttpResponse("Hola Mundo")
+    update()
     template = get_template("main.html")
     c = RequestContext(request, {'datos': printData()})
     response = template.render(c)
@@ -17,7 +17,6 @@ def main(request):
 
 def printData():
     datos = Repository.objects.all()
-
     return(datos)
 
 def update():
@@ -25,15 +24,18 @@ def update():
     datos = Repository.objects.all()
     for item in datos:
         full_name = item.full_name
-
-
-
-        r = requests.get(url + full_name + '?access_token=' + token())
+        r = requests.get(url + full_name + token())
         json_data = r.json()
         try:
-            item.name = json_data["owner"]["login"]
-            item.owner = json_data["name"]
-            item.save()
+            modified = False
+            if item.name == "Null":
+                item.name = json_data["owner"]["login"]
+                modified = True
+            if item.owner == "Null":
+                item.owner = json_data["name"]
+                modified = True
+            if modified is True:
+                item.save()
         except KeyError as e:
             pass
 
@@ -63,12 +65,24 @@ def githubClone():
         name = item.full_name
         os.system('git clone ' + url + " /var/tmp/" + name)
 
+def token():
+    # https://developer.github.com/v3/#rate-limiting
+    filename = "token"
+    if os.path.isfile(filename):
+        s = open(filename, 'r').read()
+        token = '?access_token=' + s.rstrip()
+    else:
+        token = ""
+    return token
+
+
 def githubSearch(request):
 
     url = 'https://api.github.com/search/repositories'
     #https://developer.github.com/v3/search/#search-repositories
     #https://help.github.com/articles/understanding-the-search-syntax/
-    queries = 'q=python3'      #Que contengan el string "python3"
+    queries = token()
+    queries += '+q=python3'      #Que contengan el string "python3"
     queries += '+language:python'    #Solo lenguaje Python
     queries += '+archived:false'    #Repositorios no archivados
     queries += '+created:>2018-06-01'    #Fecha posterior a YYYY:MM:DD
