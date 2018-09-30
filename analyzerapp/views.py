@@ -9,8 +9,16 @@ import os
 
 def main(request):
     #githubClone()
-    update()
+    #update()
     template = get_template("main.html")
+    c = RequestContext(request)
+    response = template.render(c)
+    return HttpResponse(response)
+
+def list(request):
+    #githubClone()
+    #update()
+    template = get_template("list.html")
     c = RequestContext(request, {'datos': printData()})
     response = template.render(c)
     return HttpResponse(response)

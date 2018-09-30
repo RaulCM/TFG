@@ -3,6 +3,7 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.main),
-    url(r'^search$', views.githubSearch),
+	url(r'^list$', views.list),
+	url(r'^search$', views.githubSearch),
     #url(r'^pylint$', views.runPylint),
 ]
