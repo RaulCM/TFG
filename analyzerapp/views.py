@@ -3,21 +3,40 @@ from django.http import HttpResponse
 from analyzerapp.models import Repository
 from django.template.loader import get_template
 from django.template import RequestContext
+from django.views.decorators.csrf import csrf_exempt
 import requests, json
 import os
 # Create your views here.
 
+@csrf_exempt
 def main(request):
-    #githubClone()
-    #update()
-    template = get_template("main.html")
-    c = RequestContext(request)
-    response = template.render(c)
+    if request.method == "GET":
+        template = get_template("main.html")
+        c = RequestContext(request)
+        response = template.render(c)
+    elif request.method == "POST":
+        form_name = request.body.decode('utf-8').split("=")[0]
+        if form_name == "load":
+            githubClone()
+        elif form_name == "update":
+            update()
+        elif form_name == "add":
+            print("Añadir repositorio único")
+        template = get_template("main.html")
+        c = RequestContext(request)
+        response = template.render(c)
+    else:
+        template = get_template("error.html")
+        c = RequestContext(request, {'error_message': '405: Method not allowed'})
+        response = template.render(c)
+
+
+
+
+
     return HttpResponse(response)
 
 def list(request):
-    #githubClone()
-    #update()
     template = get_template("list.html")
     c = RequestContext(request, {'datos': printData()})
     response = template.render(c)
@@ -46,8 +65,6 @@ def update():
                 item.save()
         except KeyError as e:
             pass
-
-
 
 def storeData(json_data):
     for item in json_data:

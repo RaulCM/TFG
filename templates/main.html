@@ -1,13 +1,26 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 
-	<div class="container">
-		<ul class="nav nav-tabs">
-			<li class="active"><a href="/">Pestaña 1</a></li>
-			<li><a href="/list">Pestaña 2</a></li>
-			<li><a>Pestaña 3</a></li>
-		</ul>
-		HOLA MUNDO <br>
-
-
-	{% endblock %}
+<div class="container">
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="/">Gestión</a></li>
+		<li><a href="/list">Lista de repositorios</a></li>
+		<li><a>Pestaña 3</a></li>
+	</ul>
+	<br>
+	<form method="POST"><button type="submit" name="load">
+			Carga desde GitHub
+		</button>
+	</form>
+	<br>
+	<form method="POST"><button type="submit" name="update">
+			Update desde GitHub
+		</button>
+	</form>
+	<br>
+	<form method="POST">
+		URL de repositorio:<br>
+		<input type="text" name="add" placeholder="https://github.com/user/name" size="25"><br>
+		<input type="submit" value="Add">
+	</form>
+</div>
+{% endblock %}
