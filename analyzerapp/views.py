@@ -19,14 +19,15 @@ def main(request):
     elif request.method == "POST":
         form_name = request.body.decode('utf-8').split("=")[0]
         if form_name == "load":
-            # github_search()
-            run_pylint()
+            github_search()
         elif form_name == "update":
             update()
         elif form_name == "add":
             print("Añadir repositorio único")
         elif form_name == "clone":
             github_clone()
+        elif form_name == "pylint":
+            run_pylint()
         template = get_template("main.html")
         c = RequestContext(request)
         response = template.render(c)
