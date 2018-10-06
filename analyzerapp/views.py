@@ -7,6 +7,7 @@ from analyzerapp.models import Repository
 from django.template.loader import get_template
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
+import pylint
 # Create your views here.
 
 @csrf_exempt
@@ -117,3 +118,11 @@ def github_search(request):
     store_data(json_data)
     json_pretty = json.dumps(json_data, sort_keys=True, indent=4)
     return HttpResponse(json_pretty,content_type="text/json")
+
+def run_pylint():
+    fichero = 'analyzerapp/views.py'
+    print(os.path.exists(fichero))
+    # pylint.run_pylint
+    os.system('pylint ' + fichero)
+    # https://docs.pylint.org/en/1.6.0/output.html
+    # pylint analyzerapp/views.py --msg-template='{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}' | grep -e C0103 -e C0111
