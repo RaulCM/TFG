@@ -4,6 +4,6 @@ from . import views
 urlpatterns = [
     url(r'^$', views.main),
 	url(r'^list$', views.list),
-	url(r'^search$', views.githubSearch),
+	url(r'^search$', views.github_search),
     #url(r'^pylint$', views.runPylint),
 ]

@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+import os
+import json
+import requests
 from analyzerapp.models import Repository
 from django.template.loader import get_template
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
-import requests, json
-import os
 # Create your views here.
 
 @csrf_exempt
@@ -17,11 +18,14 @@ def main(request):
     elif request.method == "POST":
         form_name = request.body.decode('utf-8').split("=")[0]
         if form_name == "load":
-            githubClone()
+            # github_search()
+            run_pylint()
         elif form_name == "update":
             update()
         elif form_name == "add":
             print("Añadir repositorio único")
+        elif form_name == "clone":
+            github_clone()
         template = get_template("main.html")
         c = RequestContext(request)
         response = template.render(c)
@@ -29,20 +33,15 @@ def main(request):
         template = get_template("error.html")
         c = RequestContext(request, {'error_message': '405: Method not allowed'})
         response = template.render(c)
-
-
-
-
-
     return HttpResponse(response)
 
 def list(request):
     template = get_template("list.html")
-    c = RequestContext(request, {'datos': printData()})
+    c = RequestContext(request, {'datos': print_data()})
     response = template.render(c)
     return HttpResponse(response)
 
-def printData():
+def print_data():
     datos = Repository.objects.all()
     return(datos)
 
@@ -66,7 +65,7 @@ def update():
         except KeyError as e:
             pass
 
-def storeData(json_data):
+def store_data(json_data):
     for item in json_data:
         try:
             Repository.objects.get(identifier=item["id"])
@@ -81,14 +80,13 @@ def storeData(json_data):
             repository.html_url = item["html_url"]
             repository.save()
 
-
-def githubClone():
+def github_clone():
     datos = Repository.objects.all()
     #datos = Repository.objects.all().filter(corrected=0)
     for item in datos:
         url = item.html_url + ".git"
         name = item.full_name
-        os.system('git clone ' + url + " /var/tmp/" + name)
+        os.system('git clone ' + url + " /tmp/projects/" + name)
 
 def token():
     # https://developer.github.com/v3/#rate-limiting
@@ -101,8 +99,7 @@ def token():
     return token
 
 
-def githubSearch(request):
-
+def github_search(request):
     url = 'https://api.github.com/search/repositories'
     #https://developer.github.com/v3/search/#search-repositories
     #https://help.github.com/articles/understanding-the-search-syntax/
@@ -113,18 +110,10 @@ def githubSearch(request):
     queries += '+created:>2018-06-01'    #Fecha posterior a YYYY:MM:DD
     queries += '+topics:>3'            #Numero de topics mayor a X
     queries += '&sort=updated'        #Ordenados por fecha de actualizacion
-
     url = url + queries
     r = requests.get(url)
-
     json_data = r.json()
     json_data = json_data["items"]
-    storeData(json_data)
-
+    store_data(json_data)
     json_pretty = json.dumps(json_data, sort_keys=True, indent=4)
-
-
-    #pprint.pprint(r.json())
-    #return HttpResponse(json_pretty,content_type="application/json")
-
     return HttpResponse(json_pretty,content_type="text/json")
