@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import os
+# https://docs.python.org/2/library/os.html
 import json
 import requests
 from analyzerapp.models import Repository
@@ -27,6 +28,7 @@ def main(request):
         elif form_name == "clone":
             github_clone()
         elif form_name == "pylint":
+            # read_files()
             run_pylint()
         template = get_template("main.html")
         c = RequestContext(request)
@@ -124,6 +126,16 @@ def run_pylint():
     fichero = 'analyzerapp/views.py'
     print(os.path.exists(fichero))
     # pylint.run_pylint
-    os.system('pylint ' + fichero)
+    os.system('pylint ' + fichero + " --msg-template='{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}' | grep -e '[[]C' -e '[[]E' -e '[[]F' -e '[[]I' -e '[[]R' -e '[[]W'")
     # https://docs.pylint.org/en/1.6.0/output.html
     # pylint analyzerapp/views.py --msg-template='{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}' | grep -e C0103 -e C0111
+
+def read_files():
+    for root, dirs, files in os.walk("/tmp/projects/", topdown=False):
+        for name in files:
+            ext = os.path.splitext(name)[-1].lower()
+            # print(ext)
+            if ext == ".py":
+                print(os.path.join(root, name))
+        # for name in dirs:
+        #     print(os.path.join(root, name))
