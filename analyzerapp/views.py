@@ -4,7 +4,7 @@ import os
 # https://docs.python.org/2/library/os.html
 import json
 import requests
-from analyzerapp.models import Repository
+from analyzerapp.models import Repository, Errors
 from django.template.loader import get_template
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
@@ -29,7 +29,8 @@ def main(request):
             github_clone()
         elif form_name == "pylint":
             # read_files()
-            run_pylint()
+            # run_pylint()
+            read_errors()
         template = get_template("main.html")
         c = RequestContext(request)
         response = template.render(c)
@@ -123,19 +124,29 @@ def github_search(request):
     return HttpResponse(json_pretty,content_type="text/json")
 
 def run_pylint():
+    # https://docs.pylint.org/en/1.6.0/output.html
     fichero = 'analyzerapp/views.py'
     print(os.path.exists(fichero))
-    # pylint.run_pylint
-    os.system('pylint ' + fichero + " --msg-template='{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}' | grep -e '[[]C' -e '[[]E' -e '[[]F' -e '[[]I' -e '[[]R' -e '[[]W'")
-    # https://docs.pylint.org/en/1.6.0/output.html
-    # pylint analyzerapp/views.py --msg-template='{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}' | grep -e C0103 -e C0111
+    # os.system('pylint ' + fichero + " --msg-template='{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}' | grep -e '[[]C' -e '[[]E' -e '[[]F' -e '[[]I' -e '[[]R' -e '[[]W'")
+    os.system('pylint ' + fichero + " --msg-template='{msg_id}' --reports=n >> /tmp/pylint_output")
 
 def read_files():
     for root, dirs, files in os.walk("/tmp/projects/", topdown=False):
         for name in files:
             ext = os.path.splitext(name)[-1].lower()
-            # print(ext)
             if ext == ".py":
-                print(os.path.join(root, name))
-        # for name in dirs:
-        #     print(os.path.join(root, name))
+                os.system('pylint ' + os.path.join(root, name) + " --msg-template='{msg_id}' --reports=n >> /tmp/pylint_output")
+
+def read_errors():
+    for line in open('/tmp/pylint_output'):
+        if line[0] != "*":
+            error_id = line[:-1]
+            try:
+                error = Errors.objects.get(error_id=error_id)
+                error.count = error.count + 1
+                error.save()
+            except Errors.DoesNotExist:
+                error = Errors()
+                error.error_id = error_id
+                error.count = 0
+                error.save()
