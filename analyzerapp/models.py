@@ -18,3 +18,7 @@ class Repository(models.Model):
     # "node_id": "MDEwOlJlcG9zaXRvcnkxNDUxNjQzMTc=",
     # "pulls_url": "https://api.github.com/repos/MUSSLES/sspipeline/pulls{/number}",
     # "releases_url": "https://api.github.com/repos/MUSSLES/sspipeline/releases{/id}",
+
+class Errors(models.Model):
+    error_id = models.CharField(max_length=150, default="Null", primary_key=True)
+    count = models.IntegerField(default=0)
