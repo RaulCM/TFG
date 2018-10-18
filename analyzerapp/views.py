@@ -56,7 +56,7 @@ def update():
     datos = Repository.objects.all()
     for item in datos:
         full_name = item.full_name
-        r = requests.get(url + full_name + token())
+        r = requests.get(url + full_name + '?access_token=' + read_file("token"))
         json_data = r.json()
         try:
             modified = False
@@ -94,22 +94,21 @@ def github_clone():
         name = item.full_name
         os.system('git clone ' + url + " /tmp/projects/" + name)
 
-def token():
+def read_file(filename):
     # https://developer.github.com/v3/#rate-limiting
-    filename = "token"
     if os.path.isfile(filename):
         s = open(filename, 'r').read()
-        token = '?access_token=' + s.rstrip()
+        string = s.rstrip()
     else:
-        token = ""
-    return token
+        string = ""
+    return string
 
 
 def github_search(request):
     url = 'https://api.github.com/search/repositories'
     #https://developer.github.com/v3/search/#search-repositories
     #https://help.github.com/articles/understanding-the-search-syntax/
-    queries = token()
+    queries = '?access_token=' + read_file("token")
     queries += '+q=python3'      #Que contengan el string "python3"
     queries += '+language:python'    #Solo lenguaje Python
     queries += '+archived:false'    #Repositorios no archivados
@@ -152,28 +151,9 @@ def read_errors():
                 error.count = 0
                 error.save()
 
-
-def username():
-    filename = "username"
-    if os.path.isfile(filename):
-        s = open(filename, 'r').read()
-        username = s.rstrip()
-    else:
-        username = ""
-    return username
-
-def password():
-    filename = "password"
-    if os.path.isfile(filename):
-        s = open(filename, 'r').read()
-        password = s.rstrip()
-    else:
-        password = ""
-    return password
-
 def make_fork():
     s = requests.Session()
-    s.auth = (username(), password())
+    s.auth = (read_file("username"), read_file("password"))
     url = 'https://api.github.com/repos/RaulPruebasTFG/helloworld/forks'
     r = s.post(url)
     print(r.json())
