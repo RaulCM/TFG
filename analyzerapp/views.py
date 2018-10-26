@@ -33,6 +33,8 @@ def main(request):
             read_errors()
         elif form_name == "fork":
             make_fork('https://api.github.com/repos/RaulPruebasTFG/helloworld/forks')
+        elif form_name == "delete_fork":
+            delete_fork('https://api.github.com/repos/RaulCM/helloworld')
         template = get_template("main.html")
         c = RequestContext(request)
         response = template.render(c)
@@ -156,4 +158,10 @@ def make_fork(url):
     s = requests.Session()
     s.auth = (read_file("username"), read_file("password"))
     r = s.post(url)
-    print(r.json())
+    print(r)
+
+def delete_fork(url):
+    s = requests.Session()
+    s.auth = (read_file("username"), read_file("password"))
+    r = s.delete(url)
+    print(r)
