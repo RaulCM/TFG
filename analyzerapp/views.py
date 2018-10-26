@@ -30,8 +30,9 @@ def main(request):
         elif form_name == "pylint":
             # read_files()
             # run_pylint()
-            # read_errors()
-            make_fork()
+            read_errors()
+        elif form_name == "fork":
+            make_fork('https://api.github.com/repos/RaulPruebasTFG/helloworld/forks')
         template = get_template("main.html")
         c = RequestContext(request)
         response = template.render(c)
@@ -151,9 +152,8 @@ def read_errors():
                 error.count = 0
                 error.save()
 
-def make_fork():
+def make_fork(url):
     s = requests.Session()
     s.auth = (read_file("username"), read_file("password"))
-    url = 'https://api.github.com/repos/RaulPruebasTFG/helloworld/forks'
     r = s.post(url)
     print(r.json())
