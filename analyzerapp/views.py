@@ -157,9 +157,10 @@ def read_errors():
                 error.save()
 
 def make_fork(url):
+    url += '/forks'
     s = requests.Session()
     s.auth = (read_file("username"), read_file("password"))
-    r = s.post(url + '/forks')
+    r = s.post(url)
     print(r)
 
 def delete_fork(url):
@@ -169,6 +170,7 @@ def delete_fork(url):
     print(r)
 
 def create_pull(url):
+    # https://developer.github.com/v3/pulls/#create-a-pull-request
     url += '/pulls'
     s = requests.Session()
     s.auth = (read_file("username"), read_file("password"))
@@ -177,5 +179,5 @@ def create_pull(url):
             "head": "RaulCM:pylint",
             "base": "master"}
     data = json.dumps(data)
-    r = s.post(url = url, data = data)
+    r = s.post(url, data)
     print(r.json())
