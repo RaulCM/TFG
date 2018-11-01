@@ -170,7 +170,7 @@ def delete_fork(url):
     print(r)
 
 def create_pull(url):
-    # https://developer.github.com/v3/pulls/#create-a-pull-request
+    # https://developer.github.com/v3/pulls/
     url += '/pulls'
     s = requests.Session()
     s.auth = (read_file("username"), read_file("password"))
@@ -180,4 +180,13 @@ def create_pull(url):
             "base": "master"}
     data = json.dumps(data)
     r = s.post(url, data)
+    print(r.json())
+
+def get_pulls(url):
+    url += '/pulls'
+    s = requests.Session()
+    s.auth = (read_file("username"), read_file("password"))
+    payload = {"state": "all"}
+    payload = json.dumps(payload)
+    r = s.get(url, params=payload)
     print(r.json())
