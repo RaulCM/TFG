@@ -32,9 +32,11 @@ def main(request):
             # run_pylint()
             read_errors()
         elif form_name == "fork":
-            make_fork('https://api.github.com/repos/RaulPruebasTFG/helloworld/forks')
+            make_fork('https://api.github.com/repos/RaulPruebasTFG/helloworld')
         elif form_name == "delete_fork":
             delete_fork('https://api.github.com/repos/RaulCM/helloworld')
+        elif form_name == "pull":
+            create_pull('https://api.github.com/repos/RaulPruebasTFG/helloworld')
         template = get_template("main.html")
         c = RequestContext(request)
         response = template.render(c)
@@ -157,7 +159,7 @@ def read_errors():
 def make_fork(url):
     s = requests.Session()
     s.auth = (read_file("username"), read_file("password"))
-    r = s.post(url)
+    r = s.post(url + '/forks')
     print(r)
 
 def delete_fork(url):
@@ -165,3 +167,15 @@ def delete_fork(url):
     s.auth = (read_file("username"), read_file("password"))
     r = s.delete(url)
     print(r)
+
+def create_pull(url):
+    url += '/pulls'
+    s = requests.Session()
+    s.auth = (read_file("username"), read_file("password"))
+    data = {"title": "Amazing new feature",
+            "body": "Please pull this in!",
+            "head": "RaulCM:pylint",
+            "base": "master"}
+    data = json.dumps(data)
+    r = s.post(url = url, data = data)
+    print(r.json())
