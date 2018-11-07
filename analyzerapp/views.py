@@ -187,4 +187,14 @@ def get_pulls(url):
     s = requests.Session()
     s.auth = (read_file("username"), read_file("password"))
     r = s.get(url)
-    print(r.json())
+    return r.json()
+
+def pull_state(url):
+    json_data = get_pulls(url)
+    state = ""
+    for item in json_data:
+        label = item['head']['label']
+        print(label)
+        if label == 'RaulCM:pylint':
+            state = item['state']
+    return state
