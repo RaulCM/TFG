@@ -183,10 +183,8 @@ def create_pull(url):
     print(r.json())
 
 def get_pulls(url):
-    url += '/pulls'
+    url += '/pulls?state=all'
     s = requests.Session()
     s.auth = (read_file("username"), read_file("password"))
-    payload = {"state": "all"}
-    payload = json.dumps(payload)
-    r = s.get(url, params=payload)
+    r = s.get(url)
     print(r.json())
