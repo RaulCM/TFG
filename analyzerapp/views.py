@@ -24,7 +24,7 @@ def main(request):
         elif form_name == "update":
             update()
         elif form_name == "add":
-            print("Añadir repositorio único")
+            print("Anadir repositorio unico")
         elif form_name == "clone":
             github_clone()
         elif form_name == "pylint":
