@@ -6,7 +6,7 @@ import json
 import requests
 from analyzerapp.models import Repository, Errors
 from django.template.loader import get_template
-from django.template import RequestContext
+# from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 import pylint
 # Create your views here.
@@ -14,9 +14,10 @@ import pylint
 @csrf_exempt
 def main(request):
     if request.method == "GET":
-        template = get_template("main.html")
-        c = RequestContext(request)
-        response = template.render(c)
+        # template = get_template("main.html")
+        # c = RequestContext(request)
+        # response = template.render(c)
+        return render(request, 'main.html')
     elif request.method == "POST":
         form_name = request.body.decode('utf-8').split("=")[0]
         if form_name == "load":
@@ -37,20 +38,23 @@ def main(request):
             delete_fork('https://api.github.com/repos/RaulCM/helloworld')
         elif form_name == "pull":
             create_pull('https://api.github.com/repos/RaulPruebasTFG/helloworld')
-        template = get_template("main.html")
-        c = RequestContext(request)
-        response = template.render(c)
+        # template = get_template("main.html")
+        # c = RequestContext(request)
+        # response = template.render(c)
+        return render(request, 'main.html')
     else:
-        template = get_template("error.html")
-        c = RequestContext(request, {'error_message': '405: Method not allowed'})
-        response = template.render(c)
-    return HttpResponse(response)
+        # template = get_template("error.html")
+        # c = RequestContext(request, {'error_message': '405: Method not allowed'})
+        # response = template.render(c)
+        return render(request, 'error.html', {'error_message': '405: Method not allowed'})
+    # return HttpResponse(response)
 
 def list(request):
-    template = get_template("list.html")
-    c = RequestContext(request, {'datos': print_data()})
-    response = template.render(c)
-    return HttpResponse(response)
+    # template = get_template("list.html")
+    # c = RequestContext(request, {'datos': print_data()})
+    # response = template.render(c)
+    # return HttpResponse(response)
+    return render(request, 'list.html', {'datos': print_data()})
 
 def print_data():
     datos = Repository.objects.all()
