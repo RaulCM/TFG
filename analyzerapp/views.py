@@ -137,6 +137,7 @@ def run_pylint():
     fichero = 'analyzerapp/views.py'
     print(os.path.exists(fichero))
     # os.system('pylint ' + fichero + " --msg-template='{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}' | grep -e '[[]C' -e '[[]E' -e '[[]F' -e '[[]I' -e '[[]R' -e '[[]W'")
+    # --msg-template='{abspath}:{line}:{msg_id}' --reports=n
     os.system('pylint ' + fichero + " --msg-template='{msg_id}' --reports=n >> /tmp/pylint_output")
 
 def read_files():
