@@ -12,6 +12,9 @@ def check(error):
     #     c0326(error)
     elif error.code == 'R0201':
         print("OK")
+    elif error.code == 'W0611':
+        w0611(error)
+        print("W0611")
     else:
         print("NO");
 
@@ -36,9 +39,14 @@ def c0326(error):
     # TODO Sustituir linea
     fo.close()
 
-
-
-
-
 def r0201(arg):
     pass
+
+def w0611(error):
+    fo = open(error.path, "r")
+    lines = fo.readlines()
+    fo.close()
+    del lines[error.line]
+    if lines[0] == '\n':
+        del lines[0]
+    replace_lines(error.path, lines)
