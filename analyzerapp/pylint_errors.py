@@ -32,6 +32,7 @@ def c0303(error):
     replace_lines(error.path, lines)
 
 def c0326(error):
+    # %s space %s %s %s\n%s
     fo = open(error.path, "r+")
     line = fo.readlines()[error.line]
     print(line)
@@ -42,9 +43,11 @@ def c0326(error):
     fo.close()
 
 def r0201(arg):
+    # Method could be a function
     pass
 
 def w0611(error):
+    # Unused import %s
     fo = open(error.path, "r")
     lines = fo.readlines()
     fo.close()
