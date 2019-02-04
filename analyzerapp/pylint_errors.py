@@ -35,7 +35,9 @@ def c0326(error):
     fo = open(error.path, "r+")
     line = fo.readlines()[error.line]
     print(line)
-    # TODO Corregir linea
+    pattern = r'.*[^=!<>+\-*/&|^% ]=[^=!<>+\-*/&|^% ].*'
+    new = re.search(pattern, line)
+    print(new)
     # TODO Sustituir linea
     fo.close()
 
