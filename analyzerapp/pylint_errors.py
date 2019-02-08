@@ -51,7 +51,8 @@ def w0611(error):
     fo = open(error.path, "r")
     lines = fo.readlines()
     fo.close()
-    del lines[error.line]
-    if lines[0] == '\n':
-        del lines[0]
-    replace_lines(error.path, lines)
+    if ',' not in lines[error.line]:
+        del lines[error.line]
+        if lines[0] == '\n':
+            del lines[0]
+        replace_lines(error.path, lines)
