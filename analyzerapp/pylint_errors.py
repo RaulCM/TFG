@@ -10,6 +10,9 @@ def check(error):
         print('C0303')
     # elif error.code == 'C0326':
     #     c0326(error)
+    elif error.code == 'C0321':
+        c0321(error)
+        print("C0321")
     elif error.code == 'R0201':
         print("OK")
     elif error.code == 'W0611':
@@ -29,6 +32,17 @@ def c0303(error):
     lines = fo.readlines()
     fo.close()
     lines[error.line] = lines[error.line].rstrip() + "\n"
+    replace_lines(error.path, lines)
+
+def c0321(error):
+    # More than one statement on a single line
+    fo = open(error.path, "r")
+    lines = fo.readlines()
+    fo.close()
+    if lines[error.line][error.column + 1] == ' ':
+        lines[error.line] = lines[error.line][:error.column] + '\n' + lines[error.line][error.column + 2:]
+    else:
+        lines[error.line] = lines[error.line][:error.column] + '\n' + lines[error.line][error.column + 1:]
     replace_lines(error.path, lines)
 
 def c0326(error):
