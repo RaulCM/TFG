@@ -39,11 +39,10 @@ def c0303(error):
 
 def c0321(error):
     # More than one statement on a single line
-    lines = read_file(error)
-    if lines[error.line][error.column + 1] == ' ':
-        lines[error.line] = lines[error.line][:error.column] + '\n' + lines[error.line][error.column + 2:]
-    else:
-        lines[error.line] = lines[error.line][:error.column] + '\n' + lines[error.line][error.column + 1:]
+    lines = readfile(error)
+    first = lines[error.line][:error.column].rstrip()[:-1]
+    second = lines[error.line][error.column:]
+    lines[error.line] = first + "\n" + second
     replace_lines(error.path, lines)
 
 def c0326(error):
