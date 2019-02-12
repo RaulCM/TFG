@@ -8,15 +8,14 @@ def check(error):
     if error.code == 'C0303':
         c0303(error)
         print('C0303')
-    # elif error.code == 'C0326':
-    #     c0326(error)
+    elif error.code == 'C0326':
+        # c0326(error)
+        print("C0326")
     elif error.code == 'C0321':
         c0321(error)
         print("C0321")
-    elif error.code == 'R0201':
-        print("OK")
     elif error.code == 'W0611':
-        w0611(error)
+        # w0611(error)
         print("W0611")
     else:
         print("NO");
@@ -55,10 +54,6 @@ def c0326(error):
     print(new)
     # TODO Sustituir linea
     fo.close()
-
-def r0201(arg):
-    # Method could be a function
-    pass
 
 def w0611(error):
     # Unused import %s
