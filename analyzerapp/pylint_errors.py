@@ -20,6 +20,12 @@ def check(error):
     else:
         print("NO");
 
+def read_file(error):
+    fo = open(error.path, "r")
+    lines = fo.readlines()
+    fo.close()
+    return lines
+
 def replace_lines(file, lines):
     fo = open(file, 'w')
     fo.writelines(lines)
@@ -27,17 +33,13 @@ def replace_lines(file, lines):
 
 def c0303(error):
     # Trailing whitespace
-    fo = open(error.path, "r")
-    lines = fo.readlines()
-    fo.close()
+    lines = read_file(error)
     lines[error.line] = lines[error.line].rstrip() + "\n"
     replace_lines(error.path, lines)
 
 def c0321(error):
     # More than one statement on a single line
-    fo = open(error.path, "r")
-    lines = fo.readlines()
-    fo.close()
+    lines = read_file(error)
     if lines[error.line][error.column + 1] == ' ':
         lines[error.line] = lines[error.line][:error.column] + '\n' + lines[error.line][error.column + 2:]
     else:
@@ -57,9 +59,7 @@ def c0326(error):
 
 def w0611(error):
     # Unused import %s
-    fo = open(error.path, "r")
-    lines = fo.readlines()
-    fo.close()
+    lines = read_file(error)
     if ',' not in lines[error.line]:
         del lines[error.line]
         if lines[0] == '\n':
