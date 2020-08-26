@@ -25,7 +25,7 @@ def check(error):
 
 def read_file(error):
     fo = open(error.path, "r")
-    lines = fo.read_lines()
+    lines = fo.readlines()
     fo.close()
     return lines
 
@@ -36,7 +36,7 @@ def replace_lines(file, lines):
 
 def check_placeholders(file):
     fo = open(file, "r")
-    lines = fo.read_lines()
+    lines = fo.readlines()
     fo.close()
     i = 0
     total = len(lines)
@@ -86,7 +86,7 @@ def c0321(error):
 def c0326(error):
     # %s space %s %s %s\n%s
     fo = open(error.path, "r+")
-    line = fo.read_lines()[error.line]
+    line = fo.readlines()[error.line]
     print(line)
     pattern = r'.*[^=!<>+\-*/&|^% ]=[^=!<>+\-*/&|^% ].*'
     new = re.search(pattern, line)
