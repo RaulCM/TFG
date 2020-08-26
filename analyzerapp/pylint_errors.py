@@ -49,11 +49,9 @@ def check_placeholders(file):
             aux = lines[i].split("#SPLIT")
             column = int(aux[1])
             lines[i] = aux[2]
-            print("FIRST: " + lines[i][:column])
-            print("LIM: " + lines[i][column -2:column - 1])
-            if lines[i][column - 1] == ";":
+            if lines[i][column - 1] == ";" or lines[i][column -2:column - 1] ==";":
                 first = lines[i][:column].rstrip()[:-1]
-                second = lines[i][column:]
+                second = first[:-len(first.lstrip())] + lines[i][column:]
                 lines[i] = first + "\n" + second
             # TODO if y sentencia en la misma linea
             # elif lines[i][column -2:column - 1] == ":":
