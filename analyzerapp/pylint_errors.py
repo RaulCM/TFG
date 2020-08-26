@@ -20,6 +20,9 @@ def check(error):
     elif error.code == 'W0611':
         w0611(error)
         print("W0611")
+    elif error.code == 'C0413':
+        c0413(error)
+        print("C0413")
     else:
         print("NO");
 
@@ -41,7 +44,6 @@ def check_placeholders(file):
     i = 0
     total = len(lines)
     while i < total:
-        print(lines[i])
         if lines[i].startswith("#DEL"):
             del lines[i]
             total = total - 1
@@ -58,6 +60,10 @@ def check_placeholders(file):
             #     first = lines[i][:column].rstrip()[:-1]
             #     second = lines[i][column:]
             #     lines[i] = first + ":\n    " + second
+        elif lines[i].startswith("#TOP"):
+            top_line = lines[i][4:].lstrip()
+            del lines[i]
+            lines.insert(0,top_line)
         else:
             i = i + 1
     replace_lines(file, lines)
@@ -72,7 +78,6 @@ def c0321(error):
     # More than one statement on a single line
     lines = read_file(error)
     lines[error.line] = "#SPLIT" + str(error.column) + "#SPLIT" + lines[error.line]
-    print(lines[error.line])
     replace_lines(error.path, lines)
 
 def c0326(error):
@@ -86,10 +91,16 @@ def c0326(error):
     # TODO Sustituir linea
     fo.close()
 
+def c0413(error):
+    # Import "%s" should be placed at the top of the module
+    lines = read_file(error)
+    if not lines[error.line].startswith("#TOP"):
+        lines[error.line] = "#TOP" + lines[error.line]
+        replace_lines(error.path, lines)
+
 def w0611(error):
     # Unused import %s
     lines = read_file(error)
     if ',' not in lines[error.line] and ';' not in lines[error.line]:
         lines[error.line] = "#DEL" + lines[error.line]
-        print(lines[error.line])
         replace_lines(error.path, lines)
