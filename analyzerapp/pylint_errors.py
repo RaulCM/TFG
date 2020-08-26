@@ -58,12 +58,6 @@ def check_placeholders(file):
             #     first = lines[i][:column].rstrip()[:-1]
             #     second = lines[i][column:]
             #     lines[i] = first + ":\n    " + second
-        elif lines[i].startswith("#SPLIT#DEL"):
-            print(lines[i][:10])
-            i = i + 1
-        elif lines[i].startswith("#DEL#SPLIT"):
-            print(lines[i][:10])
-            i = i + 1
         else:
             i = i + 1
     replace_lines(file, lines)
@@ -95,7 +89,7 @@ def c0326(error):
 def w0611(error):
     # Unused import %s
     lines = read_file(error)
-    if ',' not in lines[error.line]:
+    if ',' not in lines[error.line] and ';' not in lines[error.line]:
         lines[error.line] = "#DEL" + lines[error.line]
         print(lines[error.line])
         replace_lines(error.path, lines)
