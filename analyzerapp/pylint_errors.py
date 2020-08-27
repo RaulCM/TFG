@@ -17,12 +17,15 @@ def check(error):
     elif error.code == 'C0321':
         c0321(error)
         print("C0321")
-    elif error.code == 'W0611':
-        w0611(error)
-        print("W0611")
+    elif error.code == 'C0410':
+        c0410(error)
+        print("C0410")
     elif error.code == 'C0413':
         c0413(error)
         print("C0413")
+    elif error.code == 'W0611':
+        w0611(error)
+        print("W0611")
     else:
         print("NO");
 
@@ -36,6 +39,21 @@ def replace_lines(file, lines):
     fo = open(file, 'w')
     fo.writelines(lines)
     fo.close()
+
+def indent(line):
+    indentation = line[:-len(line.lstrip())]
+    return indentation
+
+def importsplit(line):
+    line = line.split("#IMPORTSPLIT")[1]
+    imports = line.split(",")
+    indentation = indent(imports[0])
+    new_lines = indentation + imports[0].strip() + "\n"
+    j = 1
+    while j < len(imports):
+        new_lines = new_lines + indentation + "import " + imports[j].strip() + "\n"
+        j = j + 1
+    return new_lines
 
 def check_placeholders(file):
     fo = open(file, "r")
@@ -53,7 +71,7 @@ def check_placeholders(file):
             lines[i] = aux[2]
             if lines[i][column - 1] == ";" or lines[i][column -2:column - 1] ==";":
                 first = lines[i][:column].rstrip()[:-1]
-                second = first[:-len(first.lstrip())] + lines[i][column:]
+                second = indent(first) + lines[i][column:]
                 lines[i] = first + "\n" + second
             # TODO if y sentencia en la misma linea
             # elif lines[i][column -2:column - 1] == ":":
@@ -63,7 +81,9 @@ def check_placeholders(file):
         elif lines[i].startswith("#TOP"):
             top_line = lines[i][4:].lstrip()
             del lines[i]
-            lines.insert(0,top_line)
+            lines.insert(0, top_line)
+        elif lines[i].startswith("#IMPORTSPLIT"):
+            lines[i] = importsplit(lines[i])
         else:
             i = i + 1
     replace_lines(file, lines)
@@ -90,6 +110,12 @@ def c0326(error):
     print(new)
     # TODO Sustituir linea
     fo.close()
+
+def c0410(error):
+    # Multiple imports on one line (%s)
+    lines = read_file(error)
+    lines[error.line] = "#IMPORTSPLIT" + lines[error.line]
+    replace_lines(error.path, lines)
 
 def c0413(error):
     # Import "%s" should be placed at the top of the module
