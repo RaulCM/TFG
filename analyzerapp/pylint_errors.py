@@ -6,6 +6,7 @@ class Error:
         self.line = int(data[1].rstrip()) - 1
         self.column = int(data[2].rstrip())
         self.code = data[3].rstrip()
+        self.msg = data[4].rstrip()
 
 def check(error):
     if error.code == 'C0303':
