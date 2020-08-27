@@ -44,7 +44,22 @@ def indent(line):
     indentation = line[:-len(line.lstrip())]
     return indentation
 
-def importsplit(line):
+def placeholder_split(line):
+    aux = line.split("#SPLIT")
+    column = int(aux[1])
+    line = aux[2]
+    if line[column - 1] == ";" or line[column -2:column - 1] ==";":
+        first = line[:column].rstrip()[:-1]
+        second = indent(first) + line[column:]
+        line = first + "\n" + second
+    # TODO if y sentencia en la misma linea
+    # elif lines[i][column -2:column - 1] == ":":
+    #     first = lines[i][:column].rstrip()[:-1]
+    #     second = lines[i][column:]
+    #     lines[i] = first + ":\n    " + second
+    return line
+
+def placeholder_importsplit(line):
     line = line.split("#IMPORTSPLIT")[1]
     imports = line.split(",")
     indentation = indent(imports[0])
@@ -66,24 +81,13 @@ def check_placeholders(file):
             del lines[i]
             total = total - 1
         elif lines[i].startswith("#SPLIT"):
-            aux = lines[i].split("#SPLIT")
-            column = int(aux[1])
-            lines[i] = aux[2]
-            if lines[i][column - 1] == ";" or lines[i][column -2:column - 1] ==";":
-                first = lines[i][:column].rstrip()[:-1]
-                second = indent(first) + lines[i][column:]
-                lines[i] = first + "\n" + second
-            # TODO if y sentencia en la misma linea
-            # elif lines[i][column -2:column - 1] == ":":
-            #     first = lines[i][:column].rstrip()[:-1]
-            #     second = lines[i][column:]
-            #     lines[i] = first + ":\n    " + second
+            lines[i] = placeholder_split(lines[i])
         elif lines[i].startswith("#TOP"):
             top_line = lines[i][4:].lstrip()
             del lines[i]
             lines.insert(0, top_line)
         elif lines[i].startswith("#IMPORTSPLIT"):
-            lines[i] = importsplit(lines[i])
+            lines[i] = placeholder_importsplit(lines[i])
         else:
             i = i + 1
     replace_lines(file, lines)
