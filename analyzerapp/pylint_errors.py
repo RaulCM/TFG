@@ -139,6 +139,19 @@ def c0326(error):
         line = line.split("=",1)
         lines[error.line] = line[0].rstrip() + " = " + line[1].lstrip()
         replace_lines(error.path, lines)
+    elif (error.msg == "Exactly one space required around comparison" or
+        error.msg == "Exactly one space required after comparison" or
+        error.msg == "Exactly one space required before comparison"):
+        comparators = [">>=", "<<=", "//=", "**=", "==", "!=", "<>", "<=",
+                       ">=", "+=", "-=", "*=", "/=", "&=", "|=", "^=", "%=",
+                       "<", ">", "="]
+        for comparator in comparators:
+            tokens = line.split(comparator, 1)
+            if len(tokens) == 2:
+                break
+        line = tokens[0].rstrip() + " " + comparator + " " + tokens[1].lstrip()
+        lines[error.line] = line
+        replace_lines(error.path, lines)
     elif (error.msg == "Exactly one space required after comma" or
           error.msg == "No space allowed before comma"):
         lines[error.line] = replace_comma(line, ",", ", ")
@@ -154,6 +167,10 @@ def c0326(error):
         line = replace_bracket2(line, " ]", "]")
         line = replace_bracket2(line, " }", "}")
         lines[error.line] = line
+        replace_lines(error.path, lines)
+    elif error.msg == "No space allowed before :":
+        line = line.split(":",1)
+        lines[error.line] = line[0].rstrip() + ":" + line[1]
         replace_lines(error.path, lines)
 
 def c0410(error):
