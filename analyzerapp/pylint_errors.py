@@ -9,26 +9,28 @@ class Error:
         self.msg = data[4].rstrip()
 
 def check(error):
+    lines = read_file(error)
     if error.code == 'C0303':
-        c0303(error)
+        c0303(lines, error.line)
         print('C0303')
     elif error.code == 'C0321':
-        c0321(error)
+        c0321(lines, error.line, error.column)
         print("C0321")
     elif error.code == 'C0326':
-        c0326(error)
+        c0326(lines, error.line, error.msg)
         print("C0326")
     elif error.code == 'C0410':
-        c0410(error)
+        c0410(lines, error.line)
         print("C0410")
     elif error.code == 'C0413':
-        c0413(error)
+        c0413(lines, error.line)
         print("C0413")
     elif error.code == 'W0611':
-        w0611(error)
+        w0611(lines, error.line)
         print("W0611")
     else:
         print("NO");
+    replace_lines(error.path, lines)
 
 def read_file(error):
     fo = open(error.path, "r")
@@ -93,17 +95,15 @@ def check_placeholders(file):
             i = i + 1
     replace_lines(file, lines)
 
-def c0303(error):
+def c0303(lines, line_number):
     # Trailing whitespace
-    lines = read_file(error)
-    lines[error.line] = lines[error.line].rstrip() + "\n"
-    replace_lines(error.path, lines)
+    lines[line_number] = lines[line_number].rstrip() + "\n"
+    return lines
 
-def c0321(error):
+def c0321(lines, line_number, column):
     # More than one statement on a single line
-    lines = read_file(error)
-    lines[error.line] = "#SPLIT" + str(error.column) + "#SPLIT" + lines[error.line]
-    replace_lines(error.path, lines)
+    lines[line_number] = "#SPLIT" + str(column) + "#SPLIT" + lines[line_number]
+    return lines
 
 def replace_comma(line, old, new):
     line = line.split(old)
@@ -129,19 +129,17 @@ def replace_bracket2(line, old, new):
         new_line = line[0].rstrip() + new + line[1].rstrip() + "\n"
     return new_line
 
-def c0326(error):
+def c0326(lines, line_number, msg):
     # %s space %s %s %s\n%s
-    lines = read_file(error)
-    line = lines[error.line]
-    if (error.msg == "Exactly one space required around assignment" or
-        error.msg == "Exactly one space required after assignment" or
-        error.msg == "Exactly one space required before assignment"):
+    line = lines[line_number]
+    if (msg == "Exactly one space required around assignment" or
+        msg == "Exactly one space required after assignment" or
+        msg == "Exactly one space required before assignment"):
         line = line.split("=",1)
-        lines[error.line] = line[0].rstrip() + " = " + line[1].lstrip()
-        replace_lines(error.path, lines)
-    elif (error.msg == "Exactly one space required around comparison" or
-        error.msg == "Exactly one space required after comparison" or
-        error.msg == "Exactly one space required before comparison"):
+        lines[line_number] = line[0].rstrip() + " = " + line[1].lstrip()
+    elif (msg == "Exactly one space required around comparison" or
+        msg == "Exactly one space required after comparison" or
+        msg == "Exactly one space required before comparison"):
         comparators = [">>=", "<<=", "//=", "**=", "==", "!=", "<>", "<=",
                        ">=", "+=", "-=", "*=", "/=", "&=", "|=", "^=", "%=",
                        "<", ">", "="]
@@ -150,45 +148,38 @@ def c0326(error):
             if len(tokens) == 2:
                 break
         line = tokens[0].rstrip() + " " + comparator + " " + tokens[1].lstrip()
-        lines[error.line] = line
-        replace_lines(error.path, lines)
-    elif (error.msg == "Exactly one space required after comma" or
-          error.msg == "No space allowed before comma"):
-        lines[error.line] = replace_comma(line, ",", ", ")
-        replace_lines(error.path, lines)
-    elif error.msg == "No space allowed after bracket":
+        lines[line_number] = line
+    elif (msg == "Exactly one space required after comma" or
+          msg == "No space allowed before comma"):
+        lines[line_number] = replace_comma(line, ",", ", ")
+    elif msg == "No space allowed after bracket":
         line = replace_bracket1(line, "( ", "(")
         line = replace_bracket1(line, "[ ", "[")
         line = replace_bracket1(line, "{ ", "{")
-        lines[error.line] = line
-        replace_lines(error.path, lines)
-    elif error.msg == "No space allowed before bracket":
+        lines[line_number] = line
+    elif msg == "No space allowed before bracket":
         line = replace_bracket2(line, " )", ")")
         line = replace_bracket2(line, " ]", "]")
         line = replace_bracket2(line, " }", "}")
-        lines[error.line] = line
-        replace_lines(error.path, lines)
-    elif error.msg == "No space allowed before :":
+        lines[line_number] = line
+    elif msg == "No space allowed before :":
         line = line.split(":",1)
-        lines[error.line] = line[0].rstrip() + ":" + line[1]
-        replace_lines(error.path, lines)
+        lines[line_number] = line[0].rstrip() + ":" + line[1]
+    return lines
 
-def c0410(error):
+def c0410(lines, line_number):
     # Multiple imports on one line (%s)
-    lines = read_file(error)
-    lines[error.line] = "#IMPORTSPLIT" + lines[error.line]
-    replace_lines(error.path, lines)
+    lines[line_number] = "#IMPORTSPLIT" + lines[line_number]
+    return lines
 
-def c0413(error):
+def c0413(lines, line_number):
     # Import "%s" should be placed at the top of the module
-    lines = read_file(error)
-    if not lines[error.line].startswith("#TOP"):
-        lines[error.line] = "#TOP" + lines[error.line]
-        replace_lines(error.path, lines)
+    if not lines[line_number].startswith("#TOP"):
+        lines[line_number] = "#TOP" + lines[line_number]
+    return lines
 
-def w0611(error):
+def w0611(lines, line_number):
     # Unused import %s
-    lines = read_file(error)
-    if ',' not in lines[error.line] and ';' not in lines[error.line]:
-        lines[error.line] = "#DEL" + lines[error.line]
-        replace_lines(error.path, lines)
+    if ',' not in lines[line_number] and ';' not in lines[line_number]:
+        lines[line_number] = "#DEL" + lines[line_number]
+    return lines
