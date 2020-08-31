@@ -9,7 +9,7 @@ class Error:
         self.msg = data[4].rstrip()
 
 def check(error):
-    lines = read_file(error)
+    lines = read_file(error.path)
     if error.code == 'C0303':
         c0303(lines, error.line)
         print('C0303')
@@ -32,14 +32,14 @@ def check(error):
         print("NO");
     replace_lines(error.path, lines)
 
-def read_file(error):
-    fo = open(error.path, "r")
+def read_file(path):
+    fo = open(path, "r")
     lines = fo.readlines()
     fo.close()
     return lines
 
 def replace_lines(file, lines):
-    fo = open(file, 'w')
+    fo = open(file, "w")
     fo.writelines(lines)
     fo.close()
 
@@ -62,6 +62,12 @@ def placeholder_split(line):
     #     lines[i] = first + ":\n    " + second
     return line
 
+def placeholder_top(lines, line_number):
+    top_line = lines[line_number][4:].lstrip()
+    del lines[line_number]
+    lines.insert(0, top_line)
+    return lines
+
 def placeholder_importsplit(line):
     line = line.split("#IMPORTSPLIT")[1]
     imports = line.split(",")
@@ -69,7 +75,8 @@ def placeholder_importsplit(line):
     new_lines = indentation + imports[0].strip() + "\n"
     j = 1
     while j < len(imports):
-        new_lines = new_lines + indentation + "import " + imports[j].strip() + "\n"
+        new_lines = (new_lines + indentation + "import " +
+                    imports[j].strip() + "\n")
         j = j + 1
     return new_lines
 
@@ -86,9 +93,7 @@ def check_placeholders(file):
         elif lines[i].startswith("#SPLIT"):
             lines[i] = placeholder_split(lines[i])
         elif lines[i].startswith("#TOP"):
-            top_line = lines[i][4:].lstrip()
-            del lines[i]
-            lines.insert(0, top_line)
+            lines = placeholder_top(lines, i)
         elif lines[i].startswith("#IMPORTSPLIT"):
             lines[i] = placeholder_importsplit(lines[i])
         else:
