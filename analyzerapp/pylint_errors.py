@@ -22,6 +22,9 @@ def check(error):
     elif error.code == 'C0410':
         c0410(lines, error.line)
         print("C0410")
+    elif error.code == 'C0411':
+        c0411(lines, error.line, error.msg)
+        print("C0411")
     elif error.code == 'C0413':
         c0413(lines, error.line)
         print("C0413")
@@ -46,6 +49,14 @@ def replace_lines(file, lines):
 def indent(line):
     indentation = line[:-len(line.lstrip())]
     return indentation
+
+def placeholder_external(lines, line_number):
+    aux = lines[line_number].split("#EXT")
+    target_line = int(aux[1])
+    line = [aux[2]]
+    del lines[line_number]
+    new_lines = lines[:target_line] + line + lines[target_line:]
+    return new_lines
 
 def placeholder_split(line):
     aux = line.split("#SPLIT")
@@ -84,6 +95,13 @@ def check_placeholders(file):
     fo = open(file, "r")
     lines = fo.readlines()
     fo.close()
+    i = 0
+    total = len(lines)
+    while i < total:
+        if lines[i].startswith("#EXT"):
+            lines = placeholder_external(lines, i)
+        else:
+            i = i + 1
     i = 0
     total = len(lines)
     while i < total:
@@ -175,6 +193,24 @@ def c0326(lines, line_number, msg):
 def c0410(lines, line_number):
     # Multiple imports on one line (%s)
     lines[line_number] = "#IMPORTSPLIT" + lines[line_number]
+    return lines
+
+def c0411(lines, line_number, msg):
+    if msg.startswith("standard"):
+        if not lines[line_number].startswith("#TOP"):
+            lines[line_number] = "#TOP" + lines[line_number]
+    elif msg.startswith("external"):
+        if not lines[line_number].startswith("#"):
+            split_msg = msg.split("\"")
+            import2 = split_msg[3] + "\n"
+            i = 0
+            total = len(lines)
+            while i < total:
+                if lines[i] == import2:
+                    break
+                else:
+                    i = i + 1
+            lines[line_number] = "#EXT" + str(i) + "#EXT" + lines[line_number]
     return lines
 
 def c0413(lines, line_number):
