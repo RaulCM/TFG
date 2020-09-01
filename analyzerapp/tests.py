@@ -22,7 +22,7 @@ class PylintErrorsTestCase(TestCase):
         msg = "Exactly one space required around comparison"
         self.assertEqual(pylint_errors.c0326(["if z==11:\n"], 0, msg), ["if z == 11:\n"])
         msg = "Exactly one space required after comma"
-        self.assertEqual(pylint_errors.c0326(["list = [1 ,2]\n"], 0, msg), ["list = [1, 2]\n"])
+        self.assertEqual(pylint_errors.c0326(["numbers = [1 ,2]\n"], 0, msg), ["numbers = [1, 2]\n"])
         msg = "No space allowed after bracket"
         self.assertEqual(pylint_errors.c0326(["print( text)\n"], 0, msg), ["print(text)\n"])
         msg = "No space allowed before bracket"
