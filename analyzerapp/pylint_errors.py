@@ -196,6 +196,7 @@ def c0410(lines, line_number):
     return lines
 
 def c0411(lines, line_number, msg):
+    # %s comes before %s
     if msg.startswith("standard"):
         if not lines[line_number].startswith("#TOP"):
             lines[line_number] = "#TOP" + lines[line_number]
