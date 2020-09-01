@@ -16,6 +16,20 @@ class PylintErrorsTestCase(TestCase):
         """Placeholder #SPLIT eliminado y línea corregida correctamente"""
         self.assertEqual(pylint_errors.placeholder_split("#SPLIT6#SPLITx = 5;y = 6\n"), "x = 5\ny = 6\n")
 
+    def test_c0326(self):
+        msg = "Exactly one space required around assignment"
+        self.assertEqual(pylint_errors.c0326(["x=5\n"], 0, msg), ["x = 5\n"])
+        msg = "Exactly one space required around comparison"
+        self.assertEqual(pylint_errors.c0326(["if z==11:\n"], 0, msg), ["if z == 11:\n"])
+        msg = "Exactly one space required after comma"
+        self.assertEqual(pylint_errors.c0326(["list = [1 ,2]\n"], 0, msg), ["list = [1, 2]\n"])
+        msg = "No space allowed after bracket"
+        self.assertEqual(pylint_errors.c0326(["print( text)\n"], 0, msg), ["print(text)\n"])
+        msg = "No space allowed before bracket"
+        self.assertEqual(pylint_errors.c0326(["print(text )\n"], 0, msg), ["print(text)\n"])
+        msg = "No space allowed before :"
+        self.assertEqual(pylint_errors.c0326(["if z == 11 :\n"], 0, msg), ["if z == 11:\n"])
+
     def test_c0410(self):
         """'Multiple imports in one line' marcados correctamente"""
         self.assertEqual(pylint_errors.c0410(["import os, re\n"], 0), ["#IMPORTSPLITimport os, re\n"])
