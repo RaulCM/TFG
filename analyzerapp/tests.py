@@ -38,6 +38,17 @@ class PylintErrorsTestCase(TestCase):
         """Placeholder #IMPORTSPLIT eliminado y línea corregida correctamente"""
         self.assertEqual(pylint_errors.placeholder_importsplit("#IMPORTSPLITimport os, re\n"), "import os\nimport re\n")
 
+    def test_c0411(self):
+        """'wrong-import-order: %s comes before %s' marcados correctamente"""
+        msg = 'standard import "import os" comes before "import requests"\n'
+        self.assertEqual(pylint_errors.c0411(["import requests\n", "import os\n"], 1, msg), ["import requests\n", "#TOPimport os\n"])
+        msg = 'external import "import requests" comes before "from fork import USERNAME"\n'
+        self.assertEqual(pylint_errors.c0411(["import os\n", "from fork import USERNAME\n", "import requests\n"], 2, msg), ["import os\n", "from fork import USERNAME\n", "#EXT1#EXTimport requests\n"])
+
+    def test_placeholder_external(self):
+        """Placeholder #EXT eliminado y línea corregida correctamente"""
+        self.assertEqual(pylint_errors.placeholder_external(["import os\n", "from fork import USERNAME\n", "#EXT1#EXTimport requests\n"], 2), ["import os\n", "import requests\n", "from fork import USERNAME\n"])
+
     def test_c0413(self):
         """'Import should be placed at the top of the module' marcados correctamente"""
         self.assertEqual(pylint_errors.c0413(["x = 5", "import os", "y = 6"], 1), ["x = 5", "#TOPimport os", "y = 6"])
