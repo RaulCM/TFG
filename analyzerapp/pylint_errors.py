@@ -19,6 +19,9 @@ def check(error):
     elif error.code == 'C0326':
         c0326(lines, error.line, error.msg)
         print("C0326")
+    elif error.code == 'W0404':
+        w0404(lines, error.line)
+        print("W0404")
     elif error.code == 'C0410':
         c0410(lines, error.line)
         print("C0410")
@@ -219,6 +222,12 @@ def c0413(lines, line_number):
     if not lines[line_number].startswith("#TOP"):
         lines[line_number] = "#TOP" + lines[line_number]
     return lines
+
+def w0404(lines, line_number):
+    # Reimport %r (imported line %s)
+    if ',' not in lines[line_number] and ';' not in lines[line_number]:
+        lines[line_number] = "#DEL" + lines[line_number]
+        return lines
 
 def w0611(lines, line_number):
     # Unused import %s
