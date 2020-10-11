@@ -13,6 +13,9 @@ def check(error):
     if error.code == 'C0303':
         c0303(lines, error.line)
         print('C0303')
+    elif error.code == 'C0304':
+        c0304(lines)
+        print("C0304")
     elif error.code == 'C0321':
         c0321(lines, error.line, error.column)
         print("C0321")
@@ -124,6 +127,11 @@ def check_placeholders(file):
 def c0303(lines, line_number):
     # Trailing whitespace
     lines[line_number] = lines[line_number].rstrip() + "\n"
+    return lines
+
+def c0304(lines):
+    # Trailing whitespace
+    lines.append("\n")
     return lines
 
 def c0321(lines, line_number, column):
