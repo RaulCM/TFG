@@ -8,6 +8,10 @@ class PylintErrorsTestCase(TestCase):
         """'Trailing whitespace' eliminados correctamente"""
         self.assertEqual(pylint_errors.c0303(["x= 5 \n"], 0), ["x= 5\n"])
 
+    def test_c0304(self):
+        """'Final newline missing' corregido correctamente"""
+        self.assertEqual(pylint_errors.c0304(["x= 5 \n", "print(x)\n"]), ["x= 5 \n", "print(x)\n", "\n"])
+
     def test_c0321(self):
         """'More than one statement in a single line' marcados correctamente"""
         self.assertEqual(pylint_errors.c0321(["x = 5;y = 6\n"], 0, 6), ["#SPLIT6#SPLITx = 5;y = 6\n"])
