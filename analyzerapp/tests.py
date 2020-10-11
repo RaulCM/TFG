@@ -42,7 +42,7 @@ class PylintErrorsTestCase(TestCase):
         self.assertEqual(pylint_errors.c0413(["x = 5", "import os", "y = 6"], 1), ["x = 5", "#TOPimport os", "y = 6"])
 
     def test_w0404(self):
-        """'Unused import' marcado correctamente"""
+        """'Reimport' marcado correctamente"""
         self.assertEqual(pylint_errors.w0404(["import os\n", "import os\n", "import requests\n"], 1), ["import os\n", "#DELimport os\n", "import requests\n"])
 
     def test_w0611(self):
