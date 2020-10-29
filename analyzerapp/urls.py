@@ -5,5 +5,6 @@ urlpatterns = [
     url(r'^$', views.main),
 	url(r'^list$', views.list),
 	url(r'^search$', views.github_search),
+	url(r'^repo/(\d+)$', views.repo),
     #url(r'^pylint$', views.runPylint),
 ]
