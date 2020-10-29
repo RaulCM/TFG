@@ -34,7 +34,7 @@
 				<tbody>
 					{% for repository in datos %}
 					<tr>
-						<td>{{repository.identifier}}</td>
+						<td><a href='/repo/{{repository.identifier}}'>{{repository.identifier}}</a></td>
 						<td>{{repository.full_name}}</td>
 						<td>{{repository.description}}</td>
 						<td>{{repository.html_url}}</td>
