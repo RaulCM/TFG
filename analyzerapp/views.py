@@ -64,7 +64,8 @@ def repo(request, resource):
         form_name = request.body.decode('utf-8').split("=")[0]
         if form_name == "pylint":
             github_clone_individual(repository)
-            pylint_output = analyze_repo(repository).split('\n')
+            pylint_output = analyze_repo(repository)
+            pylint_output = pylint_output.replace('/tmp/projects/','/').split('\n')
             # read_files()
             # run_pylint()
             # read_errors()
