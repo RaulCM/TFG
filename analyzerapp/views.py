@@ -16,9 +16,6 @@ import subprocess
 @csrf_exempt
 def main(request):
     if request.method == "GET":
-        # template = get_template("main.html")
-        # c = RequestContext(request)
-        # response = template.render(c)
         return render(request, 'main.html')
     elif request.method == "POST":
         form_name = request.body.decode('utf-8').split("=")[0]
@@ -44,14 +41,8 @@ def main(request):
             delete_fork('https://api.github.com/repos/RaulCM/helloworld')
         elif form_name == "pull":
             create_pull('https://api.github.com/repos/RaulPruebasTFG/helloworld')
-        # template = get_template("main.html")
-        # c = RequestContext(request)
-        # response = template.render(c)
         return render(request, 'main.html')
     else:
-        # template = get_template("error.html")
-        # c = RequestContext(request, {'error_message': '405: Method not allowed'})
-        # response = template.render(c)
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
     # return HttpResponse(response)
 
@@ -82,10 +73,6 @@ def repo(request, resource):
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
 
 def list(request):
-    # template = get_template("list.html")
-    # c = RequestContext(request, {'datos': print_data()})
-    # response = template.render(c)
-    # return HttpResponse(response)
     return render(request, 'list.html', {'datos': print_data()})
 
 def print_data():
