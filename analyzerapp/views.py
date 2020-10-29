@@ -9,6 +9,7 @@ from django.template.loader import get_template
 # from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 import pylint
+from urllib.parse import unquote
 # Create your views here.
 
 @csrf_exempt
@@ -25,7 +26,11 @@ def main(request):
         elif form_name == "update":
             update()
         elif form_name == "add":
-            print("Anadir repositorio unico")
+            url = unquote(request.body.decode('utf-8').split("=")[1])
+            api_url = url.replace('://github.com/', '://api.github.com/repos/')
+            r = requests.get(api_url)
+            repo_data = r.json()
+            store_individual_data(repo_data)
         elif form_name == "clone":
             github_clone()
         elif form_name == "pylint":
@@ -82,18 +87,21 @@ def update():
 
 def store_data(json_data):
     for item in json_data:
-        try:
-            Repository.objects.get(identifier=item["id"])
-        except Repository.DoesNotExist:
-            repository = Repository()
-            repository.identifier = item["id"]
-            repository.full_name = item["full_name"]
-            repository.owner = item["owner"]["login"]
-            repository.name = item["name"]
-            if item["description"] is not None:
-                repository.description = item["description"]
-            repository.html_url = item["html_url"]
-            repository.save()
+        store_individual_data(item)
+
+def store_individual_data(item):
+    try:
+        Repository.objects.get(identifier=item["id"])
+    except Repository.DoesNotExist:
+        repository = Repository()
+        repository.identifier = item["id"]
+        repository.full_name = item["full_name"]
+        repository.owner = item["owner"]["login"]
+        repository.name = item["name"]
+        if item["description"] is not None:
+            repository.description = item["description"]
+        repository.html_url = item["html_url"]
+        repository.save()
 
 def github_clone():
     datos = Repository.objects.all()
