@@ -69,7 +69,13 @@ def repo(request, resource):
             # read_files()
             # run_pylint()
             # read_errors()
-            return render(request, 'repo_data.html', {'repository': repository, 'pylint_output': pylint_output})
+            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output})
+        elif form_name == "fixables":
+            pylint_output = analyze_repo(repository)
+            pylint_output = pylint_output.replace('/tmp/projects/','/').split('\n')
+            pylint_output[:] = [x for x in pylint_output if ("C0303" in x or "C0304" in x or "C0321" in x or "C0326" in x or "W0404" in x or "C0410" in x or "C0411" in x or "C0413" in x or "W0611" in x)]
+            print(pylint_output)
+            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output})
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
 
