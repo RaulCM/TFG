@@ -122,6 +122,20 @@ def check_placeholders(file):
             lines[i] = placeholder_importsplit(lines[i])
         else:
             i = i + 1
+    i = 0
+    total = len(lines)
+    while i < total:
+        if lines[i].startswith("#DEL"):
+            del lines[i]
+            total = total - 1
+        elif lines[i].startswith("#SPLIT"):
+            lines[i] = placeholder_split(lines[i])
+        elif lines[i].startswith("#TOP"):
+            lines = placeholder_top(lines, i)
+        elif lines[i].startswith("#IMPORTSPLIT"):
+            lines[i] = placeholder_importsplit(lines[i])
+        else:
+            i = i + 1
     replace_lines(file, lines)
 
 def c0303(lines, line_number):
@@ -130,7 +144,7 @@ def c0303(lines, line_number):
     return lines
 
 def c0304(lines):
-    # Trailing whitespace
+    # Final newline missing
     lines.append("\n")
     return lines
 
