@@ -10,6 +10,7 @@ from django.template.loader import get_template
 from django.views.decorators.csrf import csrf_exempt
 import pylint
 from urllib.parse import unquote
+import subprocess
 # Create your views here.
 
 @csrf_exempt
@@ -56,17 +57,18 @@ def main(request):
 
 @csrf_exempt
 def repo(request, resource):
+    repository = Repository.objects.get(identifier=resource)
     if request.method == "GET":
-        repository = Repository.objects.get(identifier=resource)
         return render(request, 'repo_data.html', {'repository': repository})
     elif request.method == "POST":
         form_name = request.body.decode('utf-8').split("=")[0]
         if form_name == "pylint":
             github_clone_individual(repository)
+            pylint_output = analyze_repo(repository).split('\n')
             # read_files()
             # run_pylint()
             # read_errors()
-            return render(request, 'repo_data.html', {'repository': repository})
+            return render(request, 'repo_data.html', {'repository': repository, 'pylint_output': pylint_output})
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
 
@@ -129,6 +131,21 @@ def github_clone_individual(item):
     url = item.html_url + ".git"
     name = item.full_name
     os.system('git clone ' + url + " /tmp/projects/" + name)
+
+def analyze_repo(item):
+    # https://docs.pylint.org/en/1.6.0/output.html
+    # https://docs.python.org/2/library/subprocess.html
+    path = "/tmp/projects/" + item.full_name
+    pylint_output = ""
+    for root, dirs, files in os.walk(path, topdown=False):
+        for name in files:
+            ext = os.path.splitext(name)[-1].lower()
+            if ext == ".py":
+                try:
+                    output = subprocess.check_output(['pylint', os.path.join(root, name), "--msg-template='{abspath};{line};{column};{msg_id};{msg}'", "--reports=n"])
+                except subprocess.CalledProcessError as e:
+                    pylint_output = pylint_output + e.output.decode("utf-8")
+    return pylint_output
 
 def read_file(filename):
     # https://developer.github.com/v3/#rate-limiting
