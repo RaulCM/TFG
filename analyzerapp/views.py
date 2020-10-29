@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 import pylint
 from urllib.parse import unquote
 import subprocess
+from analyzerapp import pylint_errors
 # Create your views here.
 
 @csrf_exempt
@@ -68,6 +69,24 @@ def repo(request, resource):
         elif form_name == "all":
             pylint_output = analyze_repo(repository)
             pylint_output = pylint_output.replace('/tmp/projects/','/').split('\n')
+            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
+        elif form_name == "fix":
+            pylint_output = analyze_repo(repository)
+            pylint_output = pylint_output.split('\n')
+            pylint_output = pylint_output[:-1]
+            for line in pylint_output:
+                if line[0] == "/":
+                    tokens = line.split(';')
+                    error = pylint_errors.Error(tokens)
+                    pylint_errors.check(error)
+            files = []
+            for line in pylint_output:
+                if line[0] == "/":
+                    filename = line.split(';')[0]
+                    if filename not in files:
+                        files.append(filename)
+            for file in files:
+                pylint_errors.check_placeholders(file)
             return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
