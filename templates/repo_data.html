@@ -4,7 +4,7 @@
 
 <div class="container">
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="/">Gestión</a></li>
+		<li><a href="/">Gestión</a></li>
 		<li><a>Lista de repositorios</a></li>
 		<li><a>Pestaña 3</a></li>
 	</ul>
@@ -26,13 +26,6 @@
 			Pylint
 		</button>
 	</form>
-	{% for msg in pylint_output %}
-		{% if msg|slice:":1" == '/' %}
-			{{msg}}<br>
-		{% endif %}
-	{% endfor %}
-
-
 </div>
 
 
