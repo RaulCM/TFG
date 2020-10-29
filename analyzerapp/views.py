@@ -61,21 +61,23 @@ def repo(request, resource):
     if request.method == "GET":
         return render(request, 'repo_data.html', {'repository': repository})
     elif request.method == "POST":
+        fixables = 0
         form_name = request.body.decode('utf-8').split("=")[0]
         if form_name == "pylint":
             github_clone_individual(repository)
             pylint_output = analyze_repo(repository)
             pylint_output = pylint_output.replace('/tmp/projects/','/').split('\n')
-            # read_files()
-            # run_pylint()
-            # read_errors()
-            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output})
+            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
         elif form_name == "fixables":
+            fixables = 1
             pylint_output = analyze_repo(repository)
             pylint_output = pylint_output.replace('/tmp/projects/','/').split('\n')
             pylint_output[:] = [x for x in pylint_output if ("C0303" in x or "C0304" in x or "C0321" in x or "C0326" in x or "W0404" in x or "C0410" in x or "C0411" in x or "C0413" in x or "W0611" in x)]
-            print(pylint_output)
-            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output})
+            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
+        elif form_name == "all":
+            pylint_output = analyze_repo(repository)
+            pylint_output = pylint_output.replace('/tmp/projects/','/').split('\n')
+            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
 
