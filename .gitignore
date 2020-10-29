@@ -2,3 +2,5 @@
 /username
 /password
 /pylint
+/db.sqlite3
+/analizerapp/__pycache__
