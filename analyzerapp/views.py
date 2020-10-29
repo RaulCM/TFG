@@ -61,8 +61,12 @@ def repo(request, resource):
         return render(request, 'repo_data.html', {'repository': repository})
     elif request.method == "POST":
         form_name = request.body.decode('utf-8').split("=")[0]
-
-        return render(request, 'main.html')
+        if form_name == "pylint":
+            github_clone_individual(repository)
+            # read_files()
+            # run_pylint()
+            # read_errors()
+            return render(request, 'repo_data.html', {'repository': repository})
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
 
@@ -119,9 +123,12 @@ def github_clone():
     datos = Repository.objects.all()
     #datos = Repository.objects.all().filter(corrected=0)
     for item in datos:
-        url = item.html_url + ".git"
-        name = item.full_name
-        os.system('git clone ' + url + " /tmp/projects/" + name)
+        github_clone_individual(item)
+
+def github_clone_individual(item):
+    url = item.html_url + ".git"
+    name = item.full_name
+    os.system('git clone ' + url + " /tmp/projects/" + name)
 
 def read_file(filename):
     # https://developer.github.com/v3/#rate-limiting
