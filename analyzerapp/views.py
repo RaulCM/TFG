@@ -54,6 +54,18 @@ def main(request):
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
     # return HttpResponse(response)
 
+@csrf_exempt
+def repo(request, resource):
+    if request.method == "GET":
+        repository = Repository.objects.get(identifier=resource)
+        return render(request, 'repo_data.html', {'repository': repository})
+    elif request.method == "POST":
+        form_name = request.body.decode('utf-8').split("=")[0]
+
+        return render(request, 'main.html')
+    else:
+        return render(request, 'error.html', {'error_message': '405: Method not allowed'})
+
 def list(request):
     # template = get_template("list.html")
     # c = RequestContext(request, {'datos': print_data()})
