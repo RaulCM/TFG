@@ -30,9 +30,15 @@
 		{% endif %}
 	{% endfor %}
 	</samp></p>
-	<form method="POST"><button type="submit" name="fixables">
-			Mostrar sólo corregibles
-		</button>
+		{% if fixables == 1 %}
+			<form method="POST"><button type="submit" name="all">
+				Mostrar todos
+			</button>
+		{% else %}
+			<form method="POST"><button type="submit" name="fixables">
+				Mostrar sólo corregibles
+			</button>
+		{% endif %}
 	</form>
 </div>
 
