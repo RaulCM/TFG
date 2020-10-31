@@ -1,5 +1,3 @@
-import re
-
 class Error:
     def __init__(self, data):
         self.path = data[0].rstrip()
@@ -38,7 +36,7 @@ def check(error):
         w0611(lines, error.line)
         print("W0611")
     else:
-        print("NO");
+        print("NO")
     replace_lines(error.path, lines)
 
 def read_file(path):
@@ -68,7 +66,7 @@ def placeholder_split(line):
     aux = line.split("#SPLIT")
     column = int(aux[1])
     line = aux[2]
-    if line[column - 1] == ";" or line[column -2:column - 1] ==";":
+    if line[column - 1] == ";" or line[column -2:column - 1] == ";":
         first = line[:column].rstrip()[:-1]
         second = indent(first) + line[column:]
         line = first + "\n" + second
@@ -93,7 +91,7 @@ def placeholder_importsplit(line):
     j = 1
     while j < len(imports):
         new_lines = (new_lines + indentation + "import " +
-                    imports[j].strip() + "\n")
+                     imports[j].strip() + "\n")
         j = j + 1
     return new_lines
 
@@ -181,13 +179,13 @@ def c0326(lines, line_number, msg):
     # %s space %s %s %s\n%s
     line = lines[line_number]
     if (msg == "Exactly one space required around assignment" or
-        msg == "Exactly one space required after assignment" or
-        msg == "Exactly one space required before assignment"):
-        line = line.split("=",1)
+            msg == "Exactly one space required after assignment" or
+            msg == "Exactly one space required before assignment"):
+        line = line.split("=", 1)
         lines[line_number] = line[0].rstrip() + " = " + line[1].lstrip()
     elif (msg == "Exactly one space required around comparison" or
-        msg == "Exactly one space required after comparison" or
-        msg == "Exactly one space required before comparison"):
+          msg == "Exactly one space required after comparison" or
+          msg == "Exactly one space required before comparison"):
         comparators = [">>=", "<<=", "//=", "**=", "==", "!=", "<>", "<=",
                        ">=", "+=", "-=", "*=", "/=", "&=", "|=", "^=", "%=",
                        "<", ">", "="]
@@ -211,7 +209,7 @@ def c0326(lines, line_number, msg):
         line = replace_bracket2(line, " }", "}")
         lines[line_number] = line
     elif msg == "No space allowed before :":
-        line = line.split(":",1)
+        line = line.split(":", 1)
         lines[line_number] = line[0].rstrip() + ":" + line[1]
     return lines
 
