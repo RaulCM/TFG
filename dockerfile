@@ -1,11 +1,11 @@
-FROM python:3.5.2
+FROM python:3.8.5
 #ENV PYTHONUNBUFFERED 1
 #RUN mkdir /config
 RUN mkdir /src
 WORKDIR /src
 
 ADD requirements.txt /src
-RUN pip install -r /src/requirements.txt
+RUN pip3 install -r /src/requirements.txt
 
 ADD . /src/
 
