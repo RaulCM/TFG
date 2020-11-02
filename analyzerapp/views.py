@@ -95,7 +95,7 @@ def repo(request, resource):
                         files.append(filename)
             for file in files:
                 pylint_errors.check_placeholders(file)
-            # 5. Commit
+            # 5. Add y Commit
             # 6. Push
             # 7. Crear Pull-Request
             return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
@@ -194,6 +194,7 @@ def read_file(filename):
     return string
 
 def make_fork(repository):
+    # https://developer.github.com/v3/repos/forks/
     url = repository.api_url
     url += '/forks'
     s = requests.Session()
@@ -202,6 +203,20 @@ def make_fork(repository):
     repository.fork_url = r.json()["html_url"]
     repository.fork_api_url = r.json()["url"]
     repository.save()
+
+def create_pull(repository):
+    # https://developer.github.com/v3/pulls/
+    url = repository.api_url
+    url += '/pulls'
+    s = requests.Session()
+    s.auth = (read_file("username"), read_file("password"))
+    data = {"title": "Amazing new feature",
+            "body": "Please pull this in!",
+            "head": "RaulCM:pylint_errors",
+            "base": "master"}
+    data = json.dumps(data)
+    r = s.post(url, data)
+    print(r.json())
 
 def github_search(request):
     url = 'https://api.github.com/search/repositories'
@@ -256,19 +271,6 @@ def delete_fork(url):
     s.auth = (read_file("username"), read_file("password"))
     r = s.delete(url)
     print(r)
-
-def create_pull(url):
-    # https://developer.github.com/v3/pulls/
-    url += '/pulls'
-    s = requests.Session()
-    s.auth = (read_file("username"), read_file("password"))
-    data = {"title": "Amazing new feature",
-            "body": "Please pull this in!",
-            "head": "RaulCM:pylint",
-            "base": "master"}
-    data = json.dumps(data)
-    r = s.post(url, data)
-    print(r.json())
 
 def get_pulls(url):
     url += '/pulls?state=all'
