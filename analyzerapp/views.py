@@ -20,29 +20,29 @@ def main(request):
         return render(request, 'main.html')
     elif request.method == "POST":
         form_name = request.body.decode('utf-8').split("=")[0]
-        if form_name == "load":
-            github_search()
-        elif form_name == "update":
-            update()
-        elif form_name == "add":
+        if form_name == "add":
             url = unquote(request.body.decode('utf-8').split("=")[1])
             api_url = url.replace('://github.com/', '://api.github.com/repos/')
             r = requests.get(api_url)
             repo_data = r.json()
             store_individual_data(repo_data)
             return redirect('/repo/' + str(repo_data['id']))
-        elif form_name == "clone":
-            github_clone()
-        elif form_name == "pylint":
+        # elif form_name == "load":
+        #     github_search()
+        # elif form_name == "update":
+        #     update()
+        # elif form_name == "clone":
+        #     github_clone()
+        # elif form_name == "pylint":
             # read_files()
             # run_pylint()
-            read_errors()
-        elif form_name == "fork":
-            make_fork('https://api.github.com/repos/RaulPruebasTFG/helloworld')
-        elif form_name == "delete_fork":
-            delete_fork('https://api.github.com/repos/RaulCM/helloworld')
-        elif form_name == "pull":
-            create_pull('https://api.github.com/repos/RaulPruebasTFG/helloworld')
+        #     read_errors()
+        # elif form_name == "fork":
+        #     make_fork('https://api.github.com/repos/RaulPruebasTFG/helloworld')
+        # elif form_name == "delete_fork":
+        #     delete_fork('https://api.github.com/repos/RaulCM/helloworld')
+        # elif form_name == "pull":
+        #     create_pull('https://api.github.com/repos/RaulPruebasTFG/helloworld')
         return render(request, 'main.html')
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
