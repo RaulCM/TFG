@@ -72,15 +72,13 @@ def repo(request, resource):
             pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
             return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
         elif form_name == "fix":
-            # TODO Proceso pull-request:
-                # 1. Fork del repo -> Hay que sacar la URL para clonar
+        # TODO Proceso pull-request:
+            # 1. Fork del repo -> Hay que sacar la URL para clonar
             make_fork(repository)
-                # 2. Clone del fork
-                # 3. Crear branch (git checkout -b new_branch)
-                # 4. Hacer cambios
-                # 5. Commit
-                # 6. Push
-                # 7. Crear Pull-Request
+            # 2. Clone del fork
+            # 3. Crear branch (git checkout -b new_branch)
+            github_clone_fork(repository)
+            # 4. Hacer cambios
             pylint_output = analyze_repo(repository)
             pylint_output = pylint_output.split('\n')
             pylint_output = pylint_output[:-1]
@@ -97,6 +95,9 @@ def repo(request, resource):
                         files.append(filename)
             for file in files:
                 pylint_errors.check_placeholders(file)
+            # 5. Commit
+            # 6. Push
+            # 7. Crear Pull-Request
             return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
@@ -157,6 +158,16 @@ def github_clone_individual(item):
     url = item.html_url + ".git"
     name = item.full_name
     os.system('git clone ' + url + " /tmp/projects/" + name)
+
+def github_clone_fork(item):
+    url = item.fork_url + ".git"
+    name = item.full_name
+    current_dir = os.getcwd()
+    os.system('rm -rfv ' + "/tmp/projects/" + name)
+    os.system('git clone ' + url + " /tmp/projects/" + name)
+    os.chdir("/tmp/projects/" + name)
+    os.system('git checkout -b pylint_errors')
+    os.chdir(current_dir)
 
 def analyze_repo(item):
     # https://docs.pylint.org/en/1.6.0/output.html
