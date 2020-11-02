@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+{% load static %}
 <div class="container">
 	<ul class="nav nav-tabs">
 		<li><a href="/">Gestión</a></li>
@@ -22,11 +22,20 @@
 			</tbody>
 		</table>
 	</div>
-	<form method="POST"><button type="submit" name="pylint">
+	<form method="POST"><button id="runpylint" type="submit" name="pylint">
 			Pylint
 		</button>
 	</form>
+	<p id="running" class="oculto">
+	<img src="{% static 'images/loading.gif' %}">Ejecutando Pylint</p>
 </div>
-
+<script>
+	$(document).ready(function() {
+		$("#runpylint").click(function() {
+			$("#runpylint").toggleClass("oculto")
+			$("#running").toggleClass("oculto")
+		});
+	});
+</script>
 
 	{% endblock %}
