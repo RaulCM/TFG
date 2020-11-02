@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 import os
 # https://docs.python.org/2/library/os.html
@@ -30,6 +30,7 @@ def main(request):
             r = requests.get(api_url)
             repo_data = r.json()
             store_individual_data(repo_data)
+            return redirect('/repo/' + str(repo_data['id']))
         elif form_name == "clone":
             github_clone()
         elif form_name == "pylint":
