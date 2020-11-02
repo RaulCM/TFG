@@ -72,6 +72,15 @@ def repo(request, resource):
             pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
             return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
         elif form_name == "fix":
+            # TODO Proceso pull-request:
+                # 1. Fork del repo -> Hay que sacar la URL para clonar
+            make_fork(repository)
+                # 2. Clone del fork
+                # 3. Crear branch (git checkout -b new_branch)
+                # 4. Hacer cambios
+                # 5. Commit
+                # 6. Push
+                # 7. Crear Pull-Request
             pylint_output = analyze_repo(repository)
             pylint_output = pylint_output.split('\n')
             pylint_output = pylint_output[:-1]
@@ -135,6 +144,7 @@ def store_individual_data(item):
         if item["description"] is not None:
             repository.description = item["description"]
         repository.html_url = item["html_url"]
+        repository.api_url = item["url"]
         repository.save()
 
 def github_clone():
@@ -172,6 +182,15 @@ def read_file(filename):
         string = ""
     return string
 
+def make_fork(repository):
+    url = repository.api_url
+    url += '/forks'
+    s = requests.Session()
+    s.auth = (read_file("username"), read_file("password"))
+    r = s.post(url)
+    repository.fork_url = r.json()["html_url"]
+    repository.fork_api_url = r.json()["url"]
+    repository.save()
 
 def github_search(request):
     url = 'https://api.github.com/search/repositories'
@@ -220,13 +239,6 @@ def read_errors():
                 error.error_id = error_id
                 error.count = 0
                 error.save()
-
-def make_fork(url):
-    url += '/forks'
-    s = requests.Session()
-    s.auth = (read_file("username"), read_file("password"))
-    r = s.post(url)
-    print(r)
 
 def delete_fork(url):
     s = requests.Session()
