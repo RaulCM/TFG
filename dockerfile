@@ -1,4 +1,4 @@
-FROM python:3.8.5
+FROM python:3.8-slim-buster
 #ENV PYTHONUNBUFFERED 1
 #RUN mkdir /config
 RUN mkdir /src
