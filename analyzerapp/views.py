@@ -72,20 +72,12 @@ def repo(request, resource):
             pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
             return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
         elif form_name == "fix":
-        # TODO Proceso pull-request:
-            # 1. Fork del repo -> Hay que sacar la URL para clonar
             make_fork(repository)
-            # 2. Clone del fork
-            # 3. Crear branch (git checkout -b new_branch)
             github_clone_fork(repository)
-            # 4. Hacer cambios
             fix_errors(repository)
-            # 5. Add y Commit
             commit(repository)
-            # 6. Push
             push(repository)
-            # 7. Crear Pull-Request
-            create_pull(repository)
+            # create_pull(repository)
             return render(request, 'repo_data_success.html', {'repository': repository})
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
@@ -187,8 +179,11 @@ def commit(repository):
 
 def push(repository):
     name = repository.full_name
+    url = repository.fork_url + '.git'
+    url = url.replace('https://', '@')
+    url = url.replace('http://', '@')
     current_dir = os.getcwd()
-    push_cmd = 'git push https://' + read_file("username") + ':' + read_file("password") + '@github.com/RaulCM/prueba.git'
+    push_cmd = 'git push https://' + read_file("username") + ':' + read_file("password") + url
     os.chdir("/tmp/projects/" + name)
     os.system(push_cmd)
     os.chdir(current_dir)
