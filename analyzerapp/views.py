@@ -85,7 +85,8 @@ def repo(request, resource):
             # 6. Push
             push(repository)
             # 7. Crear Pull-Request
-            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
+            create_pull(repository)
+            return render(request, 'repo_data_success.html', {'repository': repository})
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
 
@@ -144,7 +145,9 @@ def github_clone():
 def github_clone_individual(item):
     url = item.html_url + ".git"
     name = item.full_name
-    os.system('git clone ' + url + " /tmp/projects/" + name)
+    if os.path.isdir("/tmp/projects/" + name):
+        os.system('rm -rfv /tmp/projects/' + name)
+    os.system('git clone ' + url + ' /tmp/projects/' + name)
 
 def github_clone_fork(item):
     url = item.fork_url + ".git"
@@ -233,7 +236,7 @@ def create_pull(repository):
     data = {"title": "Amazing new feature",
             "body": "Please pull this in!",
             "head": "RaulCM:pylint_errors",
-            "base": "master"}
+            "base": "main"}
     data = json.dumps(data)
     r = s.post(url, data)
     print(r.json())
