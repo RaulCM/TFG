@@ -79,24 +79,11 @@ def repo(request, resource):
             # 3. Crear branch (git checkout -b new_branch)
             github_clone_fork(repository)
             # 4. Hacer cambios
-            pylint_output = analyze_repo(repository)
-            pylint_output = pylint_output.split('\n')
-            pylint_output = pylint_output[:-1]
-            for line in pylint_output:
-                if line[0] == "/":
-                    tokens = line.split(';')
-                    error = pylint_errors.Error(tokens)
-                    pylint_errors.check(error)
-            files = []
-            for line in pylint_output:
-                if line[0] == "/":
-                    filename = line.split(';')[0]
-                    if filename not in files:
-                        files.append(filename)
-            for file in files:
-                pylint_errors.check_placeholders(file)
+            fix_errors(repository)
             # 5. Add y Commit
+            commit(repository)
             # 6. Push
+            push(repository)
             # 7. Crear Pull-Request
             return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
     else:
@@ -167,6 +154,39 @@ def github_clone_fork(item):
     os.system('git clone ' + url + " /tmp/projects/" + name)
     os.chdir("/tmp/projects/" + name)
     os.system('git checkout -b pylint_errors')
+    os.chdir(current_dir)
+
+def fix_errors(repository):
+    pylint_output = analyze_repo(repository)
+    pylint_output = pylint_output.split('\n')
+    pylint_output = pylint_output[:-1]
+    for line in pylint_output:
+        if line[0] == "/":
+            tokens = line.split(';')
+            error = pylint_errors.Error(tokens)
+            pylint_errors.check(error)
+    files = []
+    for line in pylint_output:
+        if line[0] == "/":
+            filename = line.split(';')[0]
+            if filename not in files:
+                files.append(filename)
+    for file in files:
+        pylint_errors.check_placeholders(file)
+
+def commit(repository):
+    name = repository.full_name
+    current_dir = os.getcwd()
+    os.chdir("/tmp/projects/" + name)
+    os.system('git add .')
+    os.system('git commit -m "Fix Pylint Errors"')
+    os.chdir(current_dir)
+
+def push(repository):
+    name = repository.full_name
+    current_dir = os.getcwd()
+    os.chdir("/tmp/projects/" + name)
+    os.system('git push https://' + read_file("username") + ':' + read_file("password") + '@github.com/RaulCM/prueba.git')
     os.chdir(current_dir)
 
 def analyze_repo(item):
