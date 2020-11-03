@@ -218,9 +218,10 @@ def make_fork(repository):
     url += '/forks'
     s = requests.Session()
     r = s.post(url, headers={'Authorization': 'token ' + read_file("token")})
-    print(r.json())
+    # print(r.json())
     repository.fork_url = r.json()["html_url"]
     repository.fork_api_url = r.json()["url"]
+    repository.default_branch = r.json()['source']['default_branch']
     repository.save()
 
 def create_pull(repository):
@@ -231,11 +232,12 @@ def create_pull(repository):
     data = {"title": "Amazing new feature",
             "body": "Please pull this in!",
             "head": "RaulCM:pylint_errors",
-            "base": "main"}
+            "base": repository.default_branch}
     data = json.dumps(data)
     r = s.post(url, data, headers={'Authorization': 'token ' + read_file("token")})
-    print(r.json())
-    return r.json()['html_url']
+    # print(r.json())
+    pull_url = r.json()['html_url']
+    return pull_url
 
 def github_search(request):
     url = 'https://api.github.com/search/repositories'
