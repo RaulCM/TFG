@@ -77,7 +77,7 @@ def repo(request, resource):
             fix_errors(repository)
             commit(repository)
             push(repository)
-            # create_pull(repository)
+            create_pull(repository)
             return render(request, 'repo_data_success.html', {'repository': repository})
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
@@ -217,8 +217,8 @@ def make_fork(repository):
     url = repository.api_url
     url += '/forks'
     s = requests.Session()
-    s.auth = (read_file("username"), read_file("password"))
-    r = s.post(url)
+    r = s.post(url, headers={'Authorization': 'token ' + read_file("token")})
+    print(r.json())
     repository.fork_url = r.json()["html_url"]
     repository.fork_api_url = r.json()["url"]
     repository.save()
@@ -228,13 +228,12 @@ def create_pull(repository):
     url = repository.api_url
     url += '/pulls'
     s = requests.Session()
-    s.auth = (read_file("username"), read_file("password"))
     data = {"title": "Amazing new feature",
             "body": "Please pull this in!",
             "head": "RaulCM:pylint_errors",
             "base": "main"}
     data = json.dumps(data)
-    r = s.post(url, data)
+    r = s.post(url, data, headers={'Authorization': 'token ' + read_file("token")})
     print(r.json())
 
 def github_search(request):
@@ -287,15 +286,15 @@ def read_errors():
 
 def delete_fork(url):
     s = requests.Session()
-    s.auth = (read_file("username"), read_file("password"))
-    r = s.delete(url)
+    # s.auth = (read_file("username"), read_file("password"))
+    r = s.delete(url, headers={'Authorization': 'token ' + read_file("token")})
     print(r)
 
 def get_pulls(url):
     url += '/pulls?state=all'
     s = requests.Session()
-    s.auth = (read_file("username"), read_file("password"))
-    r = s.get(url)
+    # s.auth = (read_file("username"), read_file("password"))
+    r = s.get(url, headers={'Authorization': 'token ' + read_file("token")})
     return r.json()
 
 def pull_state(url):
