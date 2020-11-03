@@ -188,8 +188,9 @@ def commit(repository):
 def push(repository):
     name = repository.full_name
     current_dir = os.getcwd()
+    push_cmd = 'git push https://' + read_file("username") + ':' + read_file("password") + '@github.com/RaulCM/prueba.git'
     os.chdir("/tmp/projects/" + name)
-    os.system('git push https://' + read_file("username") + ':' + read_file("password") + '@github.com/RaulCM/prueba.git')
+    os.system(push_cmd)
     os.chdir(current_dir)
 
 def analyze_repo(item):
