@@ -77,8 +77,8 @@ def repo(request, resource):
             fix_errors(repository)
             commit(repository)
             push(repository)
-            create_pull(repository)
-            return render(request, 'repo_data_success.html', {'repository': repository})
+            pull_url = create_pull(repository)
+            return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': pull_url})
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
 
@@ -235,6 +235,7 @@ def create_pull(repository):
     data = json.dumps(data)
     r = s.post(url, data, headers={'Authorization': 'token ' + read_file("token")})
     print(r.json())
+    return r.json()['html_url']
 
 def github_search(request):
     url = 'https://api.github.com/search/repositories'
