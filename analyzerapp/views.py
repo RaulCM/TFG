@@ -191,6 +191,7 @@ def push(repository):
 def analyze_repo(item):
     # https://docs.pylint.org/en/1.6.0/output.html
     # https://docs.python.org/2/library/subprocess.html
+    # https://docs.pylint.org/en/1.6.0/run.html#command-line-options
     path = "/tmp/projects/" + item.full_name
     pylintrc_path = path + '/pylintrc'
     if os.path.isfile(pylintrc_path):
