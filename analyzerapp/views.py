@@ -192,6 +192,9 @@ def analyze_repo(item):
     # https://docs.pylint.org/en/1.6.0/output.html
     # https://docs.python.org/2/library/subprocess.html
     path = "/tmp/projects/" + item.full_name
+    pylintrc_path = path + '/pylintrc'
+    if os.path.isfile(pylintrc_path):
+        os.environ['PYLINTRC'] = pylintrc_path
     pylint_output = ""
     for root, dirs, files in os.walk(path, topdown=False):
         for name in files:
@@ -201,6 +204,8 @@ def analyze_repo(item):
                     output = subprocess.check_output(['pylint', os.path.join(root, name), "--msg-template='{abspath};{line};{column};{msg_id};{msg}'", "--reports=n"])
                 except subprocess.CalledProcessError as e:
                     pylint_output = pylint_output + e.output.decode("utf-8")
+    if os.environ.get('PYLINTRC') is not None:
+        os.environ.pop('PYLINTRC')
     return pylint_output
 
 def read_file(filename):
