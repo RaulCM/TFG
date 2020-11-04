@@ -38,17 +38,19 @@
 		Mostrar errores corregibles de nivel 2
 	</button>
 	<p>Salida de pylint:</p>
-	<p><samp>
+	<p class="terminal"><samp>
 	{% for msg in pylint_output %}
 		{% if msg|slice:":1" == '/' %}
 			{{msg}}<br>
 		{% endif %}
 	{% endfor %}
 	</samp></p>
+	<div class="clear">
 		<form method="POST"><button type="submit" name={{fix_errors}}>
-			Corregir
-		</button>
-	</form>
+				Corregir
+			</button>
+		</form>
+	</div>
 </div>
 
 
