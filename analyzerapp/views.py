@@ -61,24 +61,41 @@ def repo(request, resource):
             pylint_output = analyze_repo(repository)
             pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
             return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
-        elif form_name == "fixables":
+        elif form_name.startswith("fixables"):
             fixables = 1
             pylint_output = analyze_repo(repository)
             pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
-            pylint_output[:] = [x for x in pylint_output if ("C0303" in x or "C0304" in x or "C0321" in x or "C0326" in x or "W0404" in x or "C0410" in x or "C0411" in x or "C0413" in x or "W0611" in x)]
-            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
+            if form_name == "fixables_level1":
+                pylint_output[:] = [x for x in pylint_output if ("C0303" in x or "C0304" in x or "C0321" in x or "C0326" in x or "W0404" in x or "C0410" in x or "C0411" in x or "C0413" in x or "W0611" in x)]
+                fix_errors = 'fix_errors1'
+            elif form_name == "fixables_level2":
+                pylint_output[:] = [x for x in pylint_output if ("C0303" in x or "C0304" in x or "C0321" in x or "C0326" in x or "W0404" in x or "C0410" in x or "C0411" in x or "C0413" in x or "W0611" in x)]
+                fix_errors = 'fix_errors2'
+            else:
+                pylint_output[:] = [x for x in pylint_output if ("C0303" in x or "C0304" in x or "C0321" in x or "C0326" in x or "W0404" in x or "C0410" in x or "C0411" in x or "C0413" in x or "W0611" in x)]
+                fix_errors = 'fix_errors'
+            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables, 'fix_errors': fix_errors})
         elif form_name == "all":
             pylint_output = analyze_repo(repository)
             pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
             return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
-        elif form_name == "fix":
-            make_fork(repository)
-            github_clone_fork(repository)
-            fix_errors(repository)
-            commit(repository)
-            push(repository)
-            pull_url = create_pull(repository)
+        elif form_name.startswith("fix_errors"):
+            # make_fork(repository)
+            # github_clone_fork(repository)
+            if form_name == "fix_errors1":
+                level = 1
+            elif form_name == "fix_errors2":
+                level = 2
+            else:
+                level = 0
+            print(level)
+            # fix_errors(repository, level)
+            # commit(repository)
+            # push(repository)
+            # pull_url = create_pull(repository)
             return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': pull_url})
+        else:
+            return render(request, 'error.html', {'error_message': 'ERROR'})
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
 
@@ -151,7 +168,7 @@ def github_clone_fork(item):
     os.system('git checkout -b pylint_errors')
     os.chdir(current_dir)
 
-def fix_errors(repository):
+def fix_errors(repository, level):
     pylint_output = analyze_repo(repository)
     pylint_output = pylint_output.split('\n')
     pylint_output = pylint_output[:-1]
@@ -159,7 +176,12 @@ def fix_errors(repository):
         if line[0] == "/":
             tokens = line.split(';')
             error = pylint_errors.Error(tokens)
-            pylint_errors.check(error)
+            if level == 0:
+                pylint_errors.check(error)
+            elif level == 1:
+                pylint_errors.check1(error)
+            elif level == 2:
+                pylint_errors.check2(error)
     files = []
     for line in pylint_output:
         if line[0] == "/":

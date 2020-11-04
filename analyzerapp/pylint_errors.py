@@ -39,6 +39,72 @@ def check(error):
         print("NO")
     replace_lines(error.path, lines)
 
+def check1(error):
+    lines = read_file(error.path)
+    if error.code == 'C0303':
+        c0303(lines, error.line)
+        print('C0303')
+    elif error.code == 'C0304':
+        c0304(lines)
+        print("C0304")
+    elif error.code == 'C0321':
+        c0321(lines, error.line, error.column)
+        print("C0321")
+    elif error.code == 'C0326':
+        c0326(lines, error.line, error.msg)
+        print("C0326")
+    elif error.code == 'W0404':
+        w0404(lines, error.line)
+        print("W0404")
+    elif error.code == 'C0410':
+        c0410(lines, error.line)
+        print("C0410")
+    elif error.code == 'C0411':
+        c0411(lines, error.line, error.msg)
+        print("C0411")
+    elif error.code == 'C0413':
+        c0413(lines, error.line)
+        print("C0413")
+    elif error.code == 'W0611':
+        w0611(lines, error.line)
+        print("W0611")
+    else:
+        print("NO")
+    replace_lines(error.path, lines)
+
+def check2(error):
+    lines = read_file(error.path)
+    if error.code == 'C0303':
+        c0303(lines, error.line)
+        print('C0303')
+    elif error.code == 'C0304':
+        c0304(lines)
+        print("C0304")
+    elif error.code == 'C0321':
+        c0321(lines, error.line, error.column)
+        print("C0321")
+    elif error.code == 'C0326':
+        c0326(lines, error.line, error.msg)
+        print("C0326")
+    elif error.code == 'W0404':
+        w0404(lines, error.line)
+        print("W0404")
+    elif error.code == 'C0410':
+        c0410(lines, error.line)
+        print("C0410")
+    elif error.code == 'C0411':
+        c0411(lines, error.line, error.msg)
+        print("C0411")
+    elif error.code == 'C0413':
+        c0413(lines, error.line)
+        print("C0413")
+    elif error.code == 'W0611':
+        w0611(lines, error.line)
+        print("W0611")
+    else:
+        print("NO")
+    replace_lines(error.path, lines)
+
 def read_file(path):
     fo = open(path, "r")
     lines = fo.readlines()
