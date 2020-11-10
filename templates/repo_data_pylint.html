@@ -22,21 +22,12 @@
 			</tbody>
 		</table>
 	</div>
-	{% if fixables == 1 %}
-		<form method="POST"><button type="submit" name="errors" value="0">
-			Mostrar todos
-		</button>
-	{% else %}
-		<form method="POST"><button type="submit" name="errors" value="1">
-			Mostrar sólo corregibles
-		</button>
-	{% endif %}
-	<form method="POST"><button type="submit" name="errors" value="2">
-		Mostrar errores corregibles de nivel 1
-	</button>
-	<form method="POST"><button type="submit" name="errors" value="3">
-		Mostrar errores corregibles de nivel 2
-	</button>
+	<ul class="nav nav-tabs">
+		<li {% if fixables == 0 %} class="active" {% endif %}><a href="/repo/{{repository.identifier}}?errors=0">Mostrar todos</a></li>
+		<li {% if fix_errors == 0 %} class="active" {% endif %}><a href="/repo/{{repository.identifier}}?errors=1">Mostrar corregibles</a></li>
+		<li {% if fix_errors == 1 %} class="active" {% endif %}><a href="/repo/{{repository.identifier}}?errors=2">Nivel 1</a></li>
+		<li {% if fix_errors == 2 %} class="active" {% endif %}><a href="/repo/{{repository.identifier}}?errors=3">Nivel 2</a></li>
+	</ul>
 	<p>Salida de pylint:</p>
 	<p class="terminal"><samp>
 	{% for msg in pylint_output %}
@@ -46,7 +37,7 @@
 	{% endfor %}
 	</samp></p>
 	<div class="clear">
-		<form method="POST"><button type="submit" name={{fix_errors}}>
+		<form method="POST"><button type="submit" name="fix_errors" value={{fix_errors}}>
 				Corregir
 			</button>
 		</form>
