@@ -54,45 +54,34 @@ def repo(request, resource):
     if request.method == "GET":
         return render(request, 'repo_data.html', {'repository': repository})
     elif request.method == "POST":
-        fixables = 0
         form_name = request.body.decode('utf-8').split("=")[0]
+        form_value = request.body.decode('utf-8').split("=")[1]
         if form_name == "pylint":
             github_clone_individual(repository)
             pylint_output = analyze_repo(repository)
             pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
-            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
-        elif form_name.startswith("fixables"):
-            fixables = 1
+            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
+        elif form_name == "errors":
             pylint_output = analyze_repo(repository)
             pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
-            if form_name == "fixables_level1":
+            if form_value == "0":
+                return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
+            elif form_value == "1":
                 pylint_output[:] = [x for x in pylint_output if ("C0303" in x or "C0304" in x or "C0321" in x or "C0326" in x or "W0404" in x or "C0410" in x or "C0411" in x or "C0413" in x or "W0611" in x)]
-                fix_errors = 'fix_errors1'
-            elif form_name == "fixables_level2":
+                return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 0})
+            elif form_value == "2":
                 pylint_output[:] = [x for x in pylint_output if ("C0303" in x or "C0304" in x or "C0321" in x or "C0326" in x or "W0404" in x or "C0410" in x or "C0411" in x or "C0413" in x or "W0611" in x)]
-                fix_errors = 'fix_errors2'
-            else:
+                return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 1})
+            elif form_value == "3":
                 pylint_output[:] = [x for x in pylint_output if ("C0303" in x or "C0304" in x or "C0321" in x or "C0326" in x or "W0404" in x or "C0410" in x or "C0411" in x or "C0413" in x or "W0611" in x)]
-                fix_errors = 'fix_errors'
-            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables, 'fix_errors': fix_errors})
-        elif form_name == "all":
-            pylint_output = analyze_repo(repository)
-            pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
-            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': fixables})
-        elif form_name.startswith("fix_errors"):
-            # make_fork(repository)
-            # github_clone_fork(repository)
-            if form_name == "fix_errors1":
-                level = 1
-            elif form_name == "fix_errors2":
-                level = 2
-            else:
-                level = 0
-            print(level)
-            # fix_errors(repository, level)
-            # commit(repository)
-            # push(repository)
-            # pull_url = create_pull(repository)
+                return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 2})
+        elif form_name == "fix_errors":
+            make_fork(repository)
+            github_clone_fork(repository)
+            fix_errors(repository, level)
+            commit(repository)
+            push(repository)
+            pull_url = create_pull(repository)
             return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': pull_url})
         else:
             return render(request, 'error.html', {'error_message': 'ERROR'})
