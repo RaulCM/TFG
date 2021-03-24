@@ -22,10 +22,16 @@ def main(request):
         form_name = request.body.decode('utf-8').split("=")[0]
         if form_name == "add":
             url = unquote(request.body.decode('utf-8').split("=")[1])
-            api_url = url.replace('://github.com/', '://api.github.com/repos/')
-            r = requests.get(api_url)
-            repo_data = r.json()
-            store_individual_data(repo_data)
+            if 'github' in url:
+                api_url = url.replace('://github.com/', '://api.github.com/repos/')
+                r = requests.get(api_url)
+                repo_data = r.json()
+                store_individual_data(repo_data)
+            elif 'gitlab.etsit.urjc.es' in url:
+                api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
+                r = requests.get(api_url)
+                repo_data = r.json()
+                store_individual_data_gitlab(repo_data)
             return redirect('/repo/' + str(repo_data['id']))
         # elif form_name == "load":
         #     github_search()
@@ -79,6 +85,13 @@ def repo(request, resource):
         elif form_name == "fix_errors":
             make_fork(repository)
             github_clone_fork(repository)
+            if form_value == "1":
+                level = 1
+            elif form_value == "2":
+                level = 2
+            else:
+                level = 0
+            print(level)
             fix_errors(repository, level)
             commit(repository)
             push(repository)
@@ -133,6 +146,27 @@ def store_individual_data(item):
             repository.description = item["description"]
         repository.html_url = item["html_url"]
         repository.api_url = item["url"]
+        repository.save()
+
+def store_data_gitlab(json_data):
+    for item in json_data:
+        store_individual_data_gitlab(item)
+
+def store_individual_data_gitlab(item):
+    try:
+        Repository.objects.get(identifier=item["id"])
+    except Repository.DoesNotExist:
+        repository = Repository()
+        repository.identifier = item["id"]
+        repository.full_name = item["path_with_namespace"]
+        repository.owner = item["namespace"]["path"]
+        # repository.owner = item["namespace"]["name"]
+        repository.name = item["name"]
+        if item["description"] is not None:
+            repository.description = item["description"]
+        repository.html_url = item["web_url"]
+        api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + item["web_url"].split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
+        repository.api_url = api_url
         repository.save()
 
 def github_clone():
@@ -253,7 +287,7 @@ def create_pull(repository):
             "base": repository.default_branch}
     data = json.dumps(data)
     r = s.post(url, data, headers={'Authorization': 'token ' + read_file("token")})
-    # print(r.json())
+    print(r.json())
     pull_url = r.json()['html_url']
     return pull_url
 
