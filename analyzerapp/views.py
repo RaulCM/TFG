@@ -266,29 +266,56 @@ def read_file(filename):
 
 def make_fork(repository):
     # https://developer.github.com/v3/repos/forks/
+    # https://docs.gitlab.com/ee/api/projects.html#fork-project
     url = repository.api_url
-    url += '/forks'
-    s = requests.Session()
-    r = s.post(url, headers={'Authorization': 'token ' + read_file("token")})
-    # print(r.json())
-    repository.fork_url = r.json()["html_url"]
-    repository.fork_api_url = r.json()["url"]
-    repository.default_branch = r.json()['source']['default_branch']
-    repository.save()
+    if 'github' in url:
+        url += '/forks'
+        s = requests.Session()
+        r = s.post(url, headers={'Authorization': 'token ' + read_file("token")})
+        # print(r.json())
+        repository.fork_url = r.json()["html_url"]
+        repository.fork_api_url = r.json()["url"]
+        repository.default_branch = r.json()['source']['default_branch']
+        repository.save()
+    elif 'gitlab.etsit.urjc.es' in url:
+        #TODO REVISAR
+        url += '/fork'
+        s = requests.Session()
+        r = s.post(url, headers={'PRIVATE-TOKEN': + read_file("tokengitlab")})
+        # print(r.json())
+        repository.fork_url = r.json()["web_url"]
+        api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + r.json()["web_url"].split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
+        repository.fork_api_url = api_url
+        repository.default_branch = r.json()['default_branch']
+        repository.save()
 
 def create_pull(repository):
     # https://developer.github.com/v3/pulls/
+    # https://docs.gitlab.com/ee/api/merge_requests.html#create-mr
     url = repository.api_url
-    url += '/pulls'
-    s = requests.Session()
-    data = {"title": "Amazing new feature",
-            "body": "Please pull this in!",
-            "head": "RaulCM:pylint_errors",
-            "base": repository.default_branch}
-    data = json.dumps(data)
-    r = s.post(url, data, headers={'Authorization': 'token ' + read_file("token")})
-    print(r.json())
-    pull_url = r.json()['html_url']
+    if 'github' in url:
+        url += '/pulls'
+        s = requests.Session()
+        data = {"title": "Amazing new feature",
+                "description": "Please pull this in!",
+                "source_branch ": "RaulCM:pylint_errors",
+                "target_branch": repository.default_branch}
+        data = json.dumps(data)
+        r = s.post(url, data, headers={'Authorization': 'token ' + read_file("token")})
+        print(r.json())
+        pull_url = r.json()['html_url']
+    elif 'gitlab.etsit.urjc.es' in url:
+        url += '/merge_requests'
+        #TODO REVISAR
+        s = requests.Session()
+        data = {"title": "Amazing new feature",
+                "body": "Please pull this in!",
+                "head": "RaulCM:pylint_errors",
+                "base": repository.default_branch}
+        data = json.dumps(data)
+        r = s.post(url, data, headers={'Authorization': 'token ' + read_file("token")})
+        print(r.json())
+        pull_url = r.json()['html_url']
     return pull_url
 
 def github_search(request):
