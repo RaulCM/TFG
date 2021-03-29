@@ -177,10 +177,17 @@ def github_clone():
 
 def github_clone_individual(item):
     url = item.html_url + ".git"
-    name = item.full_name
-    if os.path.isdir("/tmp/projects/" + name):
-        os.system('rm -rfv /tmp/projects/' + name)
-    os.system('git clone ' + url + ' /tmp/projects/' + name)
+    if 'github' in url:
+        name = item.full_name
+        if os.path.isdir("/tmp/projects/" + name):
+            os.system('rm -rfv /tmp/projects/' + name)
+        os.system('git clone ' + url + ' /tmp/projects/' + name)
+    elif 'gitlab.etsit.urjc.es' in url:
+        name = item.full_name
+        if os.path.isdir("/tmp/projects/" + name):
+            os.system('rm -rfv /tmp/projects/' + name)
+        url = url.split('https://')[1]
+        os.system('git clone https://gitlab-ci-token:ckxbPbVZv78ttY2z4yQ1@' + url + ' /tmp/projects/' + name)
 
 def github_clone_fork(item):
     url = item.fork_url + ".git"
