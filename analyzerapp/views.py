@@ -29,7 +29,7 @@ def main(request):
                 store_individual_data(repo_data)
             elif 'gitlab.etsit.urjc.es' in url:
                 api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
-                r = requests.get(api_url)
+                r = requests.get(api_url, headers={"PRIVATE-TOKEN": read_file("tokengitlab")})
                 repo_data = r.json()
                 store_individual_data_gitlab(repo_data)
             return redirect('/repo/' + str(repo_data['id']))
