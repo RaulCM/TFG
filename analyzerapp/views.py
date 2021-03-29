@@ -177,15 +177,12 @@ def github_clone():
 
 def github_clone_individual(item):
     url = item.html_url + ".git"
+    name = item.full_name
+    if os.path.isdir("/tmp/projects/" + name):
+        os.system('rm -rfv /tmp/projects/' + name)
     if 'github' in url:
-        name = item.full_name
-        if os.path.isdir("/tmp/projects/" + name):
-            os.system('rm -rfv /tmp/projects/' + name)
         os.system('git clone ' + url + ' /tmp/projects/' + name)
     elif 'gitlab.etsit.urjc.es' in url:
-        name = item.full_name
-        if os.path.isdir("/tmp/projects/" + name):
-            os.system('rm -rfv /tmp/projects/' + name)
         url = url.split('https://')[1]
         os.system('git clone https://gitlab-ci-token:ckxbPbVZv78ttY2z4yQ1@' + url + ' /tmp/projects/' + name)
 
@@ -194,7 +191,12 @@ def github_clone_fork(item):
     name = item.full_name
     current_dir = os.getcwd()
     os.system('rm -rfv ' + "/tmp/projects/" + name)
-    os.system('git clone ' + url + " /tmp/projects/" + name)
+    if 'github' in url:
+        os.system('git clone ' + url + " /tmp/projects/" + name)
+    elif 'gitlab.etsit.urjc.es' in url:
+        url = url.replace('https://', '@')
+        url = url.replace('http://', '@')
+        os.system('git clone https://gitlab-ci-token:ckxbPbVZv78ttY2z4yQ1@' + url + " /tmp/projects/" + name)
     os.chdir("/tmp/projects/" + name)
     os.system('git checkout -b pylint_errors')
     os.chdir(current_dir)
@@ -231,15 +233,18 @@ def commit(repository):
     os.chdir(current_dir)
 
 def push(repository):
-    name = repository.full_name
-    url = repository.fork_url + '.git'
-    url = url.replace('https://', '@')
-    url = url.replace('http://', '@')
-    current_dir = os.getcwd()
-    push_cmd = 'git push https://' + read_file("username") + ':' + read_file("password") + url
-    os.chdir("/tmp/projects/" + name)
-    os.system(push_cmd)
-    os.chdir(current_dir)
+    if 'github' in url:
+        name = repository.full_name
+        url = repository.fork_url + '.git'
+        url = url.replace('https://', '@')
+        url = url.replace('http://', '@')
+        current_dir = os.getcwd()
+        push_cmd = 'git push https://' + read_file("username") + ':' + read_file("password") + url
+        os.chdir("/tmp/projects/" + name)
+        os.system(push_cmd)
+        os.chdir(current_dir)
+    elif 'gitlab.etsit.urjc.es' in url:
+
 
 def analyze_repo(item):
     # https://docs.pylint.org/en/1.6.0/output.html
@@ -291,7 +296,7 @@ def make_fork(repository):
         repository.fork_url = r.json()["web_url"]
         api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + r.json()["web_url"].split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
         repository.fork_api_url = api_url
-        repository.default_branch = r.json()['default_branch']
+        repository.default_branch = r.json()['forked_from_project']['default_branch']
         repository.save()
 
 def create_pull(repository):
