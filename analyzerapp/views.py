@@ -285,11 +285,9 @@ def make_fork(repository):
         repository.default_branch = r.json()['source']['default_branch']
         repository.save()
     elif 'gitlab.etsit.urjc.es' in url:
-        #TODO REVISAR
         url += '/fork'
         s = requests.Session()
-        r = s.post(url, headers={'PRIVATE-TOKEN': + read_file("tokengitlab")})
-        # print(r.json())
+        r = s.post(url, headers={'PRIVATE-TOKEN': read_file("tokengitlab")})
         repository.fork_url = r.json()["web_url"]
         api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + r.json()["web_url"].split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
         repository.fork_api_url = api_url
