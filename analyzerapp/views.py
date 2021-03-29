@@ -244,7 +244,15 @@ def push(repository):
         os.system(push_cmd)
         os.chdir(current_dir)
     elif 'gitlab.etsit.urjc.es' in url:
-
+        name = repository.full_name
+        url = repository.fork_url + '.git'
+        url = url.replace('https://', '@')
+        url = url.replace('http://', '@')
+        current_dir = os.getcwd()
+        push_cmd = 'git push https://' + read_file("usernamegitlab") + ':' + read_file("passwordgitlab") + url
+        os.chdir("/tmp/projects/" + name)
+        os.system(push_cmd)
+        os.chdir(current_dir)
 
 def analyze_repo(item):
     # https://docs.pylint.org/en/1.6.0/output.html
