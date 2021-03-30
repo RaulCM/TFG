@@ -14,6 +14,10 @@ import subprocess
 from analyzerapp import pylint_errors
 # Create your views here.
 
+pull_body = ("Your code has been analyzed by XXXX using Pylint tool to adapt" +
+            "it to PEP8, the Python style guide.\nThese are the pylint " +
+            "errors found in your code:\n")
+
 @csrf_exempt
 def main(request):
     if request.method == "GET":
@@ -83,8 +87,8 @@ def repo(request, resource):
             pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
             return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
         elif form_name == "fix_errors":
-            make_fork(repository)
-            github_clone_fork(repository)
+            # make_fork(repository)
+            # github_clone_fork(repository)
             if form_value == "1":
                 level = 1
             elif form_value == "2":
@@ -93,10 +97,12 @@ def repo(request, resource):
                 level = 0
             print(level)
             fix_errors(repository, level)
-            commit(repository)
-            push(repository)
-            pull_url = create_pull(repository)
-            return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': pull_url})
+            # commit(repository)
+            # push(repository)
+            # pull_url = create_pull(repository)
+            # return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': pull_url})
+            print(pull_body)
+            return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': 'pull_url'})
         else:
             return render(request, 'error.html', {'error_message': 'ERROR'})
     else:
@@ -203,6 +209,7 @@ def github_clone_fork(item):
     os.chdir(current_dir)
 
 def fix_errors(repository, level):
+    global pull_body
     pylint_output = analyze_repo(repository)
     pylint_output = pylint_output.split('\n')
     pylint_output = pylint_output[:-1]
@@ -210,6 +217,8 @@ def fix_errors(repository, level):
         if line[0] == "/":
             tokens = line.split(';')
             error = pylint_errors.Error(tokens)
+            error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
+            pull_body = pull_body + error_string + '\n'
             if level == 0:
                 pylint_errors.check(error)
             elif level == 1:
@@ -307,8 +316,8 @@ def create_pull(repository):
     if 'github' in url:
         url += '/pulls'
         s = requests.Session()
-        data = {"title": "Amazing new feature",
-                "body": "Please pull this in!",
+        data = {"title": "Pylint errors",
+                "body": pull_body,
                 "head": "RaulCM:pylint_errors",
                 "base": repository.default_branch}
         data = json.dumps(data)
@@ -320,7 +329,7 @@ def create_pull(repository):
         #TODO REVISAR
         s = requests.Session()
         data = {"title": "testmerge",
-                "description": "testmerge",
+                "description": "pull_body",
                 # "source_branch ": "r.canomon:pylint_errors",
                 # "source_branch": "pylint_errors",
                 "source_branch": repository.default_branch,
