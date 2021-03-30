@@ -184,7 +184,7 @@ def github_clone_individual(item):
         os.system('git clone ' + url + ' /tmp/projects/' + name)
     elif 'gitlab.etsit.urjc.es' in url:
         url = url.split('https://')[1]
-        os.system('git clone https://gitlab-ci-token:ckxbPbVZv78ttY2z4yQ1@' + url + ' /tmp/projects/' + name)
+        os.system('git clone https://gitlab-ci-token:' + read_file("tokengitlab") +'@' + url + ' /tmp/projects/' + name)
 
 def github_clone_fork(item):
     url = item.fork_url + ".git"
@@ -193,12 +193,13 @@ def github_clone_fork(item):
     os.system('rm -rfv ' + "/tmp/projects/" + name)
     if 'github' in url:
         os.system('git clone ' + url + " /tmp/projects/" + name)
+        os.chdir("/tmp/projects/" + name)
+        os.system('git checkout -b pylint_errors')
     elif 'gitlab.etsit.urjc.es' in url:
-        url = url.replace('https://', '@')
-        url = url.replace('http://', '@')
-        os.system('git clone https://gitlab-ci-token:ckxbPbVZv78ttY2z4yQ1@' + url + " /tmp/projects/" + name)
-    os.chdir("/tmp/projects/" + name)
-    os.system('git checkout -b pylint_errors')
+        url = url.split('https://')[1]
+        print(url)
+        os.system('git clone https://gitlab-ci-token:' + read_file("tokengitlab") +'@' + url + " /tmp/projects/" + name)
+        os.chdir("/tmp/projects/" + name)
     os.chdir(current_dir)
 
 def fix_errors(repository, level):
@@ -233,26 +234,18 @@ def commit(repository):
     os.chdir(current_dir)
 
 def push(repository):
+    name = repository.full_name
+    url = repository.fork_url + '.git'
+    url = url.replace('https://', '@')
+    url = url.replace('http://', '@')
+    current_dir = os.getcwd()
     if 'github' in url:
-        name = repository.full_name
-        url = repository.fork_url + '.git'
-        url = url.replace('https://', '@')
-        url = url.replace('http://', '@')
-        current_dir = os.getcwd()
         push_cmd = 'git push https://' + read_file("username") + ':' + read_file("password") + url
-        os.chdir("/tmp/projects/" + name)
-        os.system(push_cmd)
-        os.chdir(current_dir)
     elif 'gitlab.etsit.urjc.es' in url:
-        name = repository.full_name
-        url = repository.fork_url + '.git'
-        url = url.replace('https://', '@')
-        url = url.replace('http://', '@')
-        current_dir = os.getcwd()
         push_cmd = 'git push https://' + read_file("usernamegitlab") + ':' + read_file("passwordgitlab") + url
-        os.chdir("/tmp/projects/" + name)
-        os.system(push_cmd)
-        os.chdir(current_dir)
+    os.chdir("/tmp/projects/" + name)
+    os.system(push_cmd)
+    os.chdir(current_dir)
 
 def analyze_repo(item):
     # https://docs.pylint.org/en/1.6.0/output.html
@@ -315,9 +308,9 @@ def create_pull(repository):
         url += '/pulls'
         s = requests.Session()
         data = {"title": "Amazing new feature",
-                "description": "Please pull this in!",
-                "source_branch ": "RaulCM:pylint_errors",
-                "target_branch": repository.default_branch}
+                "body": "Please pull this in!",
+                "head": "RaulCM:pylint_errors",
+                "base": repository.default_branch}
         data = json.dumps(data)
         r = s.post(url, data, headers={'Authorization': 'token ' + read_file("token")})
         print(r.json())
@@ -326,12 +319,14 @@ def create_pull(repository):
         url += '/merge_requests'
         #TODO REVISAR
         s = requests.Session()
-        data = {"title": "Amazing new feature",
-                "body": "Please pull this in!",
-                "head": "RaulCM:pylint_errors",
-                "base": repository.default_branch}
-        data = json.dumps(data)
-        r = s.post(url, data, headers={'Authorization': 'token ' + read_file("token")})
+        data = {"title": "testmerge",
+                "description": "testmerge",
+                # "source_branch ": "r.canomon:pylint_errors",
+                # "source_branch": "pylint_errors",
+                "source_branch": repository.default_branch,
+                "target_branch": repository.default_branch}
+        # data = json.dumps(data)
+        r = s.post(url, data, headers={'PRIVATE-TOKEN': read_file("tokengitlab")})
         print(r.json())
         pull_url = r.json()['html_url']
     return pull_url
