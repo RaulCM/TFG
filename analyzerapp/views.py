@@ -87,8 +87,8 @@ def repo(request, resource):
             pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
             return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
         elif form_name == "fix_errors":
-            # make_fork(repository)
-            # github_clone_fork(repository)
+            make_fork(repository)
+            github_clone_fork(repository)
             if form_value == "1":
                 level = 1
             elif form_value == "2":
@@ -97,12 +97,10 @@ def repo(request, resource):
                 level = 0
             print(level)
             fix_errors(repository, level)
-            # commit(repository)
-            # push(repository)
-            # pull_url = create_pull(repository)
-            # return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': pull_url})
-            print(pull_body)
-            return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': 'pull_url'})
+            commit(repository)
+            push(repository)
+            pull_url = create_pull(repository)
+            return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': pull_url})
         else:
             return render(request, 'error.html', {'error_message': 'ERROR'})
     else:
@@ -325,19 +323,17 @@ def create_pull(repository):
         print(r.json())
         pull_url = r.json()['html_url']
     elif 'gitlab.etsit.urjc.es' in url:
+        url = repository.fork_api_url
         url += '/merge_requests'
-        #TODO REVISAR
         s = requests.Session()
         data = {"title": "testmerge",
-                "description": "pull_body",
-                # "source_branch ": "r.canomon:pylint_errors",
-                # "source_branch": "pylint_errors",
+                "description": pull_body,
                 "source_branch": repository.default_branch,
-                "target_branch": repository.default_branch}
-        # data = json.dumps(data)
+                "target_branch": repository.default_branch,
+                "target_project_id": repository.identifier}
         r = s.post(url, data, headers={'PRIVATE-TOKEN': read_file("tokengitlab")})
         print(r.json())
-        pull_url = r.json()['html_url']
+        pull_url = r.json()['web_url']
     return pull_url
 
 def github_search(request):
