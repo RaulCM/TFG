@@ -241,7 +241,7 @@ def commit(repository):
     current_dir = os.getcwd()
     os.chdir("/tmp/projects/" + name)
     os.system('git config user.email "raulcanomontero@hotmail.com"')
-    os.system('git config user.email "Raúl Cano"')
+    os.system('git config user.email "Raul Cano"')
     os.system('git add .')
     os.system('git commit -m "Fix Pylint Errors"')
     os.chdir(current_dir)
@@ -327,7 +327,8 @@ def create_pull(repository):
         data = json.dumps(data)
         r = s.post(url, data, headers={'Authorization': 'token ' + os.environ['token']})
         os.system('git config user.email "raulcanomontero@hotmail.com"')
-        os.system('git config user.email "Raúl Cano"')
+        os.system('git config user.email "Raul Cano"')
+        print(r.json()) #TRAZA
         pull_url = r.json()['html_url']
     elif 'gitlab.etsit.urjc.es' in url:
         url = repository.fork_api_url
