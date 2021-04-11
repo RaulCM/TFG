@@ -87,7 +87,9 @@ def repo(request, resource):
             pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
             return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
         elif form_name == "fix_errors":
+            print('========================make_fork========================')
             make_fork(repository)
+            print('========================github_clone_fork========================')
             github_clone_fork(repository)
             if form_value == "1":
                 level = 1
@@ -95,10 +97,13 @@ def repo(request, resource):
                 level = 2
             else:
                 level = 0
-            print(level)
+            print('========================fix_errors========================')
             fix_errors(repository, level)
+            print('========================commit========================')
             commit(repository)
+            print('========================push========================')
             push(repository)
+            print('========================create_pull========================')
             pull_url = create_pull(repository)
             return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': pull_url})
         else:
@@ -138,7 +143,6 @@ def store_data(json_data):
         store_individual_data(item)
 
 def store_individual_data(item):
-    print(item) # TRAZA
     try:
         Repository.objects.get(identifier=item["id"])
     except Repository.DoesNotExist:
@@ -202,7 +206,6 @@ def github_clone_fork(item):
         os.system('git checkout -b pylint_errors')
     elif 'gitlab.etsit.urjc.es' in url:
         url = url.split('https://')[1]
-        print(url)
         os.system('git clone https://gitlab-ci-token:' + os.environ['tokengitlab'] +'@' + url + " /tmp/projects/" + name)
         os.chdir("/tmp/projects/" + name)
     os.chdir(current_dir)
@@ -213,7 +216,6 @@ def fix_errors(repository, level):
     pylint_output = pylint_output.split('\n')
     pylint_output = pylint_output[:-1]
     for line in pylint_output:
-        print(line) #TRAZA
         if len(line) > 0:
             if line[0] == "/":
                 tokens = line.split(';')
@@ -298,7 +300,6 @@ def make_fork(repository):
         url += '/forks'
         s = requests.Session()
         r = s.post(url, headers={'Authorization': 'token ' + os.environ['token']})
-        print(r.json()) #TRAZA
         repository.fork_url = r.json()["html_url"]
         repository.fork_api_url = r.json()["url"]
         repository.default_branch = r.json()['source']['default_branch']
@@ -328,7 +329,6 @@ def create_pull(repository):
         r = s.post(url, data, headers={'Authorization': 'token ' + os.environ['token']})
         os.system('git config user.email "raulcanomontero@hotmail.com"')
         os.system('git config user.email "Raul Cano"')
-        print(r.json()) #TRAZA
         pull_url = r.json()['html_url']
     elif 'gitlab.etsit.urjc.es' in url:
         url = repository.fork_api_url
@@ -365,7 +365,6 @@ def github_search(request):
 def run_pylint():
     # https://docs.pylint.org/en/1.6.0/output.html
     fichero = 'analyzerapp/views.py'
-    print(os.path.exists(fichero))
     # os.system('pylint ' + fichero + " --msg-template='{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}' | grep -e '[[]C' -e '[[]E' -e '[[]F' -e '[[]I' -e '[[]R' -e '[[]W'")
     # --msg-template='{abspath}:{line}:{msg_id}' --reports=n
     os.system('pylint ' + fichero + " --msg-template='{msg_id}' --reports=n >> /tmp/pylint_output")
@@ -396,7 +395,6 @@ def delete_fork(url):
     s = requests.Session()
     # s.auth = (os.environ['username'], os.environ['password'])
     r = s.delete(url, headers={'Authorization': 'token ' + os.environ['token']})
-    print(r)
 
 def get_pulls(url):
     url += '/pulls?state=all'
@@ -410,7 +408,6 @@ def pull_state(url):
     state = ""
     for item in json_data:
         label = item['head']['label']
-        print(label)
         if label == 'RaulCM:pylint':
             state = item['state']
     return state
