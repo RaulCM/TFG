@@ -78,6 +78,7 @@ WSGI_APPLICATION = 'tfg.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
+# https://devcenter.heroku.com/articles/heroku-postgresql#connecting-in-python
 
 DATABASES = {
     'default': {
@@ -86,9 +87,9 @@ DATABASES = {
     }
 }
 
-DATABASE_URL = os.environ['DATABASE_URL']
-
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+# DATABASE_URL = os.environ['DATABASE_URL']
+#
+# conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -113,4 +114,4 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'templates')
 ]
 
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+# DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
