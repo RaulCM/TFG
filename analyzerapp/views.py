@@ -213,6 +213,7 @@ def fix_errors(repository, level):
     pylint_output = pylint_output.split('\n')
     pylint_output = pylint_output[:-1]
     for line in pylint_output:
+        print(line) #TRAZA
         if line[0] == "/":
             tokens = line.split(';')
             error = pylint_errors.Error(tokens)
