@@ -33,7 +33,7 @@ def main(request):
                 store_individual_data(repo_data)
             elif 'gitlab.etsit.urjc.es' in url:
                 api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
-                r = requests.get(api_url, headers={"PRIVATE-TOKEN": read_file("tokengitlab")})
+                r = requests.get(api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
                 repo_data = r.json()
                 store_individual_data_gitlab(repo_data)
             return redirect('/repo/' + str(repo_data['id']))
@@ -118,7 +118,7 @@ def update():
     datos = Repository.objects.all()
     for item in datos:
         full_name = item.full_name
-        r = requests.get(url + full_name + '?access_token=' + read_file("token"))
+        r = requests.get(url + full_name + '?access_token=' + os.environ['token'])
         json_data = r.json()
         try:
             modified = False
@@ -189,7 +189,7 @@ def github_clone_individual(item):
         os.system('git clone ' + url + ' /tmp/projects/' + name)
     elif 'gitlab.etsit.urjc.es' in url:
         url = url.split('https://')[1]
-        os.system('git clone https://gitlab-ci-token:' + read_file("tokengitlab") +'@' + url + ' /tmp/projects/' + name)
+        os.system('git clone https://gitlab-ci-token:' + os.environ['tokengitlab'] +'@' + url + ' /tmp/projects/' + name)
 
 def github_clone_fork(item):
     url = item.fork_url + ".git"
@@ -203,7 +203,7 @@ def github_clone_fork(item):
     elif 'gitlab.etsit.urjc.es' in url:
         url = url.split('https://')[1]
         print(url)
-        os.system('git clone https://gitlab-ci-token:' + read_file("tokengitlab") +'@' + url + " /tmp/projects/" + name)
+        os.system('git clone https://gitlab-ci-token:' + os.environ['tokengitlab'] +'@' + url + " /tmp/projects/" + name)
         os.chdir("/tmp/projects/" + name)
     os.chdir(current_dir)
 
@@ -248,9 +248,9 @@ def push(repository):
     url = url.replace('http://', '@')
     current_dir = os.getcwd()
     if 'github' in url:
-        push_cmd = 'git push https://' + read_file("username") + ':' + read_file("password") + url
+        push_cmd = 'git push https://' + os.environ['username'] + ':' + os.environ['password'] + url
     elif 'gitlab.etsit.urjc.es' in url:
-        push_cmd = 'git push https://' + read_file("usernamegitlab") + ':' + read_file("passwordgitlab") + url
+        push_cmd = 'git push https://' + os.environ['usernamegitlab'] + ':' + os.environ['passwordgitlab'] + url
     os.chdir("/tmp/projects/" + name)
     os.system(push_cmd)
     os.chdir(current_dir)
@@ -292,7 +292,7 @@ def make_fork(repository):
     if 'github' in url:
         url += '/forks'
         s = requests.Session()
-        r = s.post(url, headers={'Authorization': 'token ' + read_file("token")})
+        r = s.post(url, headers={'Authorization': 'token ' + os.environ['token']})
         print(r.json()) #TRAZA
         repository.fork_url = r.json()["html_url"]
         repository.fork_api_url = r.json()["url"]
@@ -301,7 +301,7 @@ def make_fork(repository):
     elif 'gitlab.etsit.urjc.es' in url:
         url += '/fork'
         s = requests.Session()
-        r = s.post(url, headers={'PRIVATE-TOKEN': read_file("tokengitlab")})
+        r = s.post(url, headers={'PRIVATE-TOKEN': os.environ['tokengitlab']})
         repository.fork_url = r.json()["web_url"]
         api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + r.json()["web_url"].split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
         repository.fork_api_url = api_url
@@ -320,7 +320,7 @@ def create_pull(repository):
                 "head": "RaulCM:pylint_errors",
                 "base": repository.default_branch}
         data = json.dumps(data)
-        r = s.post(url, data, headers={'Authorization': 'token ' + read_file("token")})
+        r = s.post(url, data, headers={'Authorization': 'token ' + os.environ['token']})
         pull_url = r.json()['html_url']
     elif 'gitlab.etsit.urjc.es' in url:
         url = repository.fork_api_url
@@ -331,7 +331,7 @@ def create_pull(repository):
                 "source_branch": repository.default_branch,
                 "target_branch": repository.default_branch,
                 "target_project_id": repository.identifier}
-        r = s.post(url, data, headers={'PRIVATE-TOKEN': read_file("tokengitlab")})
+        r = s.post(url, data, headers={'PRIVATE-TOKEN': os.environ['tokengitlab']})
         pull_url = r.json()['web_url']
     return pull_url
 
@@ -339,7 +339,7 @@ def github_search(request):
     url = 'https://api.github.com/search/repositories'
     #https://developer.github.com/v3/search/#search-repositories
     #https://help.github.com/articles/understanding-the-search-syntax/
-    queries = '?access_token=' + read_file("token")
+    queries = '?access_token=' + os.environ['token']
     queries += '+q=python3'      #Que contengan el string "python3"
     queries += '+language:python'    #Solo lenguaje Python
     queries += '+archived:false'    #Repositorios no archivados
@@ -385,15 +385,15 @@ def read_errors():
 
 def delete_fork(url):
     s = requests.Session()
-    # s.auth = (read_file("username"), read_file("password"))
-    r = s.delete(url, headers={'Authorization': 'token ' + read_file("token")})
+    # s.auth = (os.environ['username'], os.environ['password'])
+    r = s.delete(url, headers={'Authorization': 'token ' + os.environ['token']})
     print(r)
 
 def get_pulls(url):
     url += '/pulls?state=all'
     s = requests.Session()
-    # s.auth = (read_file("username"), read_file("password"))
-    r = s.get(url, headers={'Authorization': 'token ' + read_file("token")})
+    # s.auth = (os.environ['username'], os.environ['password'])
+    r = s.get(url, headers={'Authorization': 'token ' + os.environ['token']})
     return r.json()
 
 def pull_state(url):
