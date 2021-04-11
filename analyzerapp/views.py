@@ -326,6 +326,8 @@ def create_pull(repository):
                 "base": repository.default_branch}
         data = json.dumps(data)
         r = s.post(url, data, headers={'Authorization': 'token ' + os.environ['token']})
+        os.system('git config user.email "raulcanomontero@hotmail.com"')
+        os.system('git config user.email "Raúl Cano"')
         pull_url = r.json()['html_url']
     elif 'gitlab.etsit.urjc.es' in url:
         url = repository.fork_api_url
