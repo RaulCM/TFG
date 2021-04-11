@@ -214,23 +214,25 @@ def fix_errors(repository, level):
     pylint_output = pylint_output[:-1]
     for line in pylint_output:
         print(line) #TRAZA
-        if line[0] == "/":
-            tokens = line.split(';')
-            error = pylint_errors.Error(tokens)
-            error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
-            pull_body = pull_body + error_string + '\n'
-            if level == 0:
-                pylint_errors.check(error)
-            elif level == 1:
-                pylint_errors.check1(error)
-            elif level == 2:
-                pylint_errors.check2(error)
+        if len(line) > 0:
+            if line[0] == "/":
+                tokens = line.split(';')
+                error = pylint_errors.Error(tokens)
+                error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
+                pull_body = pull_body + error_string + '\n'
+                if level == 0:
+                    pylint_errors.check(error)
+                elif level == 1:
+                    pylint_errors.check1(error)
+                elif level == 2:
+                    pylint_errors.check2(error)
     files = []
     for line in pylint_output:
-        if line[0] == "/":
-            filename = line.split(';')[0]
-            if filename not in files:
-                files.append(filename)
+        if len(line) > 0:
+            if line[0] == "/":
+                filename = line.split(';')[0]
+                if filename not in files:
+                    files.append(filename)
     for file in files:
         pylint_errors.check_placeholders(file)
 
@@ -372,17 +374,18 @@ def read_files():
 
 def read_errors():
     for line in open('/tmp/pylint_output'):
-        if line[0] != "*":
-            error_id = line[:-1]
-            try:
-                error = Errors.objects.get(error_id=error_id)
-                error.count = error.count + 1
-                error.save()
-            except Errors.DoesNotExist:
-                error = Errors()
-                error.error_id = error_id
-                error.count = 0
-                error.save()
+        if len(line) > 0:
+            if line[0] != "*":
+                error_id = line[:-1]
+                try:
+                    error = Errors.objects.get(error_id=error_id)
+                    error.count = error.count + 1
+                    error.save()
+                except Errors.DoesNotExist:
+                    error = Errors()
+                    error.error_id = error_id
+                    error.count = 0
+                    error.save()
 
 def delete_fork(url):
     s = requests.Session()
