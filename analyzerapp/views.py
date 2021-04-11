@@ -293,7 +293,7 @@ def make_fork(repository):
         url += '/forks'
         s = requests.Session()
         r = s.post(url, headers={'Authorization': 'token ' + read_file("token")})
-        # print(r.json())
+        print(r.json()) #TRAZA
         repository.fork_url = r.json()["html_url"]
         repository.fork_api_url = r.json()["url"]
         repository.default_branch = r.json()['source']['default_branch']
