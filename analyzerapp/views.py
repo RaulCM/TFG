@@ -240,6 +240,8 @@ def commit(repository):
     name = repository.full_name
     current_dir = os.getcwd()
     os.chdir("/tmp/projects/" + name)
+    os.system('git config user.email "raulcanomontero@hotmail.com"')
+    os.system('git config user.email "Raúl Cano"')
     os.system('git add .')
     os.system('git commit -m "Fix Pylint Errors"')
     os.chdir(current_dir)
