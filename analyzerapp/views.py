@@ -138,6 +138,7 @@ def store_data(json_data):
         store_individual_data(item)
 
 def store_individual_data(item):
+    print(item) # TRAZA
     try:
         Repository.objects.get(identifier=item["id"])
     except Repository.DoesNotExist:
