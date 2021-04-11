@@ -320,7 +320,6 @@ def create_pull(repository):
                 "base": repository.default_branch}
         data = json.dumps(data)
         r = s.post(url, data, headers={'Authorization': 'token ' + read_file("token")})
-        print(r.json())
         pull_url = r.json()['html_url']
     elif 'gitlab.etsit.urjc.es' in url:
         url = repository.fork_api_url
@@ -332,7 +331,6 @@ def create_pull(repository):
                 "target_branch": repository.default_branch,
                 "target_project_id": repository.identifier}
         r = s.post(url, data, headers={'PRIVATE-TOKEN': read_file("tokengitlab")})
-        print(r.json())
         pull_url = r.json()['web_url']
     return pull_url
 
