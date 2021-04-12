@@ -26,16 +26,32 @@ def main(request):
         form_name = request.body.decode('utf-8').split("=")[0]
         if form_name == "add":
             url = unquote(request.body.decode('utf-8').split("=")[1])
+            if url[-1] = '/':
+                url = url[:-1]
             if 'github' in url:
                 api_url = url.replace('://github.com/', '://api.github.com/repos/')
                 r = requests.get(api_url)
                 repo_data = r.json()
-                store_individual_data(repo_data)
+                try:
+                    store_individual_data(repo_data)
+                except KeyError:
+                    error_message = ('La dirección introducida: "' + url +
+                                    '" no es válida, por favor, introduce un ' +
+                                    'enlace que corresponda a un repositorio de' +
+                                    ' github.com o gitlab.etsit.urjc.es.')
+                    return render(request, 'error.html', {'error_message': error_message})
             elif 'gitlab.etsit.urjc.es' in url:
                 api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
                 r = requests.get(api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
                 repo_data = r.json()
-                store_individual_data_gitlab(repo_data)
+                try:
+                    store_individual_data(repo_data)
+                except KeyError:
+                    error_message = ('La dirección introducida: "' + url +
+                                    '" no es válida, por favor, introduce un ' +
+                                    'enlace que corresponda a un repositorio de' +
+                                    ' github.com o gitlab.etsit.urjc.es.')
+                    return render(request, 'error.html', {'error_message': error_message})
             else:
                 error_message = ('La dirección introducida: "' + url +
                                 '" no es válida, por favor, introduce un ' +
