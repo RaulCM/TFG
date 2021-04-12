@@ -26,7 +26,7 @@ def main(request):
         form_name = request.body.decode('utf-8').split("=")[0]
         if form_name == "add":
             url = unquote(request.body.decode('utf-8').split("=")[1])
-            if url[-1] = '/':
+            if url[-1] == '/':
                 url = url[:-1]
             if 'github' in url:
                 api_url = url.replace('://github.com/', '://api.github.com/repos/')
@@ -36,7 +36,7 @@ def main(request):
                     store_individual_data(repo_data)
                 except KeyError:
                     error_message = ('La dirección introducida: "' + url +
-                                    '" no es válida, por favor, introduce un ' +
+                                    '" no corresponde a un repositorio, por favor, introduce un ' +
                                     'enlace que corresponda a un repositorio de' +
                                     ' github.com o gitlab.etsit.urjc.es.')
                     return render(request, 'error.html', {'error_message': error_message})
@@ -48,7 +48,7 @@ def main(request):
                     store_individual_data(repo_data)
                 except KeyError:
                     error_message = ('La dirección introducida: "' + url +
-                                    '" no es válida, por favor, introduce un ' +
+                                    '" no corresponde a un repositorio, por favor, introduce un ' +
                                     'enlace que corresponda a un repositorio de' +
                                     ' github.com o gitlab.etsit.urjc.es.')
                     return render(request, 'error.html', {'error_message': error_message})
@@ -59,22 +59,6 @@ def main(request):
                                 ' github.com o gitlab.etsit.urjc.es.')
                 return render(request, 'error.html', {'error_message': error_message})
             return redirect('/repo/' + str(repo_data['id']))
-        # elif form_name == "load":
-        #     github_search()
-        # elif form_name == "update":
-        #     update()
-        # elif form_name == "clone":
-        #     github_clone()
-        # elif form_name == "pylint":
-            # read_files()
-            # run_pylint()
-        #     read_errors()
-        # elif form_name == "fork":
-        #     make_fork('https://api.github.com/repos/RaulPruebasTFG/helloworld')
-        # elif form_name == "delete_fork":
-        #     delete_fork('https://api.github.com/repos/RaulCM/helloworld')
-        # elif form_name == "pull":
-        #     create_pull('https://api.github.com/repos/RaulPruebasTFG/helloworld')
         return render(request, 'main.html')
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
