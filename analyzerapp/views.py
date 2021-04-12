@@ -35,12 +35,12 @@ def main(request):
                 try:
                     store_individual_data(repo_data)
                 except KeyError:
-                    error_message = ('La dirección introducida: <a href=' +
-                                    url + '>' + url + '</a> no corresponde a' +
+                    error_message = ('La dirección introducida: <a href="' +
+                                    url + '">' + url + '</a> no corresponde a' +
                                     ' un repositorio, por favor, introduce ' +
                                     'un enlace que corresponda a un ' +
-                                    'repositorio de <a href=https://github.com>Github</a>' +
-                                    ' o <a href=https://gitlab.etsit.urjc.es>Gitlab ETSIT URJC</a>.')
+                                    'repositorio de <a href="https://github.com>Github"</a>' +
+                                    ' o <a href="https://gitlab.etsit.urjc.es">Gitlab ETSIT URJC</a>.')
                     return render(request, 'error.html', {'error_message': error_message})
             elif 'gitlab.etsit.urjc.es' in url:
                 api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
@@ -49,20 +49,20 @@ def main(request):
                 try:
                     store_individual_data(repo_data)
                 except KeyError:
-                    error_message = ('La dirección introducida: <a href=' +
-                                    url + '>' + url + '</a> no corresponde a' +
+                    error_message = ('La dirección introducida: <a href="' +
+                                    url + '">' + url + '</a> no corresponde a' +
                                     ' un repositorio, por favor, introduce ' +
                                     'un enlace que corresponda a un ' +
-                                    'repositorio de <a href=https://github.com>Github</a>' +
-                                    ' o <a href=https://gitlab.etsit.urjc.es>Gitlab ETSIT URJC</a>.')
+                                    'repositorio de <a href="https://github.com>Github"</a>' +
+                                    ' o <a href="https://gitlab.etsit.urjc.es">Gitlab ETSIT URJC</a>.')
                     return render(request, 'error.html', {'error_message': error_message})
             else:
-                error_message = ('La dirección introducida: <a href=' +
-                                url + '>' + url + '</a> no es válida, ' +
+                error_message = ('La dirección introducida: <a href="' +
+                                url + '">' + url + '</a> no es válida, ' +
                                 'por favor, introduce ' +
                                 'un enlace que corresponda a un ' +
-                                'repositorio de <a href=https://github.com>Github</a>' +
-                                ' o <a href=https://gitlab.etsit.urjc.es>Gitlab ETSIT URJC</a>.')
+                                'repositorio de <a href="https://github.com>Github"</a>' +
+                                ' o <a href="https://gitlab.etsit.urjc.es">Gitlab ETSIT URJC</a>.')
                 return render(request, 'error.html', {'error_message': error_message})
             return redirect('/repo/' + str(repo_data['id']))
         return render(request, 'main.html')
