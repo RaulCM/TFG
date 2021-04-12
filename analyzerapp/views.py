@@ -36,6 +36,12 @@ def main(request):
                 r = requests.get(api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
                 repo_data = r.json()
                 store_individual_data_gitlab(repo_data)
+            else:
+                error_message = ('La dirección introducida: "' + url +
+                                '" no es válida, por favor, introduce un ' +
+                                'enlace que corresponda a un repositorio de' +
+                                ' github.com o gitlab.etsit.urjc.es.')
+                return render(request, 'error.html', {'error_message': error_message})
             return redirect('/repo/' + str(repo_data['id']))
         # elif form_name == "load":
         #     github_search()
