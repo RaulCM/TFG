@@ -1,48 +1,12 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% block content %}
 
-<div class="container">
-	<ul class="nav nav-tabs">
-		<li class="active"><a href="/">Gestión</a></li>
-		<li><a href="/list">Lista de repositorios</a></li>
-		<li><a>Pestaña 3</a></li>
-	</ul>
-	<br>
-	<!-- <form method="POST"><button type="submit" name="load">
-			Carga desde GitHub
-		</button>
-	</form>
-	<br>
-	<form method="POST"><button type="submit" name="update">
-			Update desde GitHub
-		</button>
-	</form>
-	<br> -->
-	<form method="POST">
-		URL de repositorio:<br>
-		<input type="text" name="add" placeholder="https://github.com/user/name" size="25"><br>
-		<input type="submit" value="Add">
-	</form>
-	<br>
-	<!-- <form method="POST"><button type="submit" name="clone">
-			Clone desde GitHub
-		</button>
-	</form>
-	<br>
-	<form method="POST"><button type="submit" name="pylint">
-			Pylint
-		</button>
-	</form>
-	<form method="POST"><button type="submit" name="fork">
-			Fork
-		</button>
-	</form>
-	<form method="POST"><button type="submit" name="delete_fork">
-			Borrar fork
-		</button>
-	</form>
-	<form method="POST"><button type="submit" name="pull">
-			Pull Request
-		</button>
-	</form> -->
-</div>
+	<div class="container">
+		<form method="POST">
+			URL de repositorio:<br>
+			<input type="text" name="add" placeholder="https://github.com/user/name" size="25"><br>
+			<input type="submit" value="Add">
+		</form>
+	</div>
+
 {% endblock %}

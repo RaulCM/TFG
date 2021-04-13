@@ -1,18 +1,10 @@
 {% extends "base.html" %}
-
 {% block content %}
 
-<div class="container">
-	<ul class="nav nav-tabs">
-		<li class="active"><a href="/">Gestión</a></li>
-		<li><a>Lista de repositorios</a></li>
-		<li><a>Pestaña 3</a></li>
-	</ul>
-La dirección introducida: <a href={{url}}>{{url}}</a> no corresponde a un repositorio, por favor, introduce
-un enlace que corresponda a un repositorio de <a href="https://github.com>Github"</a>
- o <a href="https://gitlab.etsit.urjc.es">Gitlab ETSIT URJC</a>.
+	<div class="container">
+		La dirección introducida: <a href={{url}}>{{url}}</a> no corresponde a un repositorio, por favor, introduce
+		un enlace que corresponda a un repositorio de <a href="https://github.com>Github"</a>
+		 o <a href="https://gitlab.etsit.urjc.es">Gitlab ETSIT URJC</a>.
+	</div>
 
-</div>
-
-
-	{% endblock %}
+{% endblock %}
