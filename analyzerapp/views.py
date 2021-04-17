@@ -318,6 +318,8 @@ def make_fork(repository):
 def create_pull(repository):
     # https://developer.github.com/v3/pulls/
     # https://docs.gitlab.com/ee/api/merge_requests.html#create-mr
+    global pull_body
+    pull_body = pull_body + '\n[PEP8 Style Guide](https://www.python.org/dev/peps/pep-0008/)'
     url = repository.api_url
     if 'github' in url:
         url += '/pulls'
