@@ -15,7 +15,7 @@ from analyzerapp import pylint_errors
 # Create your views here.
 
 pull_body = ("Your code has been analyzed by XXXX using Pylint tool to adapt" +
-            "it to PEP8, the Python style guide.\nThese are the pylint " +
+            " it to PEP8, the Python style guide.\nThese are the pylint " +
             "errors fixed in your code:\n")
 
 @csrf_exempt
