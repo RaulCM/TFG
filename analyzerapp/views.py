@@ -16,7 +16,7 @@ from analyzerapp import pylint_errors
 
 pull_body = ("Your code has been analyzed by XXXX using Pylint tool to adapt" +
             "it to PEP8, the Python style guide.\nThese are the pylint " +
-            "errors found in your code:\n")
+            "errors fixed in your code:\n")
 
 @csrf_exempt
 def main(request):
@@ -214,14 +214,21 @@ def fix_errors(repository, level):
             if line[0] == "/":
                 tokens = line.split(';')
                 error = pylint_errors.Error(tokens)
-                error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
-                pull_body = pull_body + error_string + '\n'
                 if level == 0:
                     pylint_errors.check(error)
+                    if fixable:
+                        error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
+                        pull_body = pull_body + error_string + '\n'
                 elif level == 1:
                     pylint_errors.check1(error)
+                    if fixable:
+                        error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
+                        pull_body = pull_body + error_string + '\n'
                 elif level == 2:
                     pylint_errors.check2(error)
+                    if fixable:
+                        error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
+                        pull_body = pull_body + error_string + '\n'
     files = []
     for line in pylint_output:
         if len(line) > 0:
