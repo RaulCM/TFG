@@ -27,10 +27,10 @@ def main(request):
         form_name = request.body.decode('utf-8').split('=')[0]
         if form_name == 'add':
             url = unquote(request.body.decode('utf-8').split('=')[1])
-            if url[-1] == '/':
-                url = url[:-1]
             if len(url) == 0:
                 return render(request, 'error.html', {'error_message': 'Error: no se ha introducido ningún dato en el formulario'})
+            if url[-1] == '/':
+                url = url[:-1]
             if 'github' in url:
                 api_url = url.replace('://github.com/', '://api.github.com/repos/')
                 r = requests.get(api_url)
