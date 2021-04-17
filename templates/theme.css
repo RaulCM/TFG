@@ -80,6 +80,10 @@ body {
   color: grey;
 }
 
+.repo input[type=text] {
+	color: #2a2828;
+}
+
 .button {
 	background-color: white;
 	border: none;
