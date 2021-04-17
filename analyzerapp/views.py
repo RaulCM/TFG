@@ -215,17 +215,17 @@ def fix_errors(repository, level):
                 tokens = line.split(';')
                 error = pylint_errors.Error(tokens)
                 if level == 0:
-                    pylint_errors.check(error)
+                    fixable = pylint_errors.check(error)
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
                         pull_body = pull_body + error_string + '\n'
                 elif level == 1:
-                    pylint_errors.check1(error)
+                    fixable = pylint_errors.check1(error)
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
                         pull_body = pull_body + error_string + '\n'
                 elif level == 2:
-                    pylint_errors.check2(error)
+                    fixable = pylint_errors.check2(error)
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
                         pull_body = pull_body + error_string + '\n'
