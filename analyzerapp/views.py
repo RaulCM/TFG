@@ -14,18 +14,19 @@ import subprocess
 from analyzerapp import pylint_errors
 # Create your views here.
 
-pull_body = ("Your code has been analyzed by XXXX using Pylint tool to adapt" +
-            " it to PEP8, the Python style guide.\nThese are the pylint " +
-            "errors fixed in your code:\n")
+pull_body = ('Your code has been analyzed by XXXX using Pylint tool to adapt' +
+            ' it to [PEP8, the Python style guide]' +
+            '(https://www.python.org/dev/peps/pep-0008/).\n' +
+            'These are the pylint errors fixed in your code:\n')
 
 @csrf_exempt
 def main(request):
-    if request.method == "GET":
+    if request.method == 'GET':
         return render(request, 'main.html')
-    elif request.method == "POST":
-        form_name = request.body.decode('utf-8').split("=")[0]
-        if form_name == "add":
-            url = unquote(request.body.decode('utf-8').split("=")[1])
+    elif request.method == 'POST':
+        form_name = request.body.decode('utf-8').split('=')[0]
+        if form_name == 'add':
+            url = unquote(request.body.decode('utf-8').split('=')[1])
             if url[-1] == '/':
                 url = url[:-1]
             if 'github' in url:
@@ -55,7 +56,7 @@ def main(request):
 @csrf_exempt
 def repo(request, resource):
     repository = Repository.objects.get(identifier=resource)
-    if request.method == "GET":
+    if request.method == 'GET':
         if request.GET.get('errors', default=None) is None:
             return render(request, 'repo_data.html', {'repository': repository})
         else:
@@ -64,30 +65,30 @@ def repo(request, resource):
             if request.GET.get('errors', default=None) == '0':
                 return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
             elif request.GET.get('errors', default=None) == '1':
-                pylint_output[:] = [x for x in pylint_output if ("C0303" in x or "C0304" in x or "C0321" in x or "C0326" in x or "W0404" in x or "C0410" in x or "C0411" in x or "C0413" in x or "W0611" in x)]
+                pylint_output[:] = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
                 return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 0})
             elif request.GET.get('errors', default=None) == '2':
-                pylint_output[:] = [x for x in pylint_output if ("C0303" in x or "C0304" in x or "C0321" in x or "C0326" in x or "W0404" in x or "C0410" in x or "C0411" in x or "C0413" in x or "W0611" in x)]
+                pylint_output[:] = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
                 return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 1})
             elif request.GET.get('errors', default=None) == '3':
-                pylint_output[:] = [x for x in pylint_output if ("C0303" in x or "C0304" in x or "C0321" in x or "C0326" in x or "W0404" in x or "C0410" in x or "C0411" in x or "C0413" in x or "W0611" in x)]
+                pylint_output[:] = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
                 return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 2})
-    elif request.method == "POST":
-        form_name = request.body.decode('utf-8').split("=")[0]
-        form_value = request.body.decode('utf-8').split("=")[1]
-        if form_name == "pylint":
+    elif request.method == 'POST':
+        form_name = request.body.decode('utf-8').split('=')[0]
+        form_value = request.body.decode('utf-8').split('=')[1]
+        if form_name == 'pylint':
             github_clone_individual(repository)
             pylint_output = analyze_repo(repository)
             pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
             return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
-        elif form_name == "fix_errors":
+        elif form_name == 'fix_errors':
             print('========================make_fork========================')
             make_fork(repository)
             print('========================github_clone_fork========================')
             github_clone_fork(repository)
-            if form_value == "1":
+            if form_value == '1':
                 level = 1
-            elif form_value == "2":
+            elif form_value == '2':
                 level = 2
             else:
                 level = 0
@@ -121,11 +122,11 @@ def update():
         json_data = r.json()
         try:
             modified = False
-            if item.name == "Null":
-                item.name = json_data["owner"]["login"]
+            if item.name == 'Null':
+                item.name = json_data['owner']['login']
                 modified = True
-            if item.owner == "Null":
-                item.owner = json_data["name"]
+            if item.owner == 'Null':
+                item.owner = json_data['name']
                 modified = True
             if modified is True:
                 item.save()
@@ -138,17 +139,17 @@ def store_data(json_data):
 
 def store_individual_data(item):
     try:
-        Repository.objects.get(identifier=item["id"])
+        Repository.objects.get(identifier=item['id'])
     except Repository.DoesNotExist:
         repository = Repository()
-        repository.identifier = item["id"]
-        repository.full_name = item["full_name"]
-        repository.owner = item["owner"]["login"]
-        repository.name = item["name"]
-        if item["description"] is not None:
-            repository.description = item["description"]
-        repository.html_url = item["html_url"]
-        repository.api_url = item["url"]
+        repository.identifier = item['id']
+        repository.full_name = item['full_name']
+        repository.owner = item['owner']['login']
+        repository.name = item['name']
+        if item['description'] is not None:
+            repository.description = item['description']
+        repository.html_url = item['html_url']
+        repository.api_url = item['url']
         repository.save()
 
 def store_data_gitlab(json_data):
@@ -157,18 +158,18 @@ def store_data_gitlab(json_data):
 
 def store_individual_data_gitlab(item):
     try:
-        Repository.objects.get(identifier=item["id"])
+        Repository.objects.get(identifier=item['id'])
     except Repository.DoesNotExist:
         repository = Repository()
-        repository.identifier = item["id"]
-        repository.full_name = item["path_with_namespace"]
-        repository.owner = item["namespace"]["path"]
-        # repository.owner = item["namespace"]["name"]
-        repository.name = item["name"]
-        if item["description"] is not None:
-            repository.description = item["description"]
-        repository.html_url = item["web_url"]
-        api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + item["web_url"].split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
+        repository.identifier = item['id']
+        repository.full_name = item['path_with_namespace']
+        repository.owner = item['namespace']['path']
+        # repository.owner = item['namespace']['name']
+        repository.name = item['name']
+        if item['description'] is not None:
+            repository.description = item['description']
+        repository.html_url = item['web_url']
+        api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + item['web_url'].split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
         repository.api_url = api_url
         repository.save()
 
@@ -179,9 +180,9 @@ def github_clone():
         github_clone_individual(item)
 
 def github_clone_individual(item):
-    url = item.html_url + ".git"
+    url = item.html_url + '.git'
     name = item.full_name
-    if os.path.isdir("/tmp/projects/" + name):
+    if os.path.isdir('/tmp/projects/' + name):
         os.system('rm -rfv /tmp/projects/' + name)
     if 'github' in url:
         os.system('git clone ' + url + ' /tmp/projects/' + name)
@@ -190,18 +191,18 @@ def github_clone_individual(item):
         os.system('git clone https://gitlab-ci-token:' + os.environ['tokengitlab'] +'@' + url + ' /tmp/projects/' + name)
 
 def github_clone_fork(item):
-    url = item.fork_url + ".git"
+    url = item.fork_url + '.git'
     name = item.full_name
     current_dir = os.getcwd()
-    os.system('rm -rfv ' + "/tmp/projects/" + name)
+    os.system('rm -rfv ' + '/tmp/projects/' + name)
     if 'github' in url:
-        os.system('git clone ' + url + " /tmp/projects/" + name)
-        os.chdir("/tmp/projects/" + name)
+        os.system('git clone ' + url + ' /tmp/projects/' + name)
+        os.chdir('/tmp/projects/' + name)
         os.system('git checkout -b pylint_errors')
     elif 'gitlab.etsit.urjc.es' in url:
         url = url.split('https://')[1]
-        os.system('git clone https://gitlab-ci-token:' + os.environ['tokengitlab'] +'@' + url + " /tmp/projects/" + name)
-        os.chdir("/tmp/projects/" + name)
+        os.system('git clone https://gitlab-ci-token:' + os.environ['tokengitlab'] +'@' + url + ' /tmp/projects/' + name)
+        os.chdir('/tmp/projects/' + name)
     os.chdir(current_dir)
 
 def fix_errors(repository, level):
@@ -211,7 +212,7 @@ def fix_errors(repository, level):
     pylint_output = pylint_output[:-1]
     for line in pylint_output:
         if len(line) > 0:
-            if line[0] == "/":
+            if line[0] == '/':
                 tokens = line.split(';')
                 error = pylint_errors.Error(tokens)
                 if level == 0:
@@ -232,7 +233,7 @@ def fix_errors(repository, level):
     files = []
     for line in pylint_output:
         if len(line) > 0:
-            if line[0] == "/":
+            if line[0] == '/':
                 filename = line.split(';')[0]
                 if filename not in files:
                     files.append(filename)
@@ -242,7 +243,7 @@ def fix_errors(repository, level):
 def commit(repository):
     name = repository.full_name
     current_dir = os.getcwd()
-    os.chdir("/tmp/projects/" + name)
+    os.chdir('/tmp/projects/' + name)
     os.system('git config user.email "raulcanomontero@hotmail.com"')
     os.system('git config user.name "Raul Cano"')
     os.system('git add .')
@@ -259,7 +260,7 @@ def push(repository):
         push_cmd = 'git push https://' + os.environ['username'] + ':' + os.environ['password'] + url
     elif 'gitlab.etsit.urjc.es' in url:
         push_cmd = 'git push https://' + os.environ['usernamegitlab'] + ':' + os.environ['passwordgitlab'] + url
-    os.chdir("/tmp/projects/" + name)
+    os.chdir('/tmp/projects/' + name)
     os.system(push_cmd)
     os.chdir(current_dir)
 
@@ -267,19 +268,19 @@ def analyze_repo(item):
     # https://docs.pylint.org/en/1.6.0/output.html
     # https://docs.python.org/2/library/subprocess.html
     # https://docs.pylint.org/en/1.6.0/run.html#command-line-options
-    path = "/tmp/projects/" + item.full_name
+    path = '/tmp/projects/' + item.full_name
     pylintrc_path = path + '/pylintrc'
     if os.path.isfile(pylintrc_path):
         os.environ['PYLINTRC'] = pylintrc_path
-    pylint_output = ""
+    pylint_output = ''
     for root, dirs, files in os.walk(path, topdown=False):
         for name in files:
             ext = os.path.splitext(name)[-1].lower()
-            if ext == ".py":
+            if ext == '.py':
                 try:
                     output = subprocess.check_output(['pylint', os.path.join(root, name), "--msg-template='{abspath};{line};{column};{msg_id};{msg}'", "--reports=n"])
                 except subprocess.CalledProcessError as e:
-                    pylint_output = pylint_output + e.output.decode("utf-8")
+                    pylint_output = pylint_output + e.output.decode('utf-8')
     if os.environ.get('PYLINTRC') is not None:
         os.environ.pop('PYLINTRC')
     return pylint_output
@@ -290,7 +291,7 @@ def read_file(filename):
         s = open(filename, 'r').read()
         string = s.rstrip()
     else:
-        string = ""
+        string = ''
     return string
 
 def make_fork(repository):
@@ -301,16 +302,16 @@ def make_fork(repository):
         url += '/forks'
         s = requests.Session()
         r = s.post(url, headers={'Authorization': 'token ' + os.environ['token']})
-        repository.fork_url = r.json()["html_url"]
-        repository.fork_api_url = r.json()["url"]
+        repository.fork_url = r.json()['html_url']
+        repository.fork_api_url = r.json()['url']
         repository.default_branch = r.json()['source']['default_branch']
         repository.save()
     elif 'gitlab.etsit.urjc.es' in url:
         url += '/fork'
         s = requests.Session()
         r = s.post(url, headers={'PRIVATE-TOKEN': os.environ['tokengitlab']})
-        repository.fork_url = r.json()["web_url"]
-        api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + r.json()["web_url"].split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
+        repository.fork_url = r.json()['web_url']
+        api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + r.json()['web_url'].split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
         repository.fork_api_url = api_url
         repository.default_branch = r.json()['forked_from_project']['default_branch']
         repository.save()
@@ -318,8 +319,6 @@ def make_fork(repository):
 def create_pull(repository):
     # https://developer.github.com/v3/pulls/
     # https://docs.gitlab.com/ee/api/merge_requests.html#create-mr
-    global pull_body
-    pull_body = pull_body + '\n[PEP8 Style Guide](https://www.python.org/dev/peps/pep-0008/)'
     url = repository.api_url
     if 'github' in url:
         url += '/pulls'
@@ -339,7 +338,7 @@ def create_pull(repository):
         url += '/merge_requests'
         s = requests.Session()
         data = {"title": "testmerge",
-                "description": pull_body,
+                'description': pull_body,
                 "source_branch": repository.default_branch,
                 "target_branch": repository.default_branch,
                 "target_project_id": repository.identifier}
@@ -361,7 +360,7 @@ def github_search(request):
     url = url + queries
     r = requests.get(url)
     json_data = r.json()
-    json_data = json_data["items"]
+    json_data = json_data['items']
     store_data(json_data)
     json_pretty = json.dumps(json_data, sort_keys=True, indent=4)
     return HttpResponse(json_pretty,content_type="text/json")
@@ -374,16 +373,16 @@ def run_pylint():
     os.system('pylint ' + fichero + " --msg-template='{msg_id}' --reports=n >> /tmp/pylint_output")
 
 def read_files():
-    for root, dirs, files in os.walk("/tmp/projects/", topdown=False):
+    for root, dirs, files in os.walk('/tmp/projects/', topdown=False):
         for name in files:
             ext = os.path.splitext(name)[-1].lower()
-            if ext == ".py":
+            if ext == '.py':
                 os.system('pylint ' + os.path.join(root, name) + " --msg-template='{msg_id}' --reports=n >> /tmp/pylint_output")
 
 def read_errors():
     for line in open('/tmp/pylint_output'):
         if len(line) > 0:
-            if line[0] != "*":
+            if line[0] != '*':
                 error_id = line[:-1]
                 try:
                     error = Errors.objects.get(error_id=error_id)
@@ -409,7 +408,7 @@ def get_pulls(url):
 
 def pull_state(url):
     json_data = get_pulls(url)
-    state = ""
+    state = ''
     for item in json_data:
         label = item['head']['label']
         if label == 'RaulCM:pylint':
