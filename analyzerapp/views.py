@@ -28,7 +28,7 @@ def main(request):
         if form_name == 'add':
             url = unquote(request.body.decode('utf-8').split('=')[1])
             if len(url) == 0:
-                return render(request, 'error.html', {'error_message': 'Error: no se ha introducido ningún dato en el formulario'})
+                return render(request, 'error.html', {'error_message': 'No se ha introducido ningún dato en el formulario'})
             if url[-1] == '/':
                 url = url[:-1]
             if 'github' in url:
@@ -110,6 +110,9 @@ def repo(request, resource):
 
 def list(request):
     return render(request, 'list.html', {'datos': print_data()})
+
+def guide(request):
+    return render(request, 'guide.html')
 
 def print_data():
     datos = Repository.objects.all()
