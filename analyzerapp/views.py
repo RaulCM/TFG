@@ -114,6 +114,9 @@ def list(request):
 def guide(request):
     return render(request, 'guide.html')
 
+def contact(request):
+    return render(request, 'contact.html')
+
 def print_data():
     datos = Repository.objects.all()
     return(datos)
