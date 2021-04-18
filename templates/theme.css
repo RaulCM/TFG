@@ -47,7 +47,7 @@ body {
 }
 
 #menu a:hover {
-	color: #f1f1f1;
+	color: grey;
 }
 
 #menu #btn {
@@ -96,7 +96,18 @@ body {
 }
 
 .button:hover {
-	color: #f1f1f1;
+	color: grey;
+}
+
+.message {
+	display: inline-block;
+	top: 100px;
+	left: 100px;
+	max-width: 50%;
+	padding: 20px 20px 100px 20px;
+	margin-left: 50px;
+	color: white;
+	background-color: #2a2828;
 }
 
 .oculto {
