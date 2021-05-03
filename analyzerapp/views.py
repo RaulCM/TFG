@@ -46,7 +46,7 @@ def main(request):
                 repo_data = r.json()
                 print(repo_data)
                 try:
-                    store_individual_data(repo_data)
+                    store_data_gitlab(repo_data)
                 except KeyError:
                     return render(request, 'error_repo.html', {'url': url})
             else:
