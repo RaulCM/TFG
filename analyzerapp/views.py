@@ -40,6 +40,7 @@ def main(request):
                 except KeyError:
                     return render(request, 'error_repo.html', {'url': url})
             elif 'gitlab.etsit.urjc.es' in url:
+                print("TRAZA ES GITLAB")
                 api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
                 r = requests.get(api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
                 repo_data = r.json()
