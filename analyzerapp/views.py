@@ -40,11 +40,9 @@ def main(request):
                 except KeyError:
                     return render(request, 'error_repo.html', {'url': url})
             elif 'gitlab.etsit.urjc.es' in url:
-                print("TRAZA ES GITLAB")
                 api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
                 r = requests.get(api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
                 repo_data = r.json()
-                print(repo_data)
                 try:
                     store_individual_data_gitlab(repo_data)
                 except KeyError:
@@ -322,6 +320,7 @@ def make_fork(repository):
         url += '/fork'
         s = requests.Session()
         r = s.post(url, headers={'PRIVATE-TOKEN': os.environ['tokengitlab']})
+        print(r.json())
         repository.fork_url = r.json()['web_url']
         api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + r.json()['web_url'].split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
         repository.fork_api_url = api_url
