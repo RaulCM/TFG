@@ -44,6 +44,7 @@ def main(request):
                 api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
                 r = requests.get(api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
                 repo_data = r.json()
+                print(repo_data)
                 try:
                     store_individual_data(repo_data)
                 except KeyError:
