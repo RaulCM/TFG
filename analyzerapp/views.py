@@ -102,6 +102,8 @@ def repo(request, resource):
             push(repository)
             print('========================create_pull========================')
             pull_url = create_pull(repository)
+            repository.pull_url = pull_url
+            repository.save()
             return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': pull_url})
         else:
             return render(request, 'error.html', {'error_message': 'ERROR'})
