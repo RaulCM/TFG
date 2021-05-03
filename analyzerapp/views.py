@@ -46,7 +46,7 @@ def main(request):
                 repo_data = r.json()
                 print(repo_data)
                 try:
-                    store_data_gitlab(repo_data)
+                    store_individual_data_gitlab(repo_data)
                 except KeyError:
                     return render(request, 'error_repo.html', {'url': url})
             else:
@@ -170,7 +170,7 @@ def store_data_gitlab(json_data):
 
 def store_individual_data_gitlab(item):
     try:
-        Repository.objects.get(identifier=str(item['id']))
+        Repository.objects.get(identifier=item['id'])
     except Repository.DoesNotExist:
         repository = Repository()
         repository.identifier = item['id']
