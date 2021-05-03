@@ -320,7 +320,6 @@ def make_fork(repository):
         url += '/fork'
         s = requests.Session()
         r = s.post(url, headers={'PRIVATE-TOKEN': os.environ['tokengitlab']})
-        print(r.json())
         repository.fork_url = r.json()['web_url']
         api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + r.json()['web_url'].split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
         repository.fork_api_url = api_url
