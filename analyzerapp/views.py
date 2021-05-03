@@ -170,7 +170,7 @@ def store_data_gitlab(json_data):
 
 def store_individual_data_gitlab(item):
     try:
-        Repository.objects.get(identifier=item['id'])
+        Repository.objects.get(identifier=str(item['id']))
     except Repository.DoesNotExist:
         repository = Repository()
         repository.identifier = item['id']
