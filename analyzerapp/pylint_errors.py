@@ -7,6 +7,7 @@ class Error:
         self.msg = data[4].rstrip()
 
 def check(error):
+    # http://pylint.pycqa.org/en/2.5/technical_reference/features.html#format-checker-messages
     lines = read_file(error.path)
     if error.code == 'C0303':
         c0303(lines, error.line)

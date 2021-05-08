@@ -25,8 +25,8 @@ class Repository(models.Model):
 
 class Errors(models.Model):
     error_id = models.CharField(max_length=150, default="Null", primary_key=True)
+    name = models.TextField(default="Null")
     message = models.TextField(default="Null")
-    url = models.URLField(max_length=350, default="Null")
     fixable = models.BooleanField(default=False)
 
 
