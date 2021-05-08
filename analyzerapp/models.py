@@ -25,4 +25,11 @@ class Repository(models.Model):
 
 class Errors(models.Model):
     error_id = models.CharField(max_length=150, default="Null", primary_key=True)
-    count = models.IntegerField(default=0)
+    message = models.TextField(default="Null")
+    url = models.URLField(max_length=350, default="Null")
+    fixable = models.BooleanField(default=False)
+
+
+class Error_count(models.Model):
+    error_id = models.ForeignKey(error_id)
+    pull_url = models.ForeignKey(Repository)
