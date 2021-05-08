@@ -31,5 +31,5 @@ class Errors(models.Model):
 
 
 class Error_count(models.Model):
-    error_id = models.ForeignKey(error_id)
+    error_id = models.ForeignKey(Errors)
     pull_url = models.ForeignKey(Repository)
