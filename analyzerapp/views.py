@@ -114,6 +114,8 @@ def list(request):
     return render(request, 'list.html', {'datos': print_data()})
 
 def error_list(request):
+    labels = []
+    data = []
     dataset = Error_count.objects.all()
     for error in dataset:
         labels.append(error.error_id.error_id)
