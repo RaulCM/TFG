@@ -113,6 +113,13 @@ def repo(request, resource):
 def list(request):
     return render(request, 'list.html', {'datos': print_data()})
 
+def error_list(request):
+    dataset = Error_count.objects.all()
+    for error in dataset:
+        labels.append(error.error_id.error_id)
+        data.append(error.error_id.error_id)
+    return render(request, 'error_list.html', {'labels': labels, 'data': data})
+
 def guide(request):
     return render(request, 'guide.html')
 
