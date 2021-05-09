@@ -230,8 +230,8 @@ def fix_errors(repository, level):
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
                         error_count = Error_count()
-                        error_count.error_id = error.code
-                        error_count.identifier = repository.identifier
+                        error_count.error_id = Errors.objects.get(error_id=error.code)
+                        error_count.identifier = Repository.objects.get(identifier=repository.identifier)
                         error_count.save()
                         pull_body = pull_body + error_string + '\n'
                 elif level == 1:
@@ -239,8 +239,8 @@ def fix_errors(repository, level):
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
                         error_count = Error_count()
-                        error_count.error_id = error.code
-                        error_count.identifier = repository.identifier
+                        error_count.error_id = Errors.objects.get(error_id=error.code)
+                        error_count.identifier = Repository.objects.get(identifier=repository.identifier)
                         error_count.save()
                         pull_body = pull_body + error_string + '\n'
                 elif level == 2:
@@ -248,8 +248,8 @@ def fix_errors(repository, level):
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
                         error_count = Error_count()
-                        error_count.error_id = error.code
-                        error_count.identifier = repository.identifier
+                        error_count.error_id = Errors.objects.get(error_id=error.code)
+                        error_count.identifier = Repository.objects.get(identifier=repository.identifier)
                         error_count.save()
                         pull_body = pull_body + error_string + '\n'
     files = []
