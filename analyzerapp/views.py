@@ -291,18 +291,21 @@ def count_fixed_error(error):
     except (Repository.DoesNotExist, TypeError):
         error_count = Fixed_errors_count()
         error_count.error_id = Errors.objects.get(error_id=error.code)
-        error_count.count = error_count.count + 1
+        error_count.count = 1
         error_count.save()
 
 def count_error(error):
     try:
         error_count = All_errors_count.objects.get(Errors.objects.get(error_id=error.code))
+        print("======================ERROR COUNT======================")
+        print(error_count.count)
+        print("======================ERROR COUNT======================")
         error_count.count = error_count.count + 1
         error_count.save()
     except (Repository.DoesNotExist, TypeError):
         error_count = All_errors_count()
         error_count.error_id = Errors.objects.get(error_id=error.code)
-        error_count.count = error_count.count + 1
+        error_count.count = 1
         error_count.save()
 
 def commit(repository):
