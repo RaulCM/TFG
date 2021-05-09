@@ -237,23 +237,29 @@ def fix_errors(repository, level):
                 if level == 0:
                     fixable = pylint_errors.check(error)
                     add_error(error, repository)
+                    count_error(error)
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
                         add_fixed_error(error, repository)
+                        count_fixed_error(error)
                         pull_body = pull_body + error_string + '\n'
                 elif level == 1:
                     fixable = pylint_errors.check1(error)
                     add_error(error, repository)
+                    count_error(error)
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
                         add_fixed_error(error, repository)
+                        count_fixed_error(error)
                         pull_body = pull_body + error_string + '\n'
                 elif level == 2:
                     fixable = pylint_errors.check2(error)
                     add_error(error, repository)
+                    count_error(error)
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
                         add_fixed_error(error, repository)
+                        count_fixed_error(error)
                         pull_body = pull_body + error_string + '\n'
     files = []
     for line in pylint_output:
