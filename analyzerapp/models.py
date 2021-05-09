@@ -21,7 +21,6 @@ class Repository(models.Model):
     # "created_at": "2018-08-17T20:35:11Z",
     # "language": "Python",
     # "node_id": "MDEwOlJlcG9zaXRvcnkxNDUxNjQzMTc=",
-    # "pulls_url": "https://api.github.com/repos/MUSSLES/sspipeline/pulls{/number}",
     # "releases_url": "https://api.github.com/repos/MUSSLES/sspipeline/releases{/id}",
 
 class Errors(models.Model):
