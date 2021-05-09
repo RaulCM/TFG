@@ -4,7 +4,7 @@ import os
 # https://docs.python.org/2/library/os.html
 import json
 import requests
-from analyzerapp.models import Repository, Errors, Error_count
+from analyzerapp.models import Repository, Errors, Fixed_errors_repo, Fixed_errors_count, All_errors_repo, All_errors_count
 from django.template.loader import get_template
 # from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
