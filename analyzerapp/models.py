@@ -34,11 +34,11 @@ class Fixed_errors_repo(models.Model):
     identifier = models.ForeignKey(Repository, on_delete=models.CASCADE)
 
 class Fixed_errors_count(models.Model):
-    error_id = models.ForeignKey(Errors, on_delete=models.CASCADE)
+    error_id = models.ForeignKey(Errors, on_delete=models.CASCADE, primary_key=True)
     count = models.IntegerField(default=0)
 
 class All_errors_repo(models.Model):
-    error_id = models.ForeignKey(Errors, on_delete=models.CASCADE, primary_key=True)
+    error_id = models.ForeignKey(Errors, on_delete=models.CASCADE)
     identifier = models.ForeignKey(Repository, on_delete=models.CASCADE)
 
 class All_errors_count(models.Model):
