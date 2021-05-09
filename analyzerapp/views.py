@@ -4,7 +4,7 @@ import os
 # https://docs.python.org/2/library/os.html
 import json
 import requests
-from analyzerapp.models import Repository, Errors
+from analyzerapp.models import Repository, Errors, Error_count
 from django.template.loader import get_template
 # from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
@@ -229,16 +229,28 @@ def fix_errors(repository, level):
                     fixable = pylint_errors.check(error)
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
+                        error_count = Error_count()
+                        error_count.error_id = error.code
+                        error_count.identifier = repository.identifier
+                        error_count.save()
                         pull_body = pull_body + error_string + '\n'
                 elif level == 1:
                     fixable = pylint_errors.check1(error)
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
+                        error_count = Error_count()
+                        error_count.error_id = error.code
+                        error_count.identifier = repository.identifier
+                        error_count.save()
                         pull_body = pull_body + error_string + '\n'
                 elif level == 2:
                     fixable = pylint_errors.check2(error)
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
+                        error_count = Error_count()
+                        error_count.error_id = error.code
+                        error_count.identifier = repository.identifier
+                        error_count.save()
                         pull_body = pull_body + error_string + '\n'
     files = []
     for line in pylint_output:
