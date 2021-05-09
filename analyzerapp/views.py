@@ -236,30 +236,24 @@ def fix_errors(repository, level):
                 error = pylint_errors.Error(tokens)
                 if level == 0:
                     fixable = pylint_errors.check(error)
+                    add_error(error, repository)
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
-                        error_count = Error_count()
-                        error_count.error_id = Errors.objects.get(error_id=error.code)
-                        error_count.identifier = Repository.objects.get(identifier=repository.identifier)
-                        error_count.save()
+                        add_fixed_error(error, repository)
                         pull_body = pull_body + error_string + '\n'
                 elif level == 1:
                     fixable = pylint_errors.check1(error)
+                    add_error(error, repository)
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
-                        error_count = Error_count()
-                        error_count.error_id = Errors.objects.get(error_id=error.code)
-                        error_count.identifier = Repository.objects.get(identifier=repository.identifier)
-                        error_count.save()
+                        add_fixed_error(error, repository)
                         pull_body = pull_body + error_string + '\n'
                 elif level == 2:
                     fixable = pylint_errors.check2(error)
+                    add_error(error, repository)
                     if fixable:
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
-                        error_count = Error_count()
-                        error_count.error_id = Errors.objects.get(error_id=error.code)
-                        error_count.identifier = Repository.objects.get(identifier=repository.identifier)
-                        error_count.save()
+                        add_fixed_error(error, repository)
                         pull_body = pull_body + error_string + '\n'
     files = []
     for line in pylint_output:
@@ -270,6 +264,40 @@ def fix_errors(repository, level):
                     files.append(filename)
     for file in files:
         pylint_errors.check_placeholders(file)
+
+def add_fixed_error(error, repository):
+    error_count = Fixed_errors_repo()
+    error_count.error_id = Errors.objects.get(error_id=error.code)
+    error_count.identifier = Repository.objects.get(identifier=repository.identifier)
+    error_count.save()
+
+def add_error(error, repository):
+    error_count = All_errors_repo()
+    error_count.error_id = Errors.objects.get(error_id=error.code)
+    error_count.identifier = Repository.objects.get(identifier=repository.identifier)
+    error_count.save()
+
+def count_fixed_error(error):
+    try:
+        Fixed_errors_count.objects.get(Errors.objects.get(error_id=error.code))
+        error_count.count = error_count.count + 1
+        error_count.save()
+    except Repository.DoesNotExist:
+        error_count = Fixed_errors_count()
+        error_count.error_id = Errors.objects.get(error_id=error.code)
+        error_count.count = error_count.count + 1
+        error_count.save()
+
+def count_error(error):
+    try:
+        All_errors_count.objects.get(Errors.objects.get(error_id=error.code))
+        error_count.count = error_count.count + 1
+        error_count.save()
+    except Repository.DoesNotExist:
+        error_count = All_errors_count()
+        error_count.error_id = Errors.objects.get(error_id=error.code)
+        error_count.count = error_count.count + 1
+        error_count.save()
 
 def commit(repository):
     name = repository.full_name
