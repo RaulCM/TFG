@@ -21,7 +21,16 @@
 			type: 'pie',
 			data: data,
 			options: {
-				responsive: true
+				responsive: true,
+				plugins: {
+					legend: {
+						position: 'right',
+					},
+					title: {
+						display: true,
+						text: 'Fixed Errors'
+					}
+				}
 			}
 		};
 
