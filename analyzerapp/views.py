@@ -285,7 +285,7 @@ def add_error(error, repository):
 
 def count_fixed_error(error):
     try:
-        error_count = Fixed_errors_count.objects.get(Errors.objects.get(error_id=error.code))
+        error_count = Fixed_errors_count.objects.get(error_id=Errors.objects.get(error_id=error.code))
         error_count.count = error_count.count + 1
         error_count.save()
     except (Repository.DoesNotExist, TypeError):
@@ -297,7 +297,7 @@ def count_fixed_error(error):
 def count_error(error):
     try:
         print("======================ERROR COUNT======================")
-        error_count = All_errors_count.objects.get(Errors.objects.get(error_id=error.code))
+        error_count = All_errors_count.objects.get(error_id=Errors.objects.get(error_id=error.code))
         print(error_count.count)
         print("======================ERROR COUNT======================")
         error_count.count = error_count.count + 1
