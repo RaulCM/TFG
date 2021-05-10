@@ -288,7 +288,7 @@ def count_fixed_error(error):
         error_count = Fixed_errors_count.objects.get(error_id=Errors.objects.get(error_id=error.code))
         error_count.count = error_count.count + 1
         error_count.save()
-    except (All_errors_count.DoesNotExist, TypeError):
+    except (Fixed_errors_count.DoesNotExist, TypeError):
         error_count = Fixed_errors_count()
         error_count.error_id = Errors.objects.get(error_id=error.code)
         error_count.count = 1
