@@ -296,10 +296,8 @@ def count_fixed_error(error):
 
 def count_error(error):
     try:
-        print("======================ERROR COUNT======================")
         error_count = All_errors_count.objects.get(error_id=Errors.objects.get(error_id=error.code))
         print(error_count.count)
-        print("======================ERROR COUNT======================")
         error_count.count = error_count.count + 1
         error_count.save()
     except (All_errors_count.DoesNotExist, TypeError):
