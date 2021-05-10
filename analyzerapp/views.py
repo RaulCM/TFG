@@ -118,7 +118,8 @@ def error_list(request):
     data = []
     dataset = Fixed_errors_count.objects.all()
     for error in dataset:
-        labels.append(error.error_id.error_id)
+        label = error.error_id.error_id + '-' + error.error_id.name
+        labels.append(label)
         data.append(error.count)
     return render(request, 'error_list.html', {'labels': labels, 'data': data})
 
