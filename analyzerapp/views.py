@@ -114,6 +114,7 @@ def list(request):
     return render(request, 'list.html', {'datos': print_data()})
 
 def error_list(request):
+    # https://www.chartjs.org/docs/latest
     labels = []
     data = []
     dataset = Fixed_errors_count.objects.all()
