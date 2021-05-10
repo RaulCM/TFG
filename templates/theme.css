@@ -127,3 +127,10 @@ body {
 .clear {
 	clear:both;
 }
+
+.chart-container {
+	position: relative;
+	margin: auto;
+	height: 40vh;
+	width: 40vw;
+}
