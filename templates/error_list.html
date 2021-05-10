@@ -2,10 +2,10 @@
 {% block content %}
 
 	<div class="container">
-		<canvas id="pie-chart"></canvas>
+		<canvas id="myChart"></canvas>
 	</div>
 
-	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script>
 
 		const data = {
@@ -17,25 +17,27 @@
 			}]
 		};
 
+		const options = {
+			responsive: true,
+			plugins: {
+				legend: {
+					position: 'right',
+				},
+				title: {
+					display: true,
+					text: 'Fixed Errors'
+				}
+			}
+		}
+
 		const config = {
 			type: 'pie',
 			data: data,
-			options: {
-				responsive: true,
-				plugins: {
-					legend: {
-						position: 'right',
-					},
-					title: {
-						display: true,
-						text: 'Fixed Errors'
-					}
-				}
-			}
+			options: options
 		};
 
 		window.onload = function() {
-			var ctx = document.getElementById('pie-chart').getContext('2d');
+			var ctx = document.getElementById('myChart').getContext('2d');
 			window.myPie = new Chart(ctx, config);
 		};
 	</script>
