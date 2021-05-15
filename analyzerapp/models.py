@@ -15,6 +15,7 @@ class Repository(models.Model):
     fork_api_url = models.URLField(max_length=350, default="Null")
     default_branch = models.TextField(default="Null")
     pull_url = models.URLField(max_length=350, default="Null")
+    pull_api_url = models.URLField(max_length=350, default="Null")
     pull_url_status = models.TextField(default="Null")
 
     # "clone_url": "https://github.com/MUSSLES/sspipeline.git",
