@@ -136,6 +136,15 @@ def error_list(request):
     repositories = Repository.objects.filter(pull_url_status__in=["open", "opened"])
     for repo in repositories:
         print(repo.full_name)
+        pull_api_url = repo.pull_api_url
+        if 'github' in pull_api_url:
+            r = requests.get(api_url)
+            repo_data = r.json()
+        elif 'gitlab.etsit.urjc.es' in pull_api_url:
+            r = requests.get(api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
+            repo_data = r.json()
+        repo.pull_url_status = r.json()['state']
+
     return render(request, 'error_list.html', {'labels': labels, 'data': data})
 
 def guide(request):
