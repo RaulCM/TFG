@@ -132,6 +132,10 @@ def error_list(request):
         label = error.error_id.error_id + '-' + error.error_id.name
         labels.append(label)
         data.append(error.count)
+
+    repositories = Repository.objects.filter(pull_url_status__in=["open", "opened"])
+    for repo in repositories:
+        print(repo.full_name)
     return render(request, 'error_list.html', {'labels': labels, 'data': data})
 
 def guide(request):
