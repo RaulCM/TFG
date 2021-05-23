@@ -144,7 +144,7 @@ def error_list(request):
             r = requests.get(api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
             repo_data = r.json()
         repo.pull_url_status = r.json()['state']
-
+        repo.save()
     return render(request, 'error_list.html', {'labels': labels, 'data': data})
 
 def guide(request):
