@@ -2,7 +2,8 @@
 {% block content %}
 
 	<div class="chart-container">
-		<canvas id="myChart"></canvas>
+		<canvas id="errorsChart"></canvas>
+		<canvas id="pullStatusChart"></canvas>
 	</div>
 
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -38,7 +39,9 @@
 		};
 
 		window.onload = function() {
-			var errors_ctx = document.getElementById('myChart').getContext('2d');
+			var errors_ctx = document.getElementById('errorsChart').getContext('2d');
+			window.myPie = new Chart(errors_ctx, errors_config);
+			var pull_status_ctx = document.getElementById('pullStatusChart').getContext('2d');
 			window.myPie = new Chart(errors_ctx, errors_config);
 		};
 	</script>
