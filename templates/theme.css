@@ -129,5 +129,19 @@ body {
 }
 
 .chart-container {
-	display: flex
+	display: inline-block;
+	height: 40vw;
+	width: 40vw;
 }
+
+#errorsChart {
+	position: absolute;
+	float:left;
+	left: 10vw
+}
+
+#pullStatusChart {
+	position: absolute;
+	float:right;
+	left: 40vw
+};
