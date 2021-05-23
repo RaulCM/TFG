@@ -103,12 +103,12 @@ def repo(request, resource):
             print('========================create_pull========================')
             pull_url = create_pull(repository)
             repository.pull_url = pull_url
-            if 'github' in url:
+            if 'github' in repository.html_url:
                 pull_api_url = pull_url.replace('://github.com/', '://api.github.com/repos/')
                 pull_api_url = pull_api_url.replace('/pull/', '/pulls/')
                 repository.pull_api_url = pull_api_url
                 repository.pull_url_status = 'open'
-            elif 'gitlab.etsit.urjc.es' in url:
+            elif 'gitlab.etsit.urjc.es' in repository.html_url:
                 pull_api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + pull_url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
                 pull_api_url = pull_api_url.replace('%2F-%2Fmerge_requests%2F', '/merge_requests/')
                 repository.pull_api_url = pull_api_url
