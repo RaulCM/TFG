@@ -8,16 +8,16 @@
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 	<script>
 
-		const data = {
-			labels: {{labels | safe}},
+		const errors_data = {
+			labels: {{errors_labels | safe}},
 			datasets: [{
 				label: 'Error Codes',
-				data: {{data | safe}},
+				data: {{errors_data | safe}},
 				backgroundColor: ['#696969', '#808080', '#A9A9A9', '#C0C0C0', '#D3D3D3'],
 			}]
 		};
 
-		const options = {
+		const errors_options = {
 			responsive: true,
 			maintainAspectRatio: true,
 			plugins: {
@@ -31,15 +31,15 @@
 			}
 		}
 
-		const config = {
+		const errors_config = {
 			type: 'pie',
-			data: data,
-			options: options
+			data: errors_data,
+			options: errors_options
 		};
 
 		window.onload = function() {
-			var ctx = document.getElementById('myChart').getContext('2d');
-			window.myPie = new Chart(ctx, config);
+			var errors_ctx = document.getElementById('myChart').getContext('2d');
+			window.myPie = new Chart(errors_ctx, errors_config);
 		};
 	</script>
 {% endblock %}
