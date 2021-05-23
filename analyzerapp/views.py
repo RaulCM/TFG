@@ -125,13 +125,13 @@ def list(request):
 
 def error_list(request):
     # https://www.chartjs.org/docs/latest
-    labels = []
-    data = []
-    dataset = Fixed_errors_count.objects.all()
-    for error in dataset:
-        label = error.error_id.error_id + '-' + error.error_id.name
-        labels.append(label)
-        data.append(error.count)
+    errors_labels = []
+    errors_data = []
+    errors_dataset = Fixed_errors_count.objects.all()
+    for error in errors_dataset:
+        errors_label = error.error_id.error_id + '-' + error.error_id.name
+        errors_labels.append(errors_label)
+        errors_data.append(error.count)
 
     repositories = Repository.objects.filter(pull_url_status__in=["open", "opened"])
     for repo in repositories:
@@ -145,7 +145,7 @@ def error_list(request):
             repo_data = r.json()
         repo.pull_url_status = r.json()['state']
         repo.save()
-    return render(request, 'error_list.html', {'labels': labels, 'data': data})
+    return render(request, 'error_list.html', {'errors_labels': errors_labels, 'errors_data': errors_data})
 
 def guide(request):
     return render(request, 'guide.html')
