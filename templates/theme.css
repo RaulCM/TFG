@@ -137,13 +137,6 @@ body {
 	z-index: 2;
 }
 
-.chart-container2 {
-	display: inline-block;
-	height: 35vw;
-	width: 30vw;
-	z-index: 2;
-}
-
 #errorsChart {
 	position: relative;
 	float:left;
