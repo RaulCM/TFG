@@ -132,8 +132,8 @@ body {
 
 .chart-container {
 	display: inline-block;
-	height: 30vw;
-	width: 30vw;
+	height: 35vw;
+	width: 35vw;
 	z-index: 2;
 }
 
@@ -146,5 +146,5 @@ body {
 #pullStatusChart {
 	position: relative;
 	float:right;
-	left: 5vw
+	left: 10vw
 };
