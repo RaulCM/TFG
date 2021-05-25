@@ -145,7 +145,9 @@ def error_list(request):
             repo_data = r.json()
         repo.pull_url_status = r.json()['state']
         repo.save()
-    return render(request, 'error_list.html', {'errors_labels': errors_labels, 'errors_data': errors_data})
+        pull_status_labels = errors_labels
+        pull_status_data = errors_data
+    return render(request, 'error_list.html', {'errors_labels': errors_labels, 'errors_data': errors_data, 'pull_status_labels': pull_status_labels, 'pull_status_data': pull_status_data})
 
 def guide(request):
     return render(request, 'guide.html')
