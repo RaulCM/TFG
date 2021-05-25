@@ -137,11 +137,11 @@ body {
 #errorsChart {
 	position: relative;
 	float:left;
-	left: 10vw
+	/* left: 10vw */
 }
 
 #pullStatusChart {
 	position: relative;
 	float:right;
-	left: 40vw
+	/* left: 40vw */
 };
