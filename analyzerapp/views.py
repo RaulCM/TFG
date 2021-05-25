@@ -125,13 +125,10 @@ def list(request):
 
 def error_list(request):
     # https://www.chartjs.org/docs/latest
-    errors_labels = []
-    errors_data = []
-    errors_dataset = Fixed_errors_count.objects.all()
-    for error in errors_dataset:
-        errors_label = error.error_id.error_id + '-' + error.error_id.name
-        errors_labels.append(errors_label)
-        errors_data.append(error.count)
+    errors_labels = ['Open', 'Closed', 'Accepted']
+    errors_data = [0, 0, 0]
+    pull_status_labels = []
+    pull_status_data = []
 
     repositories = Repository.objects.filter(pull_url_status__in=["open", "opened"])
     for repo in repositories:
@@ -143,10 +140,26 @@ def error_list(request):
         elif 'gitlab.etsit.urjc.es' in pull_api_url:
             r = requests.get(pull_api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
             repo_data = r.json()
-        repo.pull_url_status = r.json()['state']
-        repo.save()
-        pull_status_labels = errors_labels
-        pull_status_data = errors_data
+            repo.pull_url_status = r.json()['state']
+            repo.save()
+
+    errors_dataset = Fixed_errors_count.objects.all()
+    for error in errors_dataset:
+        errors_label = error.error_id.error_id + '-' + error.error_id.name
+        errors_labels.append(errors_label)
+        errors_data.append(error.count)
+
+    repositories = Repository.objects.all()
+    for repository in repositories:
+        if repository.pull_url_status == 'open':
+            pull_status_data[0] = pull_status_data[0] + 1
+        elif repository.pull_url_status == 'opened':
+            pull_status_data[0] = pull_status_data[0] + 1
+        elif repository.pull_url_status == 'closed':
+            pull_status_data[1] = pull_status_data[1] + 1
+        elif repository.pull_url_status == 'merged':
+            pull_status_data[2] = pull_status_data[2] + 1
+
     return render(request, 'error_list.html', {'errors_labels': errors_labels, 'errors_data': errors_data, 'pull_status_labels': pull_status_labels, 'pull_status_data': pull_status_data})
 
 def guide(request):
