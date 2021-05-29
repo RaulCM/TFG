@@ -127,7 +127,7 @@ def error_list(request):
     # https://www.chartjs.org/docs/latest
     errors_labels = []
     errors_data = []
-    pull_status_labels = ['Open', 'Closed', 'Accepted                               ']
+    pull_status_labels = ['Open', 'Closed', 'Accepted']
     pull_status_data = [0, 0, 0]
 
     repositories = Repository.objects.filter(pull_url_status__in=["open", "opened"])
