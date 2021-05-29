@@ -143,7 +143,7 @@ def error_list(request):
             repo.pull_url_status = r.json()['state']
             repo.save()
 
-    errors_dataset = Fixed_errors_count.objects.all().order_by('count')
+    errors_dataset = Fixed_errors_count.objects.all().order_by('-count')
     for error in errors_dataset:
         errors_label = error.error_id.error_id + '-' + error.error_id.name
         errors_labels.append(errors_label)
