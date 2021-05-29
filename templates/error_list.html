@@ -54,6 +54,13 @@
 		const pull_status_options = {
 			responsive: true,
 			maintainAspectRatio: true,
+			scales: {
+				yAxes: [{
+					ticks: {
+						stepSize: 1
+					}
+				}]
+			},
 			plugins: {
 				legend: {
 					display: false
