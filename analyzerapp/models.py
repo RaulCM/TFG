@@ -18,12 +18,6 @@ class Repository(models.Model):
     pull_api_url = models.URLField(max_length=350, default="Null")
     pull_url_status = models.TextField(default="Null")
 
-    # "clone_url": "https://github.com/MUSSLES/sspipeline.git",
-    # "created_at": "2018-08-17T20:35:11Z",
-    # "language": "Python",
-    # "node_id": "MDEwOlJlcG9zaXRvcnkxNDUxNjQzMTc=",
-    # "releases_url": "https://api.github.com/repos/MUSSLES/sspipeline/releases{/id}",
-
 class Errors(models.Model):
     error_id = models.CharField(max_length=150, default="Null", primary_key=True)
     name = models.TextField(default="Null")
