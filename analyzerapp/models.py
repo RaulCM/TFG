@@ -4,7 +4,7 @@ from django.db import models
 #https://docs.djangoproject.com/en/2.1/topics/db/models/
 
 class Repository(models.Model):
-    identifier = models.CharField(max_length=150, default="Null", primary_key=True)
+    identifier = models.CharField(max_length=150, default="Null")
     full_name = models.TextField(default="Null")
     owner = models.TextField(default="Null")
     name = models.TextField(default="Null")
