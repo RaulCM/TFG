@@ -369,7 +369,6 @@ def push(repository):
     os.chdir('/tmp/projects/' + name)
     os.system(push_cmd)
     os.chdir(current_dir)
-    delete_fork(repository)
 
 def analyze_repo(item):
     # https://docs.pylint.org/en/1.6.0/output.html
@@ -451,6 +450,7 @@ def create_pull(repository):
                 "target_project_id": repository.identifier}
         r = s.post(url, data, headers={'PRIVATE-TOKEN': os.environ['tokengitlab']})
         pull_url = r.json()['web_url']
+    delete_fork(repository)
     return pull_url
 
 def github_search(request):
