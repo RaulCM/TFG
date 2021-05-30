@@ -57,7 +57,7 @@ def main(request):
 
 @csrf_exempt
 def repo(request, resource):
-    repository = Repository.objects.get(identifier=resource)
+    repository = Repository.objects.filter(pull_url_status__isnull=True).get(identifier=resource) #TODO FILTRAR POR STATUS NULL
     if request.method == 'GET':
         if request.GET.get('errors', default=None) is None:
             return render(request, 'repo_data.html', {'repository': repository})
@@ -198,7 +198,7 @@ def store_data(json_data):
 
 def store_individual_data(item):
     try:
-        Repository.objects.get(identifier=item['id'])
+        repository = Repository.objects.filter(pull_url_status__isnull=True).get(identifier=item['id']) #TODO SI EL STATUS ES DISTINTO DE NULL, SE ALMACENA NUEVO
     except Repository.DoesNotExist:
         repository = Repository()
         repository.identifier = item['id']
@@ -217,7 +217,7 @@ def store_data_gitlab(json_data):
 
 def store_individual_data_gitlab(item):
     try:
-        Repository.objects.get(identifier=item['id'])
+        repository = Repository.objects.filter(pull_url_status__isnull=True).get(identifier=item['id']) #TODO SI EL STATUS ES DISTINTO DE NULL, SE ALMACENA NUEVO
     except Repository.DoesNotExist:
         repository = Repository()
         repository.identifier = item['id']
@@ -369,6 +369,7 @@ def push(repository):
     os.chdir('/tmp/projects/' + name)
     os.system(push_cmd)
     os.chdir(current_dir)
+    delete_fork(repository)
 
 def analyze_repo(item):
     # https://docs.pylint.org/en/1.6.0/output.html
@@ -437,7 +438,6 @@ def create_pull(repository):
         r = s.post(url, data, headers={'Authorization': 'token ' + os.environ['token']})
         os.system('git config user.email "raulcanomontero@hotmail.com"')
         os.system('git config user.name "Raul Cano"')
-        print('=========linea332=========')
         pull_url = r.json()['html_url']
     elif 'gitlab.etsit.urjc.es' in url:
         url = repository.fork_api_url
@@ -500,10 +500,14 @@ def read_errors():
                     error.count = 0
                     error.save()
 
-def delete_fork(url):
-    s = requests.Session()
-    # s.auth = (os.environ['username'], os.environ['password'])
-    r = s.delete(url, headers={'Authorization': 'token ' + os.environ['token']})
+def delete_fork(repository):
+    url = repository.fork_api_url
+    if 'github' in url:
+        s = requests.Session()
+        r = s.delete(url, headers={'Authorization': 'token ' + os.environ['token']})
+    elif 'gitlab.etsit.urjc.es' in url:
+        s = requests.Session()
+        r = s.delete(url, headers={'PRIVATE-TOKEN': os.environ['tokengitlab']})
 
 def get_pulls(url):
     url += '/pulls?state=all'
