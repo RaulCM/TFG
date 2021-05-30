@@ -57,7 +57,7 @@ def main(request):
 
 @csrf_exempt
 def repo(request, resource):
-    repository = Repository.objects.filter(pull_url_status__isnull=True).get(identifier=resource) #TODO FILTRAR POR STATUS NULL
+    repository = Repository.objects.filter(pull_url_status="Null").get(identifier=resource) #TODO FILTRAR POR STATUS NULL
     if request.method == 'GET':
         if request.GET.get('errors', default=None) is None:
             return render(request, 'repo_data.html', {'repository': repository})
