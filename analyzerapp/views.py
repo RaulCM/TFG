@@ -314,13 +314,13 @@ def fix_errors(repository, level):
 def add_fixed_error(error, repository):
     error_count = Fixed_errors_repo()
     error_count.error_id = Errors.objects.get(error_id=error.code)
-    error_count.identifier = Repository.objects.get(identifier=repository.identifier)
+    error_count.identifier = Repository.objects.filter(pull_url_status="Null").get(identifier=repository.identifier)
     error_count.save()
 
 def add_error(error, repository):
     error_count = All_errors_repo()
     error_count.error_id = Errors.objects.get(error_id=error.code)
-    error_count.identifier = Repository.objects.get(identifier=repository.identifier)
+    error_count.identifier = Repository.objects.filter(pull_url_status="Null").get(identifier=repository.identifier)
     error_count.save()
 
 def count_fixed_error(error):
