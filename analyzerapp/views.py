@@ -198,7 +198,7 @@ def store_data(json_data):
 
 def store_individual_data(item):
     try:
-        repository = Repository.objects.filter(pull_url_status__isnull=True).get(identifier=item['id']) #TODO SI EL STATUS ES DISTINTO DE NULL, SE ALMACENA NUEVO
+        repository = Repository.objects.filter(pull_url_status="Null").get(identifier=item['id']) #TODO SI EL STATUS ES DISTINTO DE NULL, SE ALMACENA NUEVO
     except Repository.DoesNotExist:
         repository = Repository()
         repository.identifier = item['id']
@@ -217,7 +217,7 @@ def store_data_gitlab(json_data):
 
 def store_individual_data_gitlab(item):
     try:
-        repository = Repository.objects.filter(pull_url_status__isnull=True).get(identifier=item['id']) #TODO SI EL STATUS ES DISTINTO DE NULL, SE ALMACENA NUEVO
+        repository = Repository.objects.filter(pull_url_status="Null").get(identifier=item['id']) #TODO SI EL STATUS ES DISTINTO DE NULL, SE ALMACENA NUEVO
     except Repository.DoesNotExist:
         repository = Repository()
         repository.identifier = item['id']
