@@ -39,7 +39,7 @@ def main(request):
                 try:
                     repository = Repository.objects.filter(pull_url_status='open').get(identifier=repo_data['id'])
                     # TODO Devolver mensaje de error informando de que hay una PR abierta para ese repo
-                    return render(request, 'requests_exists.html', {'url': repository.pull_url})
+                    return render(request, 'request_exists.html', {'url': repository.pull_url})
                 except Repository.DoesNotExist:
                     try:
                         store_individual_data(repo_data)
@@ -53,7 +53,7 @@ def main(request):
                 try:
                     repository = Repository.objects.filter(pull_url_status='opened').get(identifier=repo_data['id'])
                     # TODO Devolver mensaje de error informando de que hay una PR abierta para ese repo
-                    return render(request, 'requests_exists.html', {'url': repository.pull_url})
+                    return render(request, 'request_exists.html', {'url': repository.pull_url})
                 except Repository.DoesNotExist:
                     try:
                         store_individual_data_gitlab(repo_data)
@@ -144,7 +144,7 @@ def error_list(request):
 
     repositories = Repository.objects.filter(pull_url_status__in=["open", "opened"])
     for repo in repositories:
-        print(repo.full_name)
+        print(repo.full_name) # TODO Revisar, no funciona correctamente
         pull_api_url = repo.pull_api_url
         if 'github' in pull_api_url:
             r = requests.get(pull_api_url)
