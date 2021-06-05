@@ -152,8 +152,8 @@ def error_list(request):
         elif 'gitlab.etsit.urjc.es' in pull_api_url:
             r = requests.get(pull_api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
             repo_data = r.json()
-            repo.pull_url_status = r.json()['state']
-            repo.save()
+        repo.pull_url_status = r.json()['state']
+        repo.save()
 
     errors_dataset = Fixed_errors_count.objects.all().order_by('-count')
     for error in errors_dataset:
