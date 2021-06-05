@@ -37,7 +37,7 @@ def main(request):
                 repo_data = r.json()
                 # TODO Comprobar si hay una PR pendiente para ese repo
                 try:
-                    repository = Repository.objects.filter(pull_url_status='open').get(identifier=item['id'])
+                    repository = Repository.objects.filter(pull_url_status='open').get(identifier=repo_data['id'])
                     # TODO Devolver mensaje de error informando de que hay una PR abierta para ese repo
                     return render(request, 'requests_exists.html', {'url': repository.pull_url})
                 except Repository.DoesNotExist:
@@ -51,7 +51,7 @@ def main(request):
                 repo_data = r.json()
                 # TODO Comprobar si hay una PR pendiente para ese repo
                 try:
-                    repository = Repository.objects.filter(pull_url_status='opened').get(identifier=item['id'])
+                    repository = Repository.objects.filter(pull_url_status='opened').get(identifier=repo_data['id'])
                     # TODO Devolver mensaje de error informando de que hay una PR abierta para ese repo
                     return render(request, 'requests_exists.html', {'url': repository.pull_url})
                 except Repository.DoesNotExist:
