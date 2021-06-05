@@ -35,18 +35,30 @@ def main(request):
                 api_url = url.replace('://github.com/', '://api.github.com/repos/')
                 r = requests.get(api_url)
                 repo_data = r.json()
+                # TODO Comprobar si hay una PR pendiente para ese repo
                 try:
-                    store_individual_data(repo_data)
-                except KeyError:
-                    return render(request, 'error_repo.html', {'url': url})
+                    repository = Repository.objects.filter(pull_url_status='open').get(identifier=item['id'])
+                    # TODO Devolver mensaje de error informando de que hay una PR abierta para ese repo
+                    return render(request, 'requests_exists.html', {'url': repository.pull_url})
+                except Repository.DoesNotExist:
+                    try:
+                        store_individual_data(repo_data)
+                    except KeyError:
+                        return render(request, 'error_repo.html', {'url': url})
             elif 'gitlab.etsit.urjc.es' in url:
                 api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
                 r = requests.get(api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
                 repo_data = r.json()
+                # TODO Comprobar si hay una PR pendiente para ese repo
                 try:
-                    store_individual_data_gitlab(repo_data)
-                except KeyError:
-                    return render(request, 'error_repo.html', {'url': url})
+                    repository = Repository.objects.filter(pull_url_status='opened').get(identifier=item['id'])
+                    # TODO Devolver mensaje de error informando de que hay una PR abierta para ese repo
+                    return render(request, 'requests_exists.html', {'url': repository.pull_url})
+                except Repository.DoesNotExist:
+                    try:
+                        store_individual_data_gitlab(repo_data)
+                    except KeyError:
+                        return render(request, 'error_repo.html', {'url': url})
             else:
                 return render(request, 'error_repo.html', {'url': url})
             return redirect('/repo/' + str(repo_data['id']))
@@ -57,7 +69,7 @@ def main(request):
 
 @csrf_exempt
 def repo(request, resource):
-    repository = Repository.objects.filter(pull_url_status="Null").get(identifier=resource) #TODO FILTRAR POR STATUS NULL
+    repository = Repository.objects.filter(pull_url_status='Null').get(identifier=resource) #TODO FILTRAR POR STATUS NULL
     if request.method == 'GET':
         if request.GET.get('errors', default=None) is None:
             return render(request, 'repo_data.html', {'repository': repository})
@@ -198,7 +210,7 @@ def store_data(json_data):
 
 def store_individual_data(item):
     try:
-        repository = Repository.objects.filter(pull_url_status="Null").get(identifier=item['id']) #TODO SI EL STATUS ES DISTINTO DE NULL, SE ALMACENA NUEVO
+        repository = Repository.objects.filter(pull_url_status='Null').get(identifier=item['id']) #TODO SI EL STATUS ES DISTINTO DE NULL, SE ALMACENA NUEVO
     except Repository.DoesNotExist:
         repository = Repository()
         repository.identifier = item['id']
@@ -217,7 +229,7 @@ def store_data_gitlab(json_data):
 
 def store_individual_data_gitlab(item):
     try:
-        repository = Repository.objects.filter(pull_url_status="Null").get(identifier=item['id']) #TODO SI EL STATUS ES DISTINTO DE NULL, SE ALMACENA NUEVO
+        repository = Repository.objects.filter(pull_url_status='Null').get(identifier=item['id']) #TODO SI EL STATUS ES DISTINTO DE NULL, SE ALMACENA NUEVO
     except Repository.DoesNotExist:
         repository = Repository()
         repository.identifier = item['id']
@@ -314,13 +326,13 @@ def fix_errors(repository, level):
 def add_fixed_error(error, repository):
     error_count = Fixed_errors_repo()
     error_count.error_id = Errors.objects.get(error_id=error.code)
-    error_count.identifier = Repository.objects.filter(pull_url_status="Null").get(identifier=repository.identifier)
+    error_count.identifier = Repository.objects.filter(pull_url_status='Null').get(identifier=repository.identifier)
     error_count.save()
 
 def add_error(error, repository):
     error_count = All_errors_repo()
     error_count.error_id = Errors.objects.get(error_id=error.code)
-    error_count.identifier = Repository.objects.filter(pull_url_status="Null").get(identifier=repository.identifier)
+    error_count.identifier = Repository.objects.filter(pull_url_status='Null').get(identifier=repository.identifier)
     error_count.save()
 
 def count_fixed_error(error):
