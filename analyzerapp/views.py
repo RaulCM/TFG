@@ -22,6 +22,7 @@ pull_body = ('Your code has been analyzed by XXXX using Pylint tool to adapt' +
 @csrf_exempt
 def main(request):
     if request.method == 'GET':
+        update()
         return render(request, 'main.html')
     elif request.method == 'POST':
         form_name = request.body.decode('utf-8').split('=')[0]
@@ -142,18 +143,21 @@ def error_list(request):
     pull_status_labels = ['Open', 'Closed', 'Accepted']
     pull_status_data = [0, 0, 0]
 
-    repositories = Repository.objects.filter(pull_url_status__in=["open", "opened"])
-    for repo in repositories:
-        print(repo.full_name) # TODO Revisar, no funciona correctamente
-        pull_api_url = repo.pull_api_url
-        if 'github' in pull_api_url:
-            r = requests.get(pull_api_url)
-            repo_data = r.json()
-        elif 'gitlab.etsit.urjc.es' in pull_api_url:
-            r = requests.get(pull_api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
-            repo_data = r.json()
-        repo.pull_url_status = r.json()['state']
-        repo.save()
+    # repositories = Repository.objects.filter(pull_url_status__in=["open", "opened"])
+    # for repo in repositories:
+    #     print(repo.full_name) # TODO Revisar, no funciona correctamente
+    #     pull_api_url = repo.pull_api_url
+    #     if 'github' in pull_api_url:
+    #         r = requests.get(pull_api_url)
+    #         repo_data = r.json()
+    #     elif 'gitlab.etsit.urjc.es' in pull_api_url:
+    #         r = requests.get(pull_api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
+    #         repo_data = r.json()
+    #         # TODO Si la MR ha sido cerrada, borrar repo
+    #         if r.json()['state'] != 'opened':
+    #             delete_fork(repository)
+    #     repo.pull_url_status = r.json()['state']
+    #     repo.save()
 
     errors_dataset = Fixed_errors_count.objects.all().order_by('-count')
     for error in errors_dataset:
@@ -185,24 +189,39 @@ def print_data():
     return(datos)
 
 def update():
-    url = 'https://api.github.com/repos/'
-    datos = Repository.objects.all()
-    for item in datos:
-        full_name = item.full_name
-        r = requests.get(url + full_name + '?access_token=' + os.environ['token'])
-        json_data = r.json()
-        try:
-            modified = False
-            if item.name == 'Null':
-                item.name = json_data['owner']['login']
-                modified = True
-            if item.owner == 'Null':
-                item.owner = json_data['name']
-                modified = True
-            if modified is True:
-                item.save()
-        except KeyError as e:
-            pass
+    # url = 'https://api.github.com/repos/'
+    # datos = Repository.objects.all()
+    # for item in datos:
+    #     full_name = item.full_name
+    #     r = requests.get(url + full_name + '?access_token=' + os.environ['token'])
+    #     json_data = r.json()
+    #     try:
+    #         modified = False
+    #         if item.name == 'Null':
+    #             item.name = json_data['owner']['login']
+    #             modified = True
+    #         if item.owner == 'Null':
+    #             item.owner = json_data['name']
+    #             modified = True
+    #         if modified is True:
+    #             item.save()
+    #     except KeyError as e:
+    #         pass
+    repositories = Repository.objects.filter(pull_url_status__in=["open", "opened"])
+    for repo in repositories:
+        print(repo.full_name) # TODO Revisar, no funciona correctamente
+        pull_api_url = repo.pull_api_url
+        if 'github' in pull_api_url:
+            r = requests.get(pull_api_url)
+            repo_data = r.json()
+        elif 'gitlab.etsit.urjc.es' in pull_api_url:
+            r = requests.get(pull_api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
+            repo_data = r.json()
+            # TODO Si la MR ha sido cerrada, borrar repo
+            if r.json()['state'] != 'opened':
+                delete_fork(repository)
+        repo.pull_url_status = r.json()['state']
+        repo.save()
 
 def store_data(json_data):
     for item in json_data:
@@ -462,7 +481,7 @@ def create_pull(repository):
                 "target_project_id": repository.identifier}
         r = s.post(url, data, headers={'PRIVATE-TOKEN': os.environ['tokengitlab']})
         pull_url = r.json()['web_url']
-    delete_fork(repository)
+    # delete_fork(repository)
     return pull_url
 
 def github_search(request):
