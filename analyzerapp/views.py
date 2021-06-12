@@ -92,9 +92,7 @@ def repo(request, resource):
             pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
             return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
         elif form_name == 'fix_errors':
-            print('========================make_fork========================')
             make_fork(repository)
-            print('========================github_clone_fork========================')
             github_clone_fork(repository)
             if form_value == '1':
                 level = 1
@@ -102,13 +100,9 @@ def repo(request, resource):
                 level = 2
             else:
                 level = 0
-            print('========================fix_errors========================')
             fix_errors(repository, level)
-            print('========================commit========================')
             commit(repository)
-            print('========================push========================')
             push(repository)
-            print('========================create_pull========================')
             pull_url = create_pull(repository)
             repository.pull_url = pull_url
             if 'github' in repository.html_url:
@@ -352,7 +346,6 @@ def count_fixed_error(error):
 def count_error(error):
     try:
         error_count = All_errors_count.objects.get(error_id=Errors.objects.get(error_id=error.code))
-        print(error_count.count)
         error_count.count = error_count.count + 1
         error_count.save()
     except (All_errors_count.DoesNotExist, TypeError):
@@ -452,7 +445,6 @@ def create_pull(repository):
         r = s.post(url, data, headers={'Authorization': 'token ' + os.environ['token']})
         os.system('git config user.email "raulcanomontero@hotmail.com"')
         os.system('git config user.name "Raul Cano"')
-        print(r.json())
         pull_url = r.json()['html_url']
     elif 'gitlab.etsit.urjc.es' in url:
         url = repository.fork_api_url
