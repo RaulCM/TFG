@@ -134,6 +134,7 @@ def repo(request, resource):
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
 
 def list(request):
+    update()
     return render(request, 'list.html', {'datos': print_data()})
 
 def error_list(request):
@@ -142,6 +143,8 @@ def error_list(request):
     errors_data = []
     pull_status_labels = ['Open', 'Closed', 'Accepted']
     pull_status_data = [0, 0, 0]
+
+    update()
 
     # repositories = Repository.objects.filter(pull_url_status__in=["open", "opened"])
     # for repo in repositories:
@@ -179,9 +182,11 @@ def error_list(request):
     return render(request, 'error_list.html', {'errors_labels': errors_labels, 'errors_data': errors_data, 'pull_status_labels': pull_status_labels, 'pull_status_data': pull_status_data})
 
 def guide(request):
+    update()
     return render(request, 'guide.html')
 
 def contact(request):
+    update()
     return render(request, 'contact.html')
 
 def print_data():
