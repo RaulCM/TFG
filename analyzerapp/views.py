@@ -288,7 +288,7 @@ def fix_errors(repository, level):
                     add_error(error, repository)
                     count_error(error)
                     if fixable:
-                        error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
+                        error_string = line.replace('/tmp/projects', '')
                         add_fixed_error(error, repository)
                         count_fixed_error(error)
                         pull_body = pull_body + error_string + '  \n'
@@ -297,7 +297,7 @@ def fix_errors(repository, level):
                     add_error(error, repository)
                     count_error(error)
                     if fixable:
-                        error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
+                        error_string = line.replace('/tmp/projects', '')
                         add_fixed_error(error, repository)
                         count_fixed_error(error)
                         pull_body = pull_body + error_string + '  \n'
@@ -306,7 +306,7 @@ def fix_errors(repository, level):
                     add_error(error, repository)
                     count_error(error)
                     if fixable:
-                        error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
+                        error_string = line.replace('/tmp/projects', '')
                         add_fixed_error(error, repository)
                         count_fixed_error(error)
                         pull_body = pull_body + error_string + '  \n'
