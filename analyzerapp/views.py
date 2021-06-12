@@ -36,10 +36,8 @@ def main(request):
                 api_url = url.replace('://github.com/', '://api.github.com/repos/')
                 r = requests.get(api_url)
                 repo_data = r.json()
-                # TODO Comprobar si hay una PR pendiente para ese repo
                 try:
                     repository = Repository.objects.filter(pull_url_status='open').get(identifier=repo_data['id'])
-                    # TODO Devolver mensaje de error informando de que hay una PR abierta para ese repo
                     return render(request, 'request_exists.html', {'pull_url': repository.pull_url})
                 except Repository.DoesNotExist:
                     try:
@@ -50,10 +48,8 @@ def main(request):
                 api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
                 r = requests.get(api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
                 repo_data = r.json()
-                # TODO Comprobar si hay una PR pendiente para ese repo
                 try:
                     repository = Repository.objects.filter(pull_url_status='opened').get(identifier=repo_data['id'])
-                    # TODO Devolver mensaje de error informando de que hay una PR abierta para ese repo
                     return render(request, 'request_exists.html', {'pull_url': repository.pull_url})
                 except Repository.DoesNotExist:
                     try:
@@ -66,7 +62,6 @@ def main(request):
         return render(request, 'main.html')
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
-    # return HttpResponse(response)
 
 @csrf_exempt
 def repo(request, resource):
@@ -145,22 +140,6 @@ def error_list(request):
     pull_status_data = [0, 0, 0]
 
     update()
-
-    # repositories = Repository.objects.filter(pull_url_status__in=["open", "opened"])
-    # for repo in repositories:
-    #     print(repo.full_name) # TODO Revisar, no funciona correctamente
-    #     pull_api_url = repo.pull_api_url
-    #     if 'github' in pull_api_url:
-    #         r = requests.get(pull_api_url)
-    #         repo_data = r.json()
-    #     elif 'gitlab.etsit.urjc.es' in pull_api_url:
-    #         r = requests.get(pull_api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
-    #         repo_data = r.json()
-    #         # TODO Si la MR ha sido cerrada, borrar repo
-    #         if r.json()['state'] != 'opened':
-    #             delete_fork(repository)
-    #     repo.pull_url_status = r.json()['state']
-    #     repo.save()
 
     errors_dataset = Fixed_errors_count.objects.all().order_by('-count')
     for error in errors_dataset:
