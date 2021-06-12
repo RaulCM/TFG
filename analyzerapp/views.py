@@ -14,8 +14,8 @@ import subprocess
 from analyzerapp import pylint_errors
 # Create your views here.
 
-pull_body = ('Your code has been analyzed by XXXX using Pylint tool to adapt' +
-            ' it to [PEP8, the Python style guide]' +
+pull_body = ('Your code has been analyzed by PEP-Analyzer using Pylint tool' +
+            ' to adapt it to [PEP8, the Python style guide]' +
             '(https://www.python.org/dev/peps/pep-0008/).\n' +
             'These are the pylint errors fixed in your code:\n')
 
