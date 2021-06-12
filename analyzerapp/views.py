@@ -192,12 +192,12 @@ def update():
             r = requests.get(pull_api_url)
             repo_data = r.json()
             if r.json()['state'] != 'open':
-                delete_fork(repository)
+                delete_fork(repo)
         elif 'gitlab.etsit.urjc.es' in pull_api_url:
             r = requests.get(pull_api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
             repo_data = r.json()
             if r.json()['state'] != 'opened':
-                delete_fork(repository)
+                delete_fork(repo)
         repo.pull_url_status = r.json()['state']
         repo.save()
 
