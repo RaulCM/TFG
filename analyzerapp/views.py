@@ -16,8 +16,8 @@ from analyzerapp import pylint_errors
 
 pull_body = ('Your code has been analyzed by PEP-Analyzer using Pylint tool' +
             ' to adapt it to [PEP8, the Python style guide]' +
-            '(https://www.python.org/dev/peps/pep-0008/).\n' +
-            'These are the pylint errors fixed in your code:\n')
+            '(https://www.python.org/dev/peps/pep-0008/).  \n' +
+            'These are the pylint errors fixed in your code:  \n')
 
 @csrf_exempt
 def main(request):
@@ -291,7 +291,7 @@ def fix_errors(repository, level):
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
                         add_fixed_error(error, repository)
                         count_fixed_error(error)
-                        pull_body = pull_body + error_string + '\n'
+                        pull_body = pull_body + error_string + '  \n'
                 elif level == 1:
                     fixable = pylint_errors.check1(error)
                     add_error(error, repository)
@@ -300,7 +300,7 @@ def fix_errors(repository, level):
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
                         add_fixed_error(error, repository)
                         count_fixed_error(error)
-                        pull_body = pull_body + error_string + '\n'
+                        pull_body = pull_body + error_string + '  \n'
                 elif level == 2:
                     fixable = pylint_errors.check2(error)
                     add_error(error, repository)
@@ -309,7 +309,7 @@ def fix_errors(repository, level):
                         error_string = line.replace('/tmp/projects/RaulCM-TFG', '')
                         add_fixed_error(error, repository)
                         count_fixed_error(error)
-                        pull_body = pull_body + error_string + '\n'
+                        pull_body = pull_body + error_string + '  \n'
     files = []
     for line in pylint_output:
         if len(line) > 0:
