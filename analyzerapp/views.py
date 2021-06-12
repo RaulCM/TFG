@@ -508,34 +508,34 @@ def github_search(request):
     json_pretty = json.dumps(json_data, sort_keys=True, indent=4)
     return HttpResponse(json_pretty,content_type="text/json")
 
-def run_pylint():
-    # https://docs.pylint.org/en/1.6.0/output.html
-    fichero = 'analyzerapp/views.py'
-    # os.system('pylint ' + fichero + " --msg-template='{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}' | grep -e '[[]C' -e '[[]E' -e '[[]F' -e '[[]I' -e '[[]R' -e '[[]W'")
-    # --msg-template='{abspath}:{line}:{msg_id}' --reports=n
-    os.system('pylint ' + fichero + " --msg-template='{msg_id}' --reports=n >> /tmp/pylint_output")
+# def run_pylint():
+#     # https://docs.pylint.org/en/1.6.0/output.html
+#     fichero = 'analyzerapp/views.py'
+#     # os.system('pylint ' + fichero + " --msg-template='{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}' | grep -e '[[]C' -e '[[]E' -e '[[]F' -e '[[]I' -e '[[]R' -e '[[]W'")
+#     # --msg-template='{abspath}:{line}:{msg_id}' --reports=n
+#     os.system('pylint ' + fichero + " --msg-template='{msg_id}' --reports=n >> /tmp/pylint_output")
 
-def read_files():
-    for root, dirs, files in os.walk('/tmp/projects/', topdown=False):
-        for name in files:
-            ext = os.path.splitext(name)[-1].lower()
-            if ext == '.py':
-                os.system('pylint ' + os.path.join(root, name) + " --msg-template='{msg_id}' --reports=n >> /tmp/pylint_output")
+# def read_files():
+#     for root, dirs, files in os.walk('/tmp/projects/', topdown=False):
+#         for name in files:
+#             ext = os.path.splitext(name)[-1].lower()
+#             if ext == '.py':
+#                 os.system('pylint ' + os.path.join(root, name) + " --msg-template='{msg_id}' --reports=n >> /tmp/pylint_output")
 
-def read_errors():
-    for line in open('/tmp/pylint_output'):
-        if len(line) > 0:
-            if line[0] != '*':
-                error_id = line[:-1]
-                try:
-                    error = Errors.objects.get(error_id=error_id)
-                    error.count = error.count + 1
-                    error.save()
-                except Errors.DoesNotExist:
-                    error = Errors()
-                    error.error_id = error_id
-                    error.count = 0
-                    error.save()
+# def read_errors():
+#     for line in open('/tmp/pylint_output'):
+#         if len(line) > 0:
+#             if line[0] != '*':
+#                 error_id = line[:-1]
+#                 try:
+#                     error = Errors.objects.get(error_id=error_id)
+#                     error.count = error.count + 1
+#                     error.save()
+#                 except Errors.DoesNotExist:
+#                     error = Errors()
+#                     error.error_id = error_id
+#                     error.count = 0
+#                     error.save()
 
 def delete_fork(repository):
     url = repository.fork_api_url
@@ -546,18 +546,18 @@ def delete_fork(repository):
         s = requests.Session()
         r = s.delete(url, headers={'PRIVATE-TOKEN': os.environ['tokengitlab']})
 
-def get_pulls(url):
-    url += '/pulls?state=all'
-    s = requests.Session()
-    # s.auth = (os.environ['username'], os.environ['password'])
-    r = s.get(url, headers={'Authorization': 'token ' + os.environ['token']})
-    return r.json()
+# def get_pulls(url):
+#     url += '/pulls?state=all'
+#     s = requests.Session()
+#     # s.auth = (os.environ['username'], os.environ['password'])
+#     r = s.get(url, headers={'Authorization': 'token ' + os.environ['token']})
+#     return r.json()
 
-def pull_state(url):
-    json_data = get_pulls(url)
-    state = ''
-    for item in json_data:
-        label = item['head']['label']
-        if label == 'RaulCM:pylint':
-            state = item['state']
-    return state
+# def pull_state(url):
+#     json_data = get_pulls(url)
+#     state = ''
+#     for item in json_data:
+#         label = item['head']['label']
+#         if label == 'RaulCM:pylint':
+#             state = item['state']
+#     return state
