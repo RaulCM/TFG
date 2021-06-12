@@ -14,10 +14,11 @@ import subprocess
 from analyzerapp import pylint_errors
 # Create your views here.
 
-pull_body = ('Your code has been analyzed by PEP-Analyzer using Pylint tool' +
+pull_body_header = ('Your code has been analyzed by PEP-Analyzer using Pylint tool' +
             ' to adapt it to [PEP8, the Python style guide]' +
             '(https://www.python.org/dev/peps/pep-0008/).  \n' +
             'These are the pylint errors fixed in your code:  \n')
+pull_body = ''
 
 @csrf_exempt
 def main(request):
@@ -275,6 +276,7 @@ def github_clone_fork(item):
 
 def fix_errors(repository, level):
     global pull_body
+    pull_body = pull_body_header
     pylint_output = analyze_repo(repository)
     pylint_output = pylint_output.split('\n')
     pylint_output = pylint_output[:-1]
