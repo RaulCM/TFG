@@ -193,15 +193,15 @@ def update():
     #         pass
     repositories = Repository.objects.filter(pull_url_status__in=["open", "opened"])
     for repo in repositories:
-        print(repo.full_name) # TODO Revisar, no funciona correctamente
         pull_api_url = repo.pull_api_url
         if 'github' in pull_api_url:
             r = requests.get(pull_api_url)
             repo_data = r.json()
+            if r.json()['state'] != 'open':
+                delete_fork(repository)
         elif 'gitlab.etsit.urjc.es' in pull_api_url:
             r = requests.get(pull_api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
             repo_data = r.json()
-            # TODO Si la MR ha sido cerrada, borrar repo
             if r.json()['state'] != 'opened':
                 delete_fork(repository)
         repo.pull_url_status = r.json()['state']
@@ -465,7 +465,6 @@ def create_pull(repository):
                 "target_project_id": repository.identifier}
         r = s.post(url, data, headers={'PRIVATE-TOKEN': os.environ['tokengitlab']})
         pull_url = r.json()['web_url']
-    # delete_fork(repository)
     return pull_url
 
 def github_search(request):
