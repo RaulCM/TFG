@@ -373,7 +373,7 @@ def push(repository):
     url = url.replace('http://', '@')
     current_dir = os.getcwd()
     if 'github' in url:
-        push_cmd = 'git push https://' + os.environ['username'] + ':' + os.environ['password'] + url
+        push_cmd = 'git push https://' + os.environ['username'] + ':' + os.environ['token'] + url
     elif 'gitlab.etsit.urjc.es' in url:
         push_cmd = 'git push https://' + os.environ['usernamegitlab'] + ':' + os.environ['passwordgitlab'] + url
     os.chdir('/tmp/projects/' + name)
