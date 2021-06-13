@@ -4,6 +4,28 @@
 
 <div class="container">
 	<p style="color:white">Ya existe una <a href={{pull_url}} target="_blank">Pull-Request</a> abierta para ese repositorio, por favor, acéptala o ciérrala antes de volver a analizar el repositorio.<p>
+	<div class='table-responsive'>
+		<table style="color:white" class="table table-bordered">
+			<tbody>
+				<tr>
+					<td width="20%"><b>Repository name</b></td>
+					<td>{{repository.name}}</td>
+				</tr>
+				<tr>
+					<td width="20%"><b>Repository owner</b></td>
+					<td>{{repository.owner}}</td>
+				</tr>
+				<tr>
+					<td width="20%"><b>Description</b></td>
+					<td>{{repository.description}}</td>
+				</tr>
+				<tr>
+					<td width="20%"><b>URL</b></td>
+					<td><a href={{repository.html_url}} target="_blank">{{repository.html_url}}</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
 
 
