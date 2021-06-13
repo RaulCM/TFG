@@ -39,7 +39,7 @@ def main(request):
                 repo_data = r.json()
                 try:
                     repository = Repository.objects.filter(pull_url_status='open').get(identifier=repo_data['id'])
-                    return render(request, 'request_exists.html', {'pull_url': repository.pull_url})
+                    return render(request, 'request_exists.html', {'repository': repository}, 'pull_url': repository.pull_url})
                 except Repository.DoesNotExist:
                     try:
                         store_individual_data(repo_data)
@@ -51,7 +51,7 @@ def main(request):
                 repo_data = r.json()
                 try:
                     repository = Repository.objects.filter(pull_url_status='opened').get(identifier=repo_data['id'])
-                    return render(request, 'request_exists.html', {'pull_url': repository.pull_url})
+                    return render(request, 'request_exists.html', {'repository': repository}, pull_url': repository.pull_url})
                 except Repository.DoesNotExist:
                     try:
                         store_individual_data_gitlab(repo_data)
