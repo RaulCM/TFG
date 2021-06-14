@@ -25,9 +25,8 @@
 			</tbody>
 		</table>
 	</div>
-	<form method="POST"><button id="runpylint" type="submit" name="pylint">
-			Pylint
-		</button>
+	<form method="POST">
+		<input id="runpylint" type="submit" name="pylint" class="button" value="Pylint">
 	</form>
 	<p id="running" style="color:white" class="oculto">
 	<img src="{% static 'images/loading.gif' %}">Ejecutando Pylint</p>
@@ -36,7 +35,6 @@
 	$(document).ready(function() {
 		$("#runpylint").click(function() {
 			$("#runpylint").toggleClass("oculto")
-			$("#runpylint").toggleClass("button")
 			$("#running").toggleClass("oculto")
 		});
 	});
