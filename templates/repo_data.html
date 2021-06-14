@@ -29,13 +29,14 @@
 			Pylint
 		</button>
 	</form>
-	<p id="running" style="color:white" class="oculto button">
+	<p id="running" style="color:white" class="oculto">
 	<img src="{% static 'images/loading.gif' %}">Ejecutando Pylint</p>
 </div>
 <script>
 	$(document).ready(function() {
 		$("#runpylint").click(function() {
 			$("#runpylint").toggleClass("oculto")
+			$("#runpylint").toggleClass("button")
 			$("#running").toggleClass("oculto")
 		});
 	});
