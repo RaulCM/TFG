@@ -125,7 +125,8 @@ def repo(request, resource):
 
 def list(request):
     update()
-    return render(request, 'list.html', {'datos': print_data()})
+    repositories = Repository.objects.filter(pull_url_status__in=["open", "opened"])
+    return render(request, 'list.html', {'datos': repositories})
 
 def error_list(request):
     # https://www.chartjs.org/docs/latest
@@ -164,7 +165,8 @@ def contact(request):
     return render(request, 'contact.html')
 
 def print_data():
-    datos = Repository.objects.all()
+    datos = Repository.objects.filter(pull_url_status__in=["open", "opened"])
+    # datos = Repository.objects.all()
     return(datos)
 
 def update():
