@@ -31,7 +31,7 @@
 		<li {% if fix_errors == 1 %} class="active" {% endif %}><a href="/repo/{{repository.identifier}}?errors=2">Nivel 1</a></li>
 		<li {% if fix_errors == 2 %} class="active" {% endif %}><a href="/repo/{{repository.identifier}}?errors=3">Nivel 2</a></li>
 	</ul>
-	<p>Salida de pylint:</p>
+	<p style="color:white">Salida de pylint:</p>
 	<p class="terminal"><samp>
 	{% for msg in pylint_output %}
 		{% if msg|slice:":1" == '/' %}
