@@ -127,8 +127,8 @@ def list(request):
     update()
     repositories_all = Repository.objects.filter(pull_url_status__in=['open', 'opened', 'accepted', 'closed'])
     repositories_open = Repository.objects.filter(pull_url_status__in=['open', 'opened'])
-    repositories_accepted = Repository.objects.filter(pull_url_status='accepted'))
-    repositories_closed = Repository.objects.filter(pull_url_status='closed'))
+    repositories_accepted = Repository.objects.filter(pull_url_status='accepted')
+    repositories_closed = Repository.objects.filter(pull_url_status='closed')
     return render(request, 'list.html', {'data_all': repositories_all, 'data_open': repositories_open, 'data_accepted': repositories_accepted, 'data_closed': repositories_closed})
 
 def error_list(request):
