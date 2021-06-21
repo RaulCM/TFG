@@ -168,30 +168,12 @@ def contact(request):
     update()
     return render(request, 'contact.html')
 
-def print_data():
+def print_data(): #TODO Borrar
     datos = Repository.objects.filter(pull_url_status__in=['open', 'opened'])
     # datos = Repository.objects.all()
     return(datos)
 
 def update():
-    # url = 'https://api.github.com/repos/'
-    # datos = Repository.objects.all()
-    # for item in datos:
-    #     full_name = item.full_name
-    #     r = requests.get(url + full_name + '?access_token=' + os.environ['token'])
-    #     json_data = r.json()
-    #     try:
-    #         modified = False
-    #         if item.name == 'Null':
-    #             item.name = json_data['owner']['login']
-    #             modified = True
-    #         if item.owner == 'Null':
-    #             item.owner = json_data['name']
-    #             modified = True
-    #         if modified is True:
-    #             item.save()
-    #     except KeyError as e:
-    #         pass
     repositories = Repository.objects.filter(pull_url_status__in=['open', 'opened'])
     for repo in repositories:
         pull_api_url = repo.pull_api_url
@@ -208,7 +190,7 @@ def update():
         repo.pull_url_status = r.json()['state']
         repo.save()
 
-def store_data(json_data):
+def store_data(json_data): #TODO Borrar
     for item in json_data:
         store_individual_data(item)
 
@@ -227,7 +209,7 @@ def store_individual_data(item):
         repository.api_url = item['url']
         repository.save()
 
-def store_data_gitlab(json_data):
+def store_data_gitlab(json_data): #TODO Borrar
     for item in json_data:
         store_individual_data_gitlab(item)
 
@@ -248,7 +230,7 @@ def store_individual_data_gitlab(item):
         repository.api_url = api_url
         repository.save()
 
-def github_clone():
+def github_clone(): #TODO Borrar
     datos = Repository.objects.all()
     #datos = Repository.objects.all().filter(corrected=0)
     for item in datos:
@@ -407,7 +389,7 @@ def analyze_repo(item):
         os.environ.pop('PYLINTRC')
     return pylint_output
 
-def read_file(filename):
+def read_file(filename): #TODO Borrar
     # https://developer.github.com/v3/#rate-limiting
     if os.path.isfile(filename):
         s = open(filename, 'r').read()
@@ -467,7 +449,7 @@ def create_pull(repository):
         pull_url = r.json()['web_url']
     return pull_url
 
-def github_search(request):
+def github_search(request): #TODO Borrar
     url = 'https://api.github.com/search/repositories'
     #https://developer.github.com/v3/search/#search-repositories
     #https://help.github.com/articles/understanding-the-search-syntax/
@@ -486,35 +468,6 @@ def github_search(request):
     json_pretty = json.dumps(json_data, sort_keys=True, indent=4)
     return HttpResponse(json_pretty,content_type="text/json")
 
-# def run_pylint():
-#     # https://docs.pylint.org/en/1.6.0/output.html
-#     fichero = 'analyzerapp/views.py'
-#     # os.system('pylint ' + fichero + " --msg-template='{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}' | grep -e '[[]C' -e '[[]E' -e '[[]F' -e '[[]I' -e '[[]R' -e '[[]W'")
-#     # --msg-template='{abspath}:{line}:{msg_id}' --reports=n
-#     os.system('pylint ' + fichero + " --msg-template='{msg_id}' --reports=n >> /tmp/pylint_output")
-
-# def read_files():
-#     for root, dirs, files in os.walk('/tmp/projects/', topdown=False):
-#         for name in files:
-#             ext = os.path.splitext(name)[-1].lower()
-#             if ext == '.py':
-#                 os.system('pylint ' + os.path.join(root, name) + " --msg-template='{msg_id}' --reports=n >> /tmp/pylint_output")
-
-# def read_errors():
-#     for line in open('/tmp/pylint_output'):
-#         if len(line) > 0:
-#             if line[0] != '*':
-#                 error_id = line[:-1]
-#                 try:
-#                     error = Errors.objects.get(error_id=error_id)
-#                     error.count = error.count + 1
-#                     error.save()
-#                 except Errors.DoesNotExist:
-#                     error = Errors()
-#                     error.error_id = error_id
-#                     error.count = 0
-#                     error.save()
-
 def delete_fork(repository):
     url = repository.fork_api_url
     if 'github' in url:
@@ -523,19 +476,3 @@ def delete_fork(repository):
     elif 'gitlab.etsit.urjc.es' in url:
         s = requests.Session()
         r = s.delete(url, headers={'PRIVATE-TOKEN': os.environ['tokengitlab']})
-
-# def get_pulls(url):
-#     url += '/pulls?state=all'
-#     s = requests.Session()
-#     # s.auth = (os.environ['username'], os.environ['password'])
-#     r = s.get(url, headers={'Authorization': 'token ' + os.environ['token']})
-#     return r.json()
-
-# def pull_state(url):
-#     json_data = get_pulls(url)
-#     state = ''
-#     for item in json_data:
-#         label = item['head']['label']
-#         if label == 'RaulCM:pylint':
-#             state = item['state']
-#     return state
