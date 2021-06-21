@@ -161,7 +161,8 @@ def error_list(request):
 
 def guide(request):
     update()
-    return render(request, 'guide.html')
+    errors = Errors.objects.filter(fixable=True)
+    return render(request, 'guide.html', {'errors': errors})
 
 def contact(request):
     update()
