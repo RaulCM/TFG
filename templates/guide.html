@@ -27,7 +27,12 @@
 			<h3 id="start" style="margin-left: 5%">Inicio</h3>
 		</header>
 		<p>
-			Para analizar un proyecto éste debe estar alojado en un repositorio de GitHub o del GitLab de la ETSIT de la URJC.
+			En la pantalla de inicio se muestra un único formulario en el que se puede introducir el enlace al proyecto que se quiere analizar.
+			<br>Para analizar un proyecto éste debe estar alojado en un repositorio de GitHub o del GitLab de la ETSIT de la URJC.
+			<br>Una vez introducido el enlace al repositorio que contiene el proyecto, se muestra un breve resumen de los datos del repositorio, indicando su nombre, propietario, descripción y enlace, y un botón para ejecutar el análisis con Pylint.
+			<br>Tras ejecutar Pylint, se muestra el resultado del análisis, pudiendo escoger visualizar todos los errores detectados por Pylint o filtrarlos para ver sólo los que son corregibles por la aplicación web, y un botón con el que corregir dichos errores.
+			<br>Después de corregir los errores, se realiza la Pull Request/Merge Request y se muestran los datos del repositorio junto al enlace a la Pull Request/Merge Request que se ha realizado.
+			<br>Dicha Pull Request/Merge Request deberá ser aceptada o cancelada por el usuario propietario del repositorio original.
 		</p>
 		<header>
 			<h3 id="repo_list" style="margin-left: 5%">Lista de repositorios</h3>
