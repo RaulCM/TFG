@@ -103,14 +103,16 @@ def repo(request, resource):
                 output_file = open(file_path, 'r')
                 pylint_output = output_file.read()
                 output_file.close()
-                print("/////////////////////////////////////////////////////")
-                for line in pylint_output:
-                    print(line)
+                # print("/////////////////////////////////////////////////////")
+                # for line in pylint_output:
+                #     print(line)
                 # pylint_output = ''
                 # for line in pylint_output_file:
                     # pylint_output = pylint_output + line
                 print("====================================================")
-                print(pylint_output)
+                pylint_output = pylint_output.split('\n')
+                for line in pylint_output:
+                    print(line)
                 return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
             else:
                 return render(request, 'running_pylint.html', {'repository': repository})
