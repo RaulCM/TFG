@@ -152,6 +152,7 @@ def async_test(request, repository):
     print("DESPUÉS")
     pylint_output = analyze_repo(repository)
     print("DESPUÉS PYLINT")
+    print(pylint_output)
     pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
     if os.path.isfile('/tmp/projects/pylint_output' + repository.owner + '_' + repository.name):
         os.system('rm -rfv /tmp/projects/pylint_output' + repository.owner + '_' + repository.name)
