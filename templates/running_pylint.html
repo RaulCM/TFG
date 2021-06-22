@@ -29,12 +29,8 @@
 	<img src="{% static 'images/loading.gif' %}">Ejecutando Pylint</p>
 </div>
 <script>
-	$.ajax({
-		type: 'POST',
-		url: 'https://pep-analyzer.herokuapp.com/repo/'+{{repository.identifier}},
-		data: {
-			'form_name': 'running',
-		},
-	});
+	$(document).ready(function(){
+		$.post( "https://pep-analyzer.herokuapp.com/repo/"+{{repository.identifier}}, { form_name: "running"} );
+});
 </script>
 	{% endblock %}
