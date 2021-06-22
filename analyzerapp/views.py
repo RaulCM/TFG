@@ -90,7 +90,7 @@ def repo(request, resource):
         form_name = request.body.decode('utf-8').split('=')[0]
         form_value = request.body.decode('utf-8').split('=')[1]
         if form_name == 'pylint':
-            async_test.after_response(request, repository)
+            async_pylint_output.after_response(request, repository)
             return render(request, 'running_pylint.html', {'repository': repository})
         elif form_name == 'running':
             time.sleep(20)
@@ -135,7 +135,7 @@ def repo(request, resource):
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
 
 @after_response.enable
-def async_test(request, repository):
+def async_pylint_output(request, repository):
     github_clone_individual(repository)
     pylint_output = analyze_repo(repository)
     pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
