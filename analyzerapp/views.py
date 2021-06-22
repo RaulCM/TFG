@@ -147,8 +147,13 @@ def async_test(request, repository):
     pylint_output = analyze_repo(repository)
     print("DESPUÉS PYLINT")
     pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
-    #crear fichero y guardar pylint_output
+    file_path = '/tmp/projects/pylint_output' + repository.owner + '_' + repository.name
     print("FIN")
+    output_file = open(file_path, 'w+')
+    output_file.write(str(pylint_output))
+    output_file.seek(0)
+    print(output_file.read())
+    output_file.close()
 
 def list(request):
     update()
