@@ -87,14 +87,8 @@ def repo(request, resource):
                 pylint_output[:] = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
                 return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 2})
     elif request.method == 'POST':
-        print("BODY:")
-        print(request.body.decode('utf-8'))
         form_name = request.body.decode('utf-8').split('=')[0]
         form_value = request.body.decode('utf-8').split('=')[1]
-        print("form_name:")
-        print(form_name)
-        print("form_value:")
-        print(form_value)
         if form_name == 'pylint':
             # github_clone_individual(repository)
             # pylint_output = analyze_repo(repository)
@@ -107,8 +101,11 @@ def repo(request, resource):
             file_path = '/tmp/projects/pylint_output' + repository.owner + '_' + repository.name
             if os.path.isfile(file_path):
                 output_file = open(file_path, 'r')
-                pylint_output = output_file.read()
+                pylint_output_file = output_file.read()
                 output_file.close()
+                pylint_output = ''
+                for line in pylint_output_file:
+                    pylint_output = pylint_output + line
                 print("====================================================")
                 print(pylint_output)
                 return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
