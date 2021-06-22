@@ -129,7 +129,9 @@ def repo(request, resource):
 
 @after_response.enable
 def async_test(request, repository):
+    print("ANTES")
     time.sleep(60)
+    print("DESPUES")
     pylint_output = analyze_repo(repository)
     pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
     if request.GET.get('errors', default=None) == '0':
