@@ -132,7 +132,9 @@ def async_test(request, repository):
     github_clone_individual(repository)
     print("DESPUÉS")
     pylint_output = analyze_repo(repository)
+    print("DESPUÉS PYLINT")
     pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
+    print("FIN")
     return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
 
 def list(request):
