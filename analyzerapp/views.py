@@ -94,7 +94,7 @@ def repo(request, resource):
             # pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
             # return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
             async_test.after_response(request, repository)
-            return render(request, 'repo_data.html', {'repository': repository})
+            return HttpResponse(200)
         elif form_name == 'fix_errors':
             make_fork(repository)
             github_clone_fork(repository)
