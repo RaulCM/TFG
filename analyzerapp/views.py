@@ -158,7 +158,7 @@ def async_test(request, repository):
     output_file = open(file_path, 'w+')
     # for line in pylint_output:
     #     output_file.write(line + '\n')
-    output_file.write(pylint_output)
+    output_file.write(str(pylint_output))
     output_file.seek(0)
     print(output_file.read())
     output_file.close()
