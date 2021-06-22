@@ -33,6 +33,8 @@
 	</ul>
 	<p style="color:white">Salida de pylint:</p>
 	<p class="terminal"><samp>
+		{{pylint_output}}<br>
+
 	{% for msg in pylint_output %}
 		{% if msg|slice:":1" == '/' %}
 			{{msg}}<br>
