@@ -30,7 +30,7 @@
 </div>
 <script>
 	$(document).ready(function(){
-		$.redirect( "https://pep-analyzer.herokuapp.com/repo/a"+{{repository.identifier}}, { form_name: "running"} );
+		$().redirect( "https://pep-analyzer.herokuapp.com/repo/a"+{{repository.identifier}}, { form_name: "running"} );
 });
 </script>
 	{% endblock %}
