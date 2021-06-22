@@ -104,10 +104,14 @@ def repo(request, resource):
             return render(request, 'running_pylint.html', {'repository': repository})
         elif form_name == 'running':
             time.sleep(20)
-            # if fichero existe:
-                # return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
-            # else:
-            return render(request, 'running_pylint.html', {'repository': repository})
+            file_path = '/tmp/projects/pylint_output' + repository.owner + '_' + repository.name
+            if os.path.isfile(file_path):
+                output_file = open(file_path, 'r')
+                pylint_output = output_file.read()
+                output_file.close()
+                return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
+            else:
+                return render(request, 'running_pylint.html', {'repository': repository})
         elif form_name == 'fix_errors':
             make_fork(repository)
             github_clone_fork(repository)
@@ -147,6 +151,8 @@ def async_test(request, repository):
     pylint_output = analyze_repo(repository)
     print("DESPUÉS PYLINT")
     pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
+    if os.path.isfile('/tmp/projects/pylint_output' + repository.owner + '_' + repository.name):
+        os.system('rm -rfv /tmp/projects/pylint_output' + repository.owner + '_' + repository.name)
     file_path = '/tmp/projects/pylint_output' + repository.owner + '_' + repository.name
     print("FIN")
     output_file = open(file_path, 'w+')
