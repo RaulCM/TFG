@@ -103,6 +103,9 @@ def repo(request, resource):
                 output_file = open(file_path, 'r')
                 pylint_output = output_file.read()
                 output_file.close()
+                print("/////////////////////////////////////////////////////")
+                for line in pylint_output:
+                    print(line)
                 # pylint_output = ''
                 # for line in pylint_output_file:
                     # pylint_output = pylint_output + line
