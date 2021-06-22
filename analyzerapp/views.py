@@ -128,7 +128,9 @@ def repo(request, resource):
 
 @after_response.enable
 def async_test(request, repository):
+    print("ANTES")
     github_clone_individual(repository)
+    print("DESPUÉS")
     pylint_output = analyze_repo(repository)
     pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
     return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
