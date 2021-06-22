@@ -13,6 +13,7 @@ from urllib.parse import unquote
 import subprocess
 from analyzerapp import pylint_errors
 import after_response
+import time
 # Create your views here.
 
 pull_body_header = ('Your code has been analyzed by PEP-Analyzer using Pylint tool' +
@@ -94,8 +95,13 @@ def repo(request, resource):
             # pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
             # return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
             async_test.after_response(request, repository)
-            return render(request, 'repo_data.html', {'repository': repository})
-            # return HttpResponse(200)
+            return render(request, 'running_pylint.html', {'repository': repository})
+        elif form_name == 'running':
+            time.sleep(20)
+            # if fichero existe:
+                # return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
+
+            return render(request, 'running_pylint.html', {'repository': repository})
         elif form_name == 'fix_errors':
             make_fork(repository)
             github_clone_fork(repository)
@@ -135,8 +141,8 @@ def async_test(request, repository):
     pylint_output = analyze_repo(repository)
     print("DESPUÉS PYLINT")
     pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
+    #crear fichero y guardar pylint_output
     print("FIN")
-    return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
 
 def list(request):
     update()
