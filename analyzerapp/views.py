@@ -13,7 +13,6 @@ from urllib.parse import unquote
 import subprocess
 from analyzerapp import pylint_errors
 import after_response
-import time
 # Create your views here.
 
 pull_body_header = ('Your code has been analyzed by PEP-Analyzer using Pylint tool' +
@@ -73,29 +72,29 @@ def repo(request, resource):
         if request.GET.get('errors', default=None) is None:
             return render(request, 'repo_data.html', {'repository': repository})
         else:
-            # pylint_output = analyze_repo(repository)
-            # pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
-            # if request.GET.get('errors', default=None) == '0':
-            #     return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
-            # elif request.GET.get('errors', default=None) == '1':
-            #     pylint_output[:] = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
-            #     return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 0})
-            # elif request.GET.get('errors', default=None) == '2':
-            #     pylint_output[:] = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
-            #     return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 1})
-            # elif request.GET.get('errors', default=None) == '3':
-            #     pylint_output[:] = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
-            #     return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 2})
-            async_test.after_response(request, repository)
-            return render(request, 'repo_data.html', {'repository': repository})
+            pylint_output = analyze_repo(repository)
+            pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
+            if request.GET.get('errors', default=None) == '0':
+                return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
+            elif request.GET.get('errors', default=None) == '1':
+                pylint_output[:] = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
+                return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 0})
+            elif request.GET.get('errors', default=None) == '2':
+                pylint_output[:] = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
+                return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 1})
+            elif request.GET.get('errors', default=None) == '3':
+                pylint_output[:] = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
+                return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 2})
     elif request.method == 'POST':
         form_name = request.body.decode('utf-8').split('=')[0]
         form_value = request.body.decode('utf-8').split('=')[1]
         if form_name == 'pylint':
-            github_clone_individual(repository)
-            pylint_output = analyze_repo(repository)
-            pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
-            return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
+            # github_clone_individual(repository)
+            # pylint_output = analyze_repo(repository)
+            # pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
+            # return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
+            async_test.after_response(request, repository)
+            return render(request, 'repo_data.html', {'repository': repository})
         elif form_name == 'fix_errors':
             make_fork(repository)
             github_clone_fork(repository)
@@ -129,22 +128,10 @@ def repo(request, resource):
 
 @after_response.enable
 def async_test(request, repository):
-    print("ANTES")
-    time.sleep(60)
-    print("DESPUES")
+    github_clone_individual(repository)
     pylint_output = analyze_repo(repository)
     pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
-    if request.GET.get('errors', default=None) == '0':
-        return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
-    elif request.GET.get('errors', default=None) == '1':
-        pylint_output[:] = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
-        return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 0})
-    elif request.GET.get('errors', default=None) == '2':
-        pylint_output[:] = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
-        return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 1})
-    elif request.GET.get('errors', default=None) == '3':
-        pylint_output[:] = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
-        return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 1, 'fix_errors': 2})
+    return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
 
 def list(request):
     update()
