@@ -44,6 +44,7 @@ def check(error):
     elif error.code == 'W0611':
         w0611(lines, error.line)
         print("W0611")
+        fixable = True
     else:
         fixable = False
         print("NO")
