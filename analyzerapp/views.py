@@ -101,11 +101,11 @@ def repo(request, resource):
             file_path = '/tmp/projects/pylint_output' + repository.owner + '_' + repository.name
             if os.path.isfile(file_path):
                 output_file = open(file_path, 'r')
-                pylint_output_file = output_file.read()
+                pylint_output = output_file.read()
                 output_file.close()
-                pylint_output = ''
-                for line in pylint_output_file:
-                    pylint_output = pylint_output + line
+                # pylint_output = ''
+                # for line in pylint_output_file:
+                    # pylint_output = pylint_output + line
                 print("====================================================")
                 print(pylint_output)
                 return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
