@@ -90,10 +90,6 @@ def repo(request, resource):
         form_name = request.body.decode('utf-8').split('=')[0]
         form_value = request.body.decode('utf-8').split('=')[1]
         if form_name == 'pylint':
-            # github_clone_individual(repository)
-            # pylint_output = analyze_repo(repository)
-            # pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
-            # return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
             async_test.after_response(request, repository)
             return render(request, 'running_pylint.html', {'repository': repository})
         elif form_name == 'running':
@@ -103,16 +99,7 @@ def repo(request, resource):
                 output_file = open(file_path, 'r')
                 pylint_output = output_file.read()
                 output_file.close()
-                # print("/////////////////////////////////////////////////////")
-                # for line in pylint_output:
-                #     print(line)
-                # pylint_output = ''
-                # for line in pylint_output_file:
-                    # pylint_output = pylint_output + line
-                print("====================================================")
                 pylint_output = pylint_output.split('\n')
-                for line in pylint_output:
-                    print(line)
                 return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'fixables': 0})
             else:
                 return render(request, 'running_pylint.html', {'repository': repository})
@@ -149,23 +136,16 @@ def repo(request, resource):
 
 @after_response.enable
 def async_test(request, repository):
-    print("ANTES")
     github_clone_individual(repository)
-    print("DESPUÉS")
     pylint_output = analyze_repo(repository)
-    print("DESPUÉS PYLINT")
-    print(pylint_output)
     pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
     if os.path.isfile('/tmp/projects/pylint_output' + repository.owner + '_' + repository.name):
         os.system('rm -rfv /tmp/projects/pylint_output' + repository.owner + '_' + repository.name)
     file_path = '/tmp/projects/pylint_output' + repository.owner + '_' + repository.name
-    print("FIN")
     output_file = open(file_path, 'w+')
     for line in pylint_output:
         output_file.write(line + '\n')
-    # output_file.write(str(pylint_output))
     output_file.seek(0)
-    print(output_file.read())
     output_file.close()
 
 def list(request):
