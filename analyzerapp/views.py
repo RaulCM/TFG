@@ -13,6 +13,7 @@ from urllib.parse import unquote
 import subprocess
 from analyzerapp import pylint_errors
 import after_response
+import time
 # Create your views here.
 
 pull_body_header = ('Your code has been analyzed by PEP-Analyzer using Pylint tool' +
@@ -128,6 +129,7 @@ def repo(request, resource):
 
 @after_response.enable
 def async_test(request, repository):
+    time.sleep(60)
     pylint_output = analyze_repo(repository)
     pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
     if request.GET.get('errors', default=None) == '0':
