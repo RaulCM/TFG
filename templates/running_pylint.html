@@ -28,5 +28,13 @@
 	<p id="running" style="color:white">
 	<img src="{% static 'images/loading.gif' %}">Ejecutando Pylint</p>
 </div>
-
+<script>
+	$.ajax({
+		type: 'POST',
+		url: 'https://pep-analyzer.herokuapp.com/repo/'+{{repository.identifier}},
+		data: {
+			'form_name': 'running',
+		},
+	});
+</script>
 	{% endblock %}
