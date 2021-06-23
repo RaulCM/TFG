@@ -125,7 +125,10 @@ def repo(request, resource):
             if os.path.isfile(file_path):
                 return render(request, 'fixing_errors.html', {'repository': repository})
             else:
-                repository = Repository.objects.filter(pull_url_status='Null').get(identifier=resource)
+                if 'github' in repository.html_url:
+                    repository = Repository.objects.filter(pull_url_status='open').get(identifier=resource)
+                elif 'gitlab.etsit.urjc.es' in repository.html_url:
+                    repository = Repository.objects.filter(pull_url_status='opened').get(identifier=resource)
                 return render(request, 'repo_data_success.html', {'repository': repository})
         else:
             return render(request, 'error.html', {'error_message': 'ERROR'})
