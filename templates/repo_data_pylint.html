@@ -25,26 +25,81 @@
 			</tbody>
 		</table>
 	</div>
-	<ul class="nav nav-tabs">
-		<li {% if fixables == 0 %} class="active" {% endif %}><a href="/repo/{{repository.identifier}}?errors=0">Mostrar todos</a></li>
-		<li {% if fix_errors == 0 %} class="active" {% endif %}><a href="/repo/{{repository.identifier}}?errors=1">Mostrar corregibles</a></li>
-		<li {% if fix_errors == 1 %} class="active" {% endif %}><a href="/repo/{{repository.identifier}}?errors=2">Nivel 1</a></li>
-		<li {% if fix_errors == 2 %} class="active" {% endif %}><a href="/repo/{{repository.identifier}}?errors=3">Nivel 2</a></li>
+	<ul class="nav nav-tabs" role="tablist">
+		<li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" role="tab" href="#all">Mostrar todos</a></li>
+		<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" role="tab" href="#fixables">Mostrar corregibles</a></li>
+		<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" role="tab" href="#level1">Nivel 1</a></li>
+		<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" role="tab" href="#level2">Nivel 2</a></li>
 	</ul>
-	<p style="color:white">Salida de pylint:</p>
-	<p class="terminal"><samp>
-	{% for msg in pylint_output %}
-		{% if msg|slice:":1" == '/' %}
-			{{msg}}<br>
-		{% endif %}
-	{% endfor %}
-	</samp></p>
-	<div class="clear">
-		<form method="POST">
-			<button type="submit" name="fix_errors" class="button" value={{fix_errors}}>
-				Corregir
-			</button>
-		</form>
+	<div class="tab-content">
+		<div id="all" class="tab-pane in active" role="tabpanel">
+			<p style="color:white">Salida de pylint:</p>
+			<p class="terminal"><samp>
+			{% for msg in pylint_output %}
+				{% if msg|slice:":1" == '/' %}
+					{{msg}}<br>
+				{% endif %}
+			{% endfor %}
+			</samp></p>
+			<div class="clear">
+				<form method="POST">
+					<button type="submit" name="fix_errors" class="button" value="0">
+						Corregir
+					</button>
+				</form>
+			</div>
+		</div>
+		<div id="fixables" class="tab-pane fade" role="tabpanel">
+			<p style="color:white">Salida de pylint:</p>
+			<p class="terminal"><samp>
+			{% for msg in pylint_output_fixables %}
+				{% if msg|slice:":1" == '/' %}
+					{{msg}}<br>
+				{% endif %}
+			{% endfor %}
+			</samp></p>
+			<div class="clear">
+				<form method="POST">
+					<button type="submit" name="fix_errors" class="button" value="0">
+						Corregir
+					</button>
+				</form>
+			</div>
+		</div>
+		<div id="level1" class="tab-pane fade" role="tabpanel">
+			<p style="color:white">Salida de pylint:</p>
+			<p class="terminal"><samp>
+			{% for msg in pylint_output_level1 %}
+				{% if msg|slice:":1" == '/' %}
+					{{msg}}<br>
+				{% endif %}
+			{% endfor %}
+			</samp></p>
+			<div class="clear">
+				<form method="POST">
+					<button type="submit" name="fix_errors" class="button" value="1">
+						Corregir
+					</button>
+				</form>
+			</div>
+		</div>
+		<div id="level2" class="tab-pane fade" role="tabpanel">
+			<p style="color:white">Salida de pylint:</p>
+			<p class="terminal"><samp>
+			{% for msg in pylint_output_level2 %}
+				{% if msg|slice:":1" == '/' %}
+					{{msg}}<br>
+				{% endif %}
+			{% endfor %}
+			</samp></p>
+			<div class="clear">
+				<form method="POST">
+					<button type="submit" name="fix_errors" class="button" value="2">
+						Corregir
+					</button>
+				</form>
+			</div>
+		</div>
 	</div>
 </div>
 
