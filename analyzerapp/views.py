@@ -67,7 +67,7 @@ def main(request):
 
 @csrf_exempt
 def repo(request, resource):
-    repository = Repository.objects.filter(pull_url_status='Null').get(identifier=resource) #TODO FILTRAR POR STATUS NULL
+    repository = Repository.objects.filter(pull_url_status='Null').get(identifier=resource)
     if request.method == 'GET':
         return render(request, 'repo_data.html', {'repository': repository})
     elif request.method == 'POST':
@@ -125,6 +125,7 @@ def repo(request, resource):
             if os.path.isfile(file_path):
                 return render(request, 'fixing_errors.html', {'repository': repository})
             else:
+                repository = Repository.objects.filter(pull_url_status='Null').get(identifier=resource)
                 return render(request, 'repo_data_success.html', {'repository': repository})
         else:
             return render(request, 'error.html', {'error_message': 'ERROR'})
