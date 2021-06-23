@@ -136,6 +136,34 @@ def async_pylint_output(request, repository):
     output_file.seek(0)
     output_file.close()
 
+@after_response.enable
+def async_fixing_errors(arg):
+    make_fork(repository)
+    github_clone_fork(repository)
+    if form_value == '1':
+        level = 1
+    elif form_value == '2':
+        level = 2
+    else:
+        level = 0
+    fix_errors(repository, level)
+    commit(repository)
+    push(repository)
+    pull_url = create_pull(repository)
+    repository.pull_url = pull_url
+    if 'github' in repository.html_url:
+        pull_api_url = pull_url.replace('://github.com/', '://api.github.com/repos/')
+        pull_api_url = pull_api_url.replace('/pull/', '/pulls/')
+        repository.pull_api_url = pull_api_url
+        repository.pull_url_status = 'open'
+    elif 'gitlab.etsit.urjc.es' in repository.html_url:
+        pull_api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + pull_url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
+        pull_api_url = pull_api_url.replace('%2F-%2Fmerge_requests%2F', '/merge_requests/')
+        repository.pull_api_url = pull_api_url
+        repository.pull_url_status = 'opened'
+    repository.save()
+    os.system('rm -rfv /tmp/projects/pylint_output' + repository.owner + '_' + repository.name)
+
 def list(request):
     update()
     repositories_all = Repository.objects.filter(pull_url_status__in=['open', 'opened', 'accepted', 'closed'])
