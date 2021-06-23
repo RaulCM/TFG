@@ -99,7 +99,7 @@ def repo(request, resource):
                 level = 2
             else:
                 level = 0
-            fix_errors(repository, level)
+            fix_errors(repository, level) #TODO async
             commit(repository)
             push(repository)
             pull_url = create_pull(repository)
@@ -277,7 +277,13 @@ def github_clone_fork(item):
 def fix_errors(repository, level):
     global pull_body
     pull_body = pull_body_header
-    pylint_output = analyze_repo(repository)
+    # pylint_output = analyze_repo(repository)
+
+    file_path = '/tmp/projects/pylint_output' + repository.owner + '_' + repository.name
+    output_file = open(file_path, 'r')
+    pylint_output = output_file.read()
+    output_file.close()
+
     pylint_output = pylint_output.split('\n')
     pylint_output = pylint_output[:-1]
     for line in pylint_output:
