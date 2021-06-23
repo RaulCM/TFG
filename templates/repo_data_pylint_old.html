@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+	<div class='table-responsive'>
+		<table style="color:white" class="table table-bordered">
+			<tbody>
+				<tr>
+					<td width="20%"><b>Repository name</b></td>
+					<td>{{repository.name}}</td>
+				</tr>
+				<tr>
+					<td width="20%"><b>Repository owner</b></td>
+					<td>{{repository.owner}}</td>
+				</tr>
+				<tr>
+					<td width="20%"><b>Description</b></td>
+					<td>{{repository.description}}</td>
+				</tr>
+				<tr>
+					<td width="20%"><b>Repository URL</b></td>
+					<td><a href={{repository.html_url}} target="_blank">{{repository.html_url}}</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<ul class="nav nav-tabs">
+		<li {% if fixables == 0 %} class="active" {% endif %}><a href="/repo/{{repository.identifier}}?errors=0">Mostrar todos</a></li>
+		<li {% if fix_errors == 0 %} class="active" {% endif %}><a href="/repo/{{repository.identifier}}?errors=1">Mostrar corregibles</a></li>
+		<li {% if fix_errors == 1 %} class="active" {% endif %}><a href="/repo/{{repository.identifier}}?errors=2">Nivel 1</a></li>
+		<li {% if fix_errors == 2 %} class="active" {% endif %}><a href="/repo/{{repository.identifier}}?errors=3">Nivel 2</a></li>
+	</ul>
+	<p style="color:white">Salida de pylint:</p>
+	<p class="terminal"><samp>
+	{% for msg in pylint_output %}
+		{% if msg|slice:":1" == '/' %}
+			{{msg}}<br>
+		{% endif %}
+	{% endfor %}
+	</samp></p>
+	<div class="clear">
+		<form method="POST">
+			<button type="submit" name="fix_errors" class="button" value={{fix_errors}}>
+				Corregir
+			</button>
+		</form>
+	</div>
+</div>
+
+
+	{% endblock %}

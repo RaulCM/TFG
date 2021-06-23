@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+	<div class="container">
+  	<div class='table-responsive'>
+  		<table style="color:white" class="table table-bordered">
+  			<thead>
+  				<tr>
+  					<th class="th-sm">Repository name</th>
+  					<th class="th-sm">Repository owner</th>
+  					<th class="th-sm">Description</th>
+  					<th class="th-sm">Repository URL</th>
+  					<th class="th-sm">Pull-Request URL</th>
+  				</tr>
+  			</thead>
+  			<tbody>
+  				{% for repository in data_open %}
+  				<tr>
+  					<td>{{repository.name}}</td>
+  					<td>{{repository.owner}}</td>
+  					<td>{{repository.description}}</td>
+  					<td><a href={{repository.html_url}} target="_blank">{{repository.html_url}}</a></td>
+  					<td><a href={{repository.pull_url}} target="_blank">{{repository.pull_url}}</a></td>
+  				</tr>
+  				{% endfor %}
+  			</tbody>
+  		</table>
+  	</div>
+	</div>
+
+	{% endblock %}
