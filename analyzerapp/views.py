@@ -92,31 +92,40 @@ def repo(request, resource):
             else:
                 return render(request, 'running_pylint.html', {'repository': repository})
         elif form_name == 'fix_errors':
-            make_fork(repository)
-            github_clone_fork(repository)
-            if form_value == '1':
-                level = 1
-            elif form_value == '2':
-                level = 2
+            # make_fork(repository)
+            # github_clone_fork(repository)
+            # if form_value == '1':
+            #     level = 1
+            # elif form_value == '2':
+            #     level = 2
+            # else:
+            #     level = 0
+            # fix_errors(repository, level) #TODO async
+            # commit(repository)
+            # push(repository)
+            # pull_url = create_pull(repository)
+            # repository.pull_url = pull_url
+            # if 'github' in repository.html_url:
+            #     pull_api_url = pull_url.replace('://github.com/', '://api.github.com/repos/')
+            #     pull_api_url = pull_api_url.replace('/pull/', '/pulls/')
+            #     repository.pull_api_url = pull_api_url
+            #     repository.pull_url_status = 'open'
+            # elif 'gitlab.etsit.urjc.es' in repository.html_url:
+            #     pull_api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + pull_url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
+            #     pull_api_url = pull_api_url.replace('%2F-%2Fmerge_requests%2F', '/merge_requests/')
+            #     repository.pull_api_url = pull_api_url
+            #     repository.pull_url_status = 'opened'
+            # repository.save()
+            # return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': pull_url})
+            async_pylint_output.after_response(form_value, repository)
+            return render(request, 'fixing_errors.html', {'repository': repository})
+        elif form_name == 'fixing':
+            time.sleep(20)
+            file_path = '/tmp/projects/pylint_output' + repository.owner + '_' + repository.name
+            if os.path.isfile(file_path):
+                return render(request, 'fixing_errors.html', {'repository': repository})
             else:
-                level = 0
-            fix_errors(repository, level) #TODO async
-            commit(repository)
-            push(repository)
-            pull_url = create_pull(repository)
-            repository.pull_url = pull_url
-            if 'github' in repository.html_url:
-                pull_api_url = pull_url.replace('://github.com/', '://api.github.com/repos/')
-                pull_api_url = pull_api_url.replace('/pull/', '/pulls/')
-                repository.pull_api_url = pull_api_url
-                repository.pull_url_status = 'open'
-            elif 'gitlab.etsit.urjc.es' in repository.html_url:
-                pull_api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + pull_url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
-                pull_api_url = pull_api_url.replace('%2F-%2Fmerge_requests%2F', '/merge_requests/')
-                repository.pull_api_url = pull_api_url
-                repository.pull_url_status = 'opened'
-            repository.save()
-            return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': pull_url})
+                return render(request, 'repo_data_success.html', {'repository': repository})
         else:
             return render(request, 'error.html', {'error_message': 'ERROR'})
     else:
@@ -137,7 +146,7 @@ def async_pylint_output(request, repository):
     output_file.close()
 
 @after_response.enable
-def async_fixing_errors(arg):
+def async_fixing_errors(form_value, repository):
     make_fork(repository)
     github_clone_fork(repository)
     if form_value == '1':
