@@ -117,7 +117,7 @@ def repo(request, resource):
             #     repository.pull_url_status = 'opened'
             # repository.save()
             # return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': pull_url})
-            async_pylint_output.after_response(form_value, repository)
+            async_fixing_errors.after_response(form_value, repository)
             return render(request, 'fixing_errors.html', {'repository': repository})
         elif form_name == 'fixing':
             time.sleep(20)
