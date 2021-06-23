@@ -126,6 +126,7 @@ def repo(request, resource):
 def async_pylint_output(request, repository):
     github_clone_individual(repository)
     pylint_output = analyze_repo(repository)
+    pylint_output = pylint_output.split('\n')
     if os.path.isfile('/tmp/projects/pylint_output' + repository.owner + '_' + repository.name):
         os.system('rm -rfv /tmp/projects/pylint_output' + repository.owner + '_' + repository.name)
     file_path = '/tmp/projects/pylint_output' + repository.owner + '_' + repository.name
