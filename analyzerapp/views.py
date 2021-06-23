@@ -83,7 +83,8 @@ def repo(request, resource):
                 output_file = open(file_path, 'r')
                 pylint_output = output_file.read()
                 output_file.close()
-                pylint_output = pylint_output.split('\n')
+                # pylint_output = pylint_output.split('\n')
+                pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
                 pylint_output_fixables = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
                 pylint_output_level1 = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
                 pylint_output_level2 = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
@@ -125,7 +126,6 @@ def repo(request, resource):
 def async_pylint_output(request, repository):
     github_clone_individual(repository)
     pylint_output = analyze_repo(repository)
-    pylint_output = pylint_output.replace('/tmp/projects/', '/').split('\n')
     if os.path.isfile('/tmp/projects/pylint_output' + repository.owner + '_' + repository.name):
         os.system('rm -rfv /tmp/projects/pylint_output' + repository.owner + '_' + repository.name)
     file_path = '/tmp/projects/pylint_output' + repository.owner + '_' + repository.name
