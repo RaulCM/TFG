@@ -2,30 +2,118 @@
 {% block content %}
 
 	<div class="container">
-  	<div class='table-responsive'>
-  		<table style="color:white" class="table table-bordered">
-  			<thead>
-  				<tr>
-  					<th class="th-sm">Repository name</th>
-  					<th class="th-sm">Repository owner</th>
-  					<th class="th-sm">Description</th>
-  					<th class="th-sm">Repository URL</th>
-  					<th class="th-sm">Pull-Request URL</th>
-  				</tr>
-  			</thead>
-  			<tbody>
-  				{% for repository in data_open %}
-  				<tr>
-  					<td>{{repository.name}}</td>
-  					<td>{{repository.owner}}</td>
-  					<td>{{repository.description}}</td>
-  					<td><a href={{repository.html_url}} target="_blank">{{repository.html_url}}</a></td>
-  					<td><a href={{repository.pull_url}} target="_blank">{{repository.pull_url}}</a></td>
-  				</tr>
-  				{% endfor %}
-  			</tbody>
-  		</table>
-  	</div>
+		<ul class="nav nav-tabs" role="tablist">
+			<li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" role="tab" href="#all">Mostrar todos</a></li>
+			<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" role="tab" href="#open">Mostrar abiertas</a></li>
+			<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" role="tab" href="#accepted">Mostrar aceptados</a></li>
+			<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" role="tab" href="#closed">Mostrar cerrados</a></li>
+		</ul>
+		<div class="tab-content">
+			<div id="all" class="tab-pane fade in active" role="tabpanel">
+				<div class='table-responsive'>
+					<table style="color:white" class="table table-bordered">
+						<thead>
+							<tr>
+								<th class="th-sm">Repository name</th>
+								<th class="th-sm">Repository owner</th>
+								<th class="th-sm">Description</th>
+								<th class="th-sm">Repository URL</th>
+								<th class="th-sm">Pull-Request URL</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for repository in data_all %}
+							<tr>
+								<td>{{repository.name}}</td>
+								<td>{{repository.owner}}</td>
+								<td>{{repository.description}}</td>
+								<td><a href={{repository.html_url}} target="_blank">{{repository.html_url}}</a></td>
+								<td><a href={{repository.pull_url}} target="_blank">{{repository.pull_url}}</a></td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div id="open" class="tab-pane fade" role="tabpanel">
+				<div class='table-responsive'>
+					<table style="color:white" class="table table-bordered">
+						<thead>
+							<tr>
+								<th class="th-sm">Repository name</th>
+								<th class="th-sm">Repository owner</th>
+								<th class="th-sm">Description</th>
+								<th class="th-sm">Repository URL</th>
+								<th class="th-sm">Pull-Request URL</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for repository in data_open %}
+							<tr>
+								<td>{{repository.name}}</td>
+								<td>{{repository.owner}}</td>
+								<td>{{repository.description}}</td>
+								<td><a href={{repository.html_url}} target="_blank">{{repository.html_url}}</a></td>
+								<td><a href={{repository.pull_url}} target="_blank">{{repository.pull_url}}</a></td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div id="accepted" class="tab-pane fade" role="tabpanel">
+				<div class='table-responsive'>
+					<table style="color:white" class="table table-bordered">
+						<thead>
+							<tr>
+								<th class="th-sm">Repository name</th>
+								<th class="th-sm">Repository owner</th>
+								<th class="th-sm">Description</th>
+								<th class="th-sm">Repository URL</th>
+								<th class="th-sm">Pull-Request URL</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for repository in data_accepted %}
+							<tr>
+								<td>{{repository.name}}</td>
+								<td>{{repository.owner}}</td>
+								<td>{{repository.description}}</td>
+								<td><a href={{repository.html_url}} target="_blank">{{repository.html_url}}</a></td>
+								<td><a href={{repository.pull_url}} target="_blank">{{repository.pull_url}}</a></td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div id="closed" class="tab-pane fade" role="tabpanel">
+				<div class='table-responsive'>
+					<table style="color:white" class="table table-bordered">
+						<thead>
+							<tr>
+								<th class="th-sm">Repository name</th>
+								<th class="th-sm">Repository owner</th>
+								<th class="th-sm">Description</th>
+								<th class="th-sm">Repository URL</th>
+								<th class="th-sm">Pull-Request URL</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for repository in data_closed %}
+							<tr>
+								<td>{{repository.name}}</td>
+								<td>{{repository.owner}}</td>
+								<td>{{repository.description}}</td>
+								<td><a href={{repository.html_url}} target="_blank">{{repository.html_url}}</a></td>
+								<td><a href={{repository.pull_url}} target="_blank">{{repository.pull_url}}</a></td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	{% endblock %}
