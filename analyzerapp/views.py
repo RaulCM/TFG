@@ -140,7 +140,7 @@ def es(request):
     request.session[LANGUAGE_SESSION_KEY] = 'es'
     return redirect('/')
 
-def es(request):
+def en(request):
     request.session[LANGUAGE_SESSION_KEY] = 'en'
     return redirect('/')
 
