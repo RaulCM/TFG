@@ -28,7 +28,7 @@ def main(request):
     if request.method == 'GET':
         update()
         if language == 'en':
-            return render(request, 'main_en.html')
+            return render(request, 'en/main_en.html')
         else:
             return render(request, 'main.html')
     elif request.method == 'POST':
