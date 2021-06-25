@@ -150,6 +150,7 @@ body {
 }
 
 #language{
+	z-index: 8
 	text-align: right;
 }
 
