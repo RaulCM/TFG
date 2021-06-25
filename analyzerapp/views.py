@@ -14,6 +14,7 @@ import subprocess
 from analyzerapp import pylint_errors
 import after_response
 import time
+from django.utils.translation import LANGUAGE_SESSION_KEY
 
 pull_body_header = ('Your code has been analyzed by PEP-Analyzer using Pylint tool' +
             ' to adapt it to [PEP8, the Python style guide]' +
@@ -134,6 +135,14 @@ def repo(request, resource):
             return render(request, 'error.html', {'error_message': 'ERROR'})
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
+
+def es(request, repository):
+    request.session[LANGUAGE_SESSION_KEY] = 'es'
+    return redirect('/')
+
+def es(request, repository):
+    request.session[LANGUAGE_SESSION_KEY] = 'en'
+    return redirect('/')
 
 @after_response.enable
 def async_pylint_output(request, repository):
