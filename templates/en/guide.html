@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block content %}
+
+	<div class="message">
+		<header>
+			<h1 id="resumen">RESUMEN</h1>
+			<hr>
+		</header>
+		<p>PEP8-Analyzer es una aplicación web dirigida a analizar proyectos desarrollados en Python para comprobar su nivel de cumplimiento de la guía de estilo PEP8 y corregir algunos de los errores detectados.
+		<br>Para realizar el análisis se hace uso de la herramienta Pylint, que analiza individualmente los ficheros e indica qué normas de la guía de estilo PEP8 se están incumpliendo.
+		<br>Una vez obtenido el resultado del análisis realizado por Pylint, la aplicación web corrige los errores indicados en el <a href="#errors">listado de errores corregibles</a> y realiza una Pull Request/Merge Request sobre el repositorio introducido con las modificaciones que se han realizado y un resumen de los errores corregidos situado en la descripción.
+		</p>
+		<header>
+			<h1 id="use_guide">GUÍA DE USO</h1>
+			<hr>
+		</header>
+		<p>PEP8-Analyzer está divido en las siguientes páginas:
+			<ul>
+				<li><a href="#start">Inicio</a></li>
+				<li><a href="#repo_list">Lista de repositorios</a></li>
+				<li><a href="#error_list">Lista de errores</a></li>
+				<li><a href="#guide">Guía</a></li>
+				<li><a href="#contact">Contacto</a></li>
+			</ul>
+		</p>
+		<header>
+			<h3 id="start" style="margin-left: 5%">Inicio</h3>
+			<hr style="margin-left: 5%">
+		</header>
+		<p style="margin-left: 5%">
+			Desde la página de Inicio se muestra un único formulario en el que se puede introducir el enlace al proyecto que se quiere analizar.
+			<br>Para analizar un proyecto éste debe estar alojado en un repositorio de GitHub o del GitLab de la ETSIT de la URJC.
+			<br>Una vez introducido el enlace al repositorio que contiene el proyecto, se muestra un breve resumen de los datos del repositorio, indicando su nombre, propietario, descripción y enlace, y un botón para ejecutar el análisis con Pylint.
+			<br>Tras ejecutar Pylint, se muestra el resultado del análisis, pudiendo escoger visualizar todos los errores detectados por Pylint o filtrarlos para ver sólo los que son corregibles por la aplicación web, y un botón con el que corregir dichos errores.
+			<br>Después de corregir los errores, se realiza la Pull Request/Merge Request y se muestran los datos del repositorio junto al enlace a la Pull Request/Merge Request que se ha realizado.
+			<br>Dicha Pull Request/Merge Request deberá ser aceptada o cancelada por el usuario propietario del repositorio original.
+		</p>
+		<header>
+			<h3 id="repo_list" style="margin-left: 5%">Lista de repositorios</h3>
+			<hr style="margin-left: 5%">
+		</header>
+		<p style="margin-left: 5%">
+			En Lista de repositorios se muestra un listado de las Pull Requests/Merge Requests realizadas desde la aplicación y que están pendientes de aprobación por parte del propietario del repositorio.
+		</p>
+		<header>
+			<h3 id="error_list" style="margin-left: 5%">Lista de errores</h3>
+			<hr style="margin-left: 5%">
+		</header>
+		<p style="margin-left: 5%">
+			En Lista de errores se muestran dos gráficas.
+			<br>La primera gráfica muestra el número de veces que se ha producido cada uno de los errores que se han corregido en los repositorios analizados.
+			<br>La segunda gráfica muestra el número de repositorios analizados y los separa según el estado en el que se encuentre la Pull Request/Merge Request realizada.
+		</p>
+		<header>
+			<h3 id="guide" style="margin-left: 5%">Guía</h3>
+			<hr style="margin-left: 5%">
+		</header>
+		<p style="margin-left: 5%">
+			Página que contiene un resumen sobre la aplicación, una breve guía de uso definiendo cada una de las páginas y una tabla con los errores detectados por Pylint que son corregibles por la aplicación.
+		</p>
+		<header>
+			<h3 id="contact" style="margin-left: 5%">Contacto</h3>
+			<hr style="margin-left: 5%">
+		</header>
+		<p style="margin-left: 5%">
+			Datos de contacto.
+		</p>
+		<header>
+			<h1 id="errors">ERRORES CORREGIBLES</h1>
+			<hr>
+		</header>
+		<div class='table-responsive'>
+			<table style="color:white" class="table table-bordered">
+				<thead>
+					<tr>
+						<th class="th-sm">Error ID</th>
+						<th class="th-sm">Error Name</th>
+						<th class="th-sm">Message</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for error in errors %}
+					<tr>
+						<td>{{error.error_id}}</td>
+						<td>{{error.name}}</td>
+						<td>{{error.message}}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+{% endblock %}

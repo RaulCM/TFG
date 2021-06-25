@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+
+	<div class="chart-container">
+		<canvas id="errorsChart"></canvas>
+	</div>
+	<div class="chart-container">
+		<canvas id="pullStatusChart"></canvas>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script>
+
+		const errors_data = {
+			labels: {{errors_labels | safe}},
+			datasets: [{
+				axis: 'y',
+				label: 'Error Codes',
+				data: {{errors_data | safe}},
+				backgroundColor: ['#FF9AA2', '#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA', '#BEE0B4', '#FFF7AB', '#fdeae3'],
+			}]
+		};
+
+		const errors_options = {
+			indexAxis: 'y',
+			responsive: true,
+			maintainAspectRatio: true,
+			plugins: {
+				legend: {
+					display: false
+				},
+				title: {
+					display: true,
+					text: 'Fixed Errors'
+				}
+			}
+		}
+
+		const errors_config = {
+			type: 'bar',
+			data: errors_data,
+			options: errors_options
+		};
+
+		const pull_status_data = {
+			labels: {{pull_status_labels | safe}},
+			datasets: [{
+				label: 'Pull Requests Status',
+				data: {{pull_status_data | safe}},
+				backgroundColor: ['#ffec80', '#f4a4a4', '#b2e6d5'],
+			}]
+		};
+
+		const pull_status_options = {
+			responsive: true,
+			maintainAspectRatio: true,
+			scales: {
+				y: {
+					ticks: {
+						stepSize: 1
+					}
+				}
+			},
+			plugins: {
+				legend: {
+					display: false
+				},
+				title: {
+					display: true,
+					text: 'Pull Requests'
+				}
+			}
+		}
+
+		const pull_status_config = {
+			type: 'bar',
+			data: pull_status_data,
+			options: pull_status_options
+		};
+
+		window.onload = function() {
+			var errors_ctx = document.getElementById('errorsChart').getContext('2d');
+			window.myPie = new Chart(errors_ctx, errors_config);
+			var pull_status_ctx = document.getElementById('pullStatusChart').getContext('2d');
+			window.myPie = new Chart(pull_status_ctx, pull_status_config);
+		};
+	</script>
+{% endblock %}

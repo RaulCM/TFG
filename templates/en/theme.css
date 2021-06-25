@@ -1,0 +1,150 @@
+body {
+	font-family: "Lato", sans-serif;
+	background-color: #282c34;
+	background-image: url('images/fondo.png');
+	background-size: 100%;
+	background-repeat: no-repeat;
+}
+
+#banner {
+	position: fixed;
+	height: 50px;
+	width: 100%;
+	top: 0;
+	left: 0;
+	background-color: #2a2828;
+	padding-top: 5px;
+	z-index: 10;
+}
+
+#banner a {
+	font-size: 30px;
+	color: white;
+	text-decoration: none;
+	padding-left: 50px;
+}
+
+#menu {
+	position: fixed;
+	height: 100%;
+	width: 50px;
+	top: 0;
+	left: 0;
+	padding-top: 100px;
+	padding-left: 50px;
+	background-color: #2a2828;
+	overflow-x: hidden;
+	transition: 1s;
+	z-index: 9;
+}
+
+#menu a {
+	white-space: nowrap;
+	padding-top: 8px;
+	padding-right: 8px;
+	text-decoration: none;
+	font-size: 2vw;
+	color: #FFF;
+	display: block;
+	transition: 0.3s;
+}
+
+#menu a:hover {
+	color: grey;
+}
+
+#menu #btn {
+	position: absolute;
+	top: 50px;
+	right: 0px;
+	font-size: 36px;
+	margin-left: 0px;
+}
+
+#main {
+	transition: 1s;
+	margin-left: 50px;
+	margin-top: 100px;
+}
+
+.repo {
+	top: 100px;
+	left: 100px;
+	height: 150px;
+	width: 300px;
+	padding-top: 20px;
+	padding-left: 20px;
+	margin-left: 50px;
+	color: white;
+	background-color: #2a2828;
+}
+
+::placeholder {
+  color: grey;
+}
+
+.repo input[type=text] {
+	color: #2a2828;
+}
+
+.button {
+	background-color: white;
+	border: none;
+	color: #2a2828;
+	font-size: 16px;
+	padding: 8px 20px;
+	margin-top: 5px;
+	margin-left: 5px;
+	cursor: pointer;
+}
+
+.button:hover {
+	color: grey;
+}
+
+.message {
+	display: inline-block;
+	top: 100px;
+	left: 100px;
+	max-width: 50%;
+	padding: 20px 20px 100px 20px;
+	margin-left: 50px;
+	color: white;
+	background-color: #2a2828;
+}
+
+.oculto {
+	display: none;
+}
+
+.terminal {
+	height:40vh;
+	color: white;
+	background-color: #303030;
+	overflow-y:scroll;
+	float:left;
+	position:relative;
+}
+
+.clear {
+	clear:both;
+}
+
+.chart-container {
+	display: inline-block;
+	height: 35vw;
+	width: 35vw;
+	z-index: 2;
+}
+
+#errorsChart {
+	position: relative;
+	float:left;
+	left: 5vw
+}
+
+#pullStatusChart {
+	position: relative;
+	float:right;
+	left: 10vw
+};

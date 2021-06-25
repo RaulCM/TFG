@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!-- https://getbootstrap.com/docs/3.3/getting-started/ -->
+{% load static %}
+<html lang="es-ES">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>PEP8-Analyzer</title>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
+		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+		<link rel="stylesheet" type="text/css" href="{% static '/theme.css' %} ">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="undefined" crossorigin="anonymous"></script>
+	</head>
+	<body>
+		<div id="menu">
+			<a id="btn" href="javascript:void(0)" onclick="openNav()">&#9776;</a>
+			<a href="/">Start</a>
+			<a href="/list">Repository list</a>
+			<a href="/error-list">Error list</a>
+			<a href="/guide">Guide</a>
+			<a href="/contact">Contact</a>
+			<a href="/en">English</a>
+			<a href="/es">Español</a>
+		</div>
+		<div id="banner">
+			<div id="title">
+				<a href="/">PEP8-Analyzer</a>
+			</div>
+		</div>
+		<div id="main">
+			{% block content %}
+			{% endblock %}
+		</div>
+	</body>
+	<script>
+		function openNav() {
+			document.getElementById("menu").style.width = "25%";
+			// document.getElementById("titlebar").style.marginLeft = "25%";
+			document.getElementById("main").style.marginLeft = "25%";
+			document.getElementById("btn").innerHTML = "&times;";
+			document.getElementById("btn").onclick = function () { closeNav(); };
+		}
+		function closeNav() {
+			document.getElementById("menu").style.width = "50px";
+			// document.getElementById("titlebar").style.marginLeft = "50px";
+			document.getElementById("main").style.marginLeft = "50px";
+			document.getElementById("btn").innerHTML = "&#9776;";
+			document.getElementById("btn").onclick = function () { openNav(); };
+		}
+	</script>
+</html>
