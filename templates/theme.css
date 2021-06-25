@@ -151,5 +151,8 @@ body {
 
 #language{
 	text-align: right;
+}
+
+#language a{
 	font-size: 10px;
 }
