@@ -136,11 +136,11 @@ def repo(request, resource):
     else:
         return render(request, 'error.html', {'error_message': '405: Method not allowed'})
 
-def es(request, repository):
+def es(request):
     request.session[LANGUAGE_SESSION_KEY] = 'es'
     return redirect('/')
 
-def es(request, repository):
+def es(request):
     request.session[LANGUAGE_SESSION_KEY] = 'en'
     return redirect('/')
 
