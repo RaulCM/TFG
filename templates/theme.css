@@ -160,5 +160,6 @@ body {
 }
 
 #language a{
+	display: block;
 	font-size: 10px;
 }
