@@ -74,7 +74,10 @@ def main(request):
 def repo(request, resource):
     repository = Repository.objects.filter(pull_url_status='Null').get(identifier=resource)
     if request.method == 'GET':
-        return render(request, 'repo_data.html', {'repository': repository})
+        if language == 'en':
+            return render(request, 'en/repo_data.html', {'repository': repository})
+        else:
+            return render(request, 'repo_data.html', {'repository': repository})
     elif request.method == 'POST':
         form_name = request.body.decode('utf-8').split('=')[0]
         form_value = request.body.decode('utf-8').split('=')[1]
