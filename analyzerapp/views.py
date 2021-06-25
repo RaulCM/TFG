@@ -24,9 +24,13 @@ pull_body = ''
 
 @csrf_exempt
 def main(request):
+    language = request.session.get(LANGUAGE_SESSION_KEY)
     if request.method == 'GET':
         update()
-        return render(request, 'main.html')
+        if language == 'en':
+            return render(request, 'main_en.html')
+        else:
+            return render(request, 'main.html')
     elif request.method == 'POST':
         form_name = request.body.decode('utf-8').split('=')[0]
         if form_name == 'add':
