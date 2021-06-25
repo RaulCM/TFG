@@ -72,6 +72,7 @@ def main(request):
 
 @csrf_exempt
 def repo(request, resource):
+    language = request.session.get(LANGUAGE_SESSION_KEY)
     repository = Repository.objects.filter(pull_url_status='Null').get(identifier=resource)
     if request.method == 'GET':
         if language == 'en':
@@ -194,6 +195,7 @@ def async_fixing_errors(form_value, repository):
     os.system('rm -rfv /tmp/projects/pylint_output' + repository.owner + '_' + repository.name)
 
 def list(request):
+    language = request.session.get(LANGUAGE_SESSION_KEY)
     update()
     repositories_all = Repository.objects.filter(pull_url_status__in=['open', 'opened', 'accepted', 'closed'])
     repositories_open = Repository.objects.filter(pull_url_status__in=['open', 'opened'])
@@ -203,6 +205,7 @@ def list(request):
 
 def error_list(request):
     # https://www.chartjs.org/docs/latest
+    language = request.session.get(LANGUAGE_SESSION_KEY)
     errors_labels = []
     errors_data = []
     pull_status_labels = ['Open', 'Closed', 'Accepted']
@@ -230,11 +233,13 @@ def error_list(request):
     return render(request, 'error_list.html', {'errors_labels': errors_labels, 'errors_data': errors_data, 'pull_status_labels': pull_status_labels, 'pull_status_data': pull_status_data})
 
 def guide(request):
+    language = request.session.get(LANGUAGE_SESSION_KEY)
     update()
     errors = Errors.objects.filter(fixable=True)
     return render(request, 'guide.html', {'errors': errors})
 
 def contact(request):
+    language = request.session.get(LANGUAGE_SESSION_KEY)
     update()
     return render(request, 'contact.html')
 
