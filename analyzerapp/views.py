@@ -36,7 +36,10 @@ def main(request):
         if form_name == 'add':
             url = unquote(request.body.decode('utf-8').split('=')[1])
             if len(url) == 0:
-                return render(request, 'error.html', {'error_message': 'No se ha introducido ningún dato en el formulario'})
+                if language == 'en':
+                    return render(request, 'en/error.html', {'error_message': 'No se ha introducido ningún dato en el formulario'})
+                else:
+                    return render(request, 'error.html', {'error_message': 'No se ha introducido ningún dato en el formulario'})
             if url[-1] == '/':
                 url = url[:-1]
             if 'github' in url:
@@ -45,30 +48,51 @@ def main(request):
                 repo_data = r.json()
                 try:
                     repository = Repository.objects.filter(pull_url_status='open').get(identifier=repo_data['id'])
-                    return render(request, 'request_exists.html', {'repository': repository})
+                    if language == 'en':
+                        return render(request, 'en/request_exists.html', {'repository': repository})
+                    else:
+                        return render(request, 'request_exists.html', {'repository': repository})
                 except Repository.DoesNotExist:
                     try:
                         store_individual_data(repo_data)
                     except KeyError:
-                        return render(request, 'error_repo.html', {'url': url})
+                        if language == 'en':
+                            return render(request, 'en/error_repo.html', {'url': url})
+                        else:
+                            return render(request, 'error_repo.html', {'url': url})
             elif 'gitlab.etsit.urjc.es' in url:
                 api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
                 r = requests.get(api_url, headers={"PRIVATE-TOKEN": os.environ['tokengitlab']})
                 repo_data = r.json()
                 try:
                     repository = Repository.objects.filter(pull_url_status='opened').get(identifier=repo_data['id'])
-                    return render(request, 'request_exists.html', {'repository': repository})
+                    if language == 'en':
+                        return render(request, 'en/request_exists.html', {'repository': repository})
+                    else:
+                        return render(request, 'request_exists.html', {'repository': repository})
                 except Repository.DoesNotExist:
                     try:
                         store_individual_data_gitlab(repo_data)
                     except KeyError:
-                        return render(request, 'error_repo.html', {'url': url})
+                        if language == 'en':
+                            return render(request, 'en/error_repo.html', {'url': url})
+                        else:
+                            return render(request, 'error_repo.html', {'url': url})
             else:
-                return render(request, 'error_repo.html', {'url': url})
+                if language == 'en':
+                    return render(request, 'en/error_repo.html', {'url': url})
+                else:
+                    return render(request, 'error_repo.html', {'url': url})
             return redirect('/repo/' + str(repo_data['id']))
-        return render(request, 'main.html')
+        if language == 'en':
+            return render(request, 'en/main.html')
+        else:
+            return render(request, 'main.html')
     else:
-        return render(request, 'error.html', {'error_message': '405: Method not allowed'})
+        if language == 'en':
+            return render(request, 'en/error.html', {'error_message': '405: Method not allowed'})
+        else:
+            return render(request, 'error.html', {'error_message': '405: Método no permitido'})
 
 @csrf_exempt
 def repo(request, resource):
@@ -84,7 +108,10 @@ def repo(request, resource):
         form_value = request.body.decode('utf-8').split('=')[1]
         if form_name == 'pylint':
             async_pylint_output.after_response(request, repository)
-            return render(request, 'running_pylint.html', {'repository': repository})
+            if language == 'en':
+                return render(request, 'en/running_pylint.html', {'repository': repository})
+            else:
+                return render(request, 'running_pylint.html', {'repository': repository})
         elif form_name == 'running':
             time.sleep(20)
             file_path = '/tmp/projects/pylint_output' + repository.owner + '_' + repository.name
@@ -97,52 +124,48 @@ def repo(request, resource):
                 pylint_output_fixables = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
                 pylint_output_level1 = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
                 pylint_output_level2 = [x for x in pylint_output if ('C0303' in x or 'C0304' in x or 'C0321' in x or 'C0326' in x or 'W0404' in x or 'C0410' in x or 'C0411' in x or 'C0413' in x or 'W0611' in x)]
-                return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'pylint_output_fixables': pylint_output_fixables, 'pylint_output_level1': pylint_output_level1, 'pylint_output_level2': pylint_output_level2})
+                if language == 'en':
+                    return render(request, 'en/repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'pylint_output_fixables': pylint_output_fixables, 'pylint_output_level1': pylint_output_level1, 'pylint_output_level2': pylint_output_level2})
+                else:
+                    return render(request, 'repo_data_pylint.html', {'repository': repository, 'pylint_output': pylint_output, 'pylint_output_fixables': pylint_output_fixables, 'pylint_output_level1': pylint_output_level1, 'pylint_output_level2': pylint_output_level2})
             else:
-                return render(request, 'running_pylint.html', {'repository': repository})
+                if language == 'en':
+                    return render(request, 'en/running_pylint.html', {'repository': repository})
+                else:
+                    return render(request, 'running_pylint.html', {'repository': repository})
         elif form_name == 'fix_errors':
-            # make_fork(repository)
-            # github_clone_fork(repository)
-            # if form_value == '1':
-            #     level = 1
-            # elif form_value == '2':
-            #     level = 2
-            # else:
-            #     level = 0
-            # fix_errors(repository, level) #TODO async
-            # commit(repository)
-            # push(repository)
-            # pull_url = create_pull(repository)
-            # repository.pull_url = pull_url
-            # if 'github' in repository.html_url:
-            #     pull_api_url = pull_url.replace('://github.com/', '://api.github.com/repos/')
-            #     pull_api_url = pull_api_url.replace('/pull/', '/pulls/')
-            #     repository.pull_api_url = pull_api_url
-            #     repository.pull_url_status = 'open'
-            # elif 'gitlab.etsit.urjc.es' in repository.html_url:
-            #     pull_api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + pull_url.split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
-            #     pull_api_url = pull_api_url.replace('%2F-%2Fmerge_requests%2F', '/merge_requests/')
-            #     repository.pull_api_url = pull_api_url
-            #     repository.pull_url_status = 'opened'
-            # repository.save()
-            # return render(request, 'repo_data_success.html', {'repository': repository, 'pull_url': pull_url})
             async_fixing_errors.after_response(form_value, repository)
-            return render(request, 'fixing_errors.html', {'repository': repository})
+            if language == 'en':
+                return render(request, 'en/fixing_errors.html', {'repository': repository})
+            else:
+                return render(request, 'fixing_errors.html', {'repository': repository})
         elif form_name == 'fixing':
             time.sleep(20)
             file_path = '/tmp/projects/pylint_output' + repository.owner + '_' + repository.name
             if os.path.isfile(file_path):
-                return render(request, 'fixing_errors.html', {'repository': repository})
+                if language == 'en':
+                    return render(request, 'en/fixing_errors.html', {'repository': repository})
+                else:
+                    return render(request, 'fixing_errors.html', {'repository': repository})
             else:
                 if 'github' in repository.html_url:
                     repository = Repository.objects.filter(pull_url_status='open').get(identifier=resource)
                 elif 'gitlab.etsit.urjc.es' in repository.html_url:
                     repository = Repository.objects.filter(pull_url_status='opened').get(identifier=resource)
-                return render(request, 'repo_data_success.html', {'repository': repository})
+                if language == 'en':
+                    return render(request, 'en/repo_data_success.html', {'repository': repository})
+                else:
+                    return render(request, 'repo_data_success.html', {'repository': repository})
         else:
-            return render(request, 'error.html', {'error_message': 'ERROR'})
+            if language == 'en':
+                return render(request, 'en/error.html', {'error_message': 'ERROR'})
+            else:
+                return render(request, 'error.html', {'error_message': 'ERROR'})
     else:
-        return render(request, 'error.html', {'error_message': '405: Method not allowed'})
+        if language == 'en':
+            return render(request, 'en/error.html', {'error_message': '405: Method not allowed'})
+        else:
+            return render(request, 'error.html', {'error_message': '405: Method not allowed'})
 
 def es(request):
     request.session[LANGUAGE_SESSION_KEY] = 'es'
@@ -201,7 +224,10 @@ def list(request):
     repositories_open = Repository.objects.filter(pull_url_status__in=['open', 'opened'])
     repositories_accepted = Repository.objects.filter(pull_url_status='accepted')
     repositories_closed = Repository.objects.filter(pull_url_status='closed')
-    return render(request, 'list.html', {'data_all': repositories_all, 'data_open': repositories_open, 'data_accepted': repositories_accepted, 'data_closed': repositories_closed})
+    if language == 'en':
+        return render(request, 'en/list.html', {'data_all': repositories_all, 'data_open': repositories_open, 'data_accepted': repositories_accepted, 'data_closed': repositories_closed})
+    else:
+        return render(request, 'list.html', {'data_all': repositories_all, 'data_open': repositories_open, 'data_accepted': repositories_accepted, 'data_closed': repositories_closed})
 
 def error_list(request):
     # https://www.chartjs.org/docs/latest
@@ -229,19 +255,27 @@ def error_list(request):
             pull_status_data[1] = pull_status_data[1] + 1
         elif repository.pull_url_status == 'merged':
             pull_status_data[2] = pull_status_data[2] + 1
-
-    return render(request, 'error_list.html', {'errors_labels': errors_labels, 'errors_data': errors_data, 'pull_status_labels': pull_status_labels, 'pull_status_data': pull_status_data})
+    if language == 'en':
+        return render(request, 'en/error_list.html', {'errors_labels': errors_labels, 'errors_data': errors_data, 'pull_status_labels': pull_status_labels, 'pull_status_data': pull_status_data})
+    else:
+        return render(request, 'error_list.html', {'errors_labels': errors_labels, 'errors_data': errors_data, 'pull_status_labels': pull_status_labels, 'pull_status_data': pull_status_data})
 
 def guide(request):
     language = request.session.get(LANGUAGE_SESSION_KEY)
     update()
     errors = Errors.objects.filter(fixable=True)
-    return render(request, 'guide.html', {'errors': errors})
+    if language == 'en':
+        return render(request, 'en/guide.html', {'errors': errors})
+    else:
+        return render(request, 'guide.html', {'errors': errors})
 
 def contact(request):
     language = request.session.get(LANGUAGE_SESSION_KEY)
     update()
-    return render(request, 'contact.html')
+    if language == 'en':
+        return render(request, 'en/contact.html')
+    else:
+        return render(request, 'contact.html')
 
 def print_data(): #TODO Borrar
     datos = Repository.objects.filter(pull_url_status__in=['open', 'opened'])
