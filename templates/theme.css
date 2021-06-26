@@ -167,14 +167,13 @@ body {
 .nav-tabs .nav-link {
 	background-color: #2a2828;
 	color: white;
-	border: 1px solid grey;
+	border: 1px solid white;
 	/* border-bottom: 1px solid grey; */
 }
 
 .nav-tabs .nav-link:hover {
 	color: grey;
-	border: 0;
-	border-bottom: 1px solid grey;
+	border: 1px solid grey;
 }
 
 .nav-tabs .nav-link.active {
