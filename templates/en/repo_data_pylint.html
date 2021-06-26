@@ -26,14 +26,14 @@
 		</table>
 	</div>
 	<ul class="nav nav-tabs" role="tablist">
-		<li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" role="tab" href="#all">Mostrar todos</a></li>
-		<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" role="tab" href="#fixables">Mostrar corregibles</a></li>
-		<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" role="tab" href="#level1">Nivel 1</a></li>
-		<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" role="tab" href="#level2">Nivel 2</a></li>
+		<li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" role="tab" href="#all">Show all</a></li>
+		<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" role="tab" href="#fixables">Show fixables</a></li>
+		<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" role="tab" href="#level1">Level 1</a></li>
+		<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" role="tab" href="#level2">Level 2</a></li>
 	</ul>
 	<div class="tab-content">
 		<div id="all" class="tab-pane in active" role="tabpanel">
-			<p style="color:white">Salida de pylint (todos los errores detectados):</p>
+			<p style="color:white">Pylint output:</p>
 			<p class="terminal"><samp>
 			{% for msg in pylint_output %}
 				{% if msg|slice:":1" == '/' %}
@@ -50,7 +50,7 @@
 			</div>
 		</div>
 		<div id="fixables" class="tab-pane fade" role="tabpanel">
-			<p style="color:white">Salida de pylint (todos los errores corregibles):</p>
+			<p style="color:white">Pylint output:</p>
 			<p class="terminal"><samp>
 			{% for msg in pylint_output_fixables %}
 				{% if msg|slice:":1" == '/' %}
@@ -67,7 +67,7 @@
 			</div>
 		</div>
 		<div id="level1" class="tab-pane fade" role="tabpanel">
-			<p style="color:white">Salida de pylint:</p>
+			<p style="color:white">Pylint output:</p>
 			<p class="terminal"><samp>
 			{% for msg in pylint_output_level1 %}
 				{% if msg|slice:":1" == '/' %}
@@ -84,7 +84,7 @@
 			</div>
 		</div>
 		<div id="level2" class="tab-pane fade" role="tabpanel">
-			<p style="color:white">Salida de pylint:</p>
+			<p style="color:white">Pylint output:</p>
 			<p class="terminal"><samp>
 			{% for msg in pylint_output_level2 %}
 				{% if msg|slice:":1" == '/' %}
