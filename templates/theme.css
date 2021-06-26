@@ -165,21 +165,21 @@ body {
 }
 
 .nav-tabs .nav-link {
-		background-color: #2a2828;
-		color: white;
-		border: 1px;
-		border-color: #282c34;
-		border-bottom: 1px solid grey;
+	background-color: #2a2828;
+	color: white;
+	border: 1px solid grey;
+	/* border-bottom: 1px solid grey; */
 }
 
 .nav-tabs .nav-link:hover {
-		border: 0;
-		border-bottom: 1px solid grey;
+	color: grey;
+	border: 0;
+	border-bottom: 1px solid grey;
 }
 
 .nav-tabs .nav-link.active {
-		color: #000000;
-		border: 0;
-		border-radius: 0;
-		border-bottom: 2px solid blue;
+	color: #000000;
+	border: 0;
+	border-radius: 0;
+	border-bottom: 2px solid blue;
 }
