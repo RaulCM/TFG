@@ -167,12 +167,13 @@ body {
 .nav-tabs .nav-link {
 	background-color: #2a2828;
 	color: white;
+	border-radius: 0;
 	border: 1px solid grey;
-	/* border-bottom: 1px solid grey; */
 }
 
 .nav-tabs .nav-link:hover {
 	color: grey;
+	border-radius: 0;
 	border: 1px solid #282c34;
 }
 
@@ -180,5 +181,4 @@ body {
 	color: #000000;
 	border: 0;
 	border-radius: 0;
-	border-bottom: 2px solid blue;
 }
