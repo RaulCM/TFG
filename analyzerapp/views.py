@@ -37,7 +37,7 @@ def main(request):
             url = unquote(request.body.decode('utf-8').split('=')[1])
             if len(url) == 0:
                 if language == 'en':
-                    return render(request, 'en/error.html', {'error_message': 'No se ha introducido ningún dato en el formulario'})
+                    return render(request, 'en/error.html', {'error_message': 'No data has been entered in the form.'})
                 else:
                     return render(request, 'error.html', {'error_message': 'No se ha introducido ningún dato en el formulario'})
             if url[-1] == '/':
