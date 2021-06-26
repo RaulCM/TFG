@@ -3,70 +3,71 @@
 
 	<div class="message">
 		<header>
-			<h1 id="resumen">RESUMEN</h1>
+			<h1 id="resumen">SUMMARY</h1>
 			<hr>
 		</header>
-		<p>PEP8-Analyzer es una aplicación web dirigida a analizar proyectos desarrollados en Python para comprobar su nivel de cumplimiento de la guía de estilo PEP8 y corregir algunos de los errores detectados.
-		<br>Para realizar el análisis se hace uso de la herramienta Pylint, que analiza individualmente los ficheros e indica qué normas de la guía de estilo PEP8 se están incumpliendo.
-		<br>Una vez obtenido el resultado del análisis realizado por Pylint, la aplicación web corrige los errores indicados en el <a href="#errors">listado de errores corregibles</a> y realiza una Pull Request/Merge Request sobre el repositorio introducido con las modificaciones que se han realizado y un resumen de los errores corregidos situado en la descripción.
+		<p>PEP8-Analyzer is a web application aimed at analyzing Python projects to check their compliance level with the PEP8 style guide and correct some of the errors detected.
+		<br>The analysis is performed by Pylint tool, which analyzes the files individually and indicates which rules of the PEP8 style guide are not being complied.
+		Para realizar el análisis se hace uso de la herramienta Pylint, que analiza individualmente los ficheros e indica qué normas de la guía de estilo PEP8 se están incumpliendo.
+		<br>Once the result of the analysis performed by Pylint is obtained, the web application corrects the errors indicated in the <a href="#errors">fixable errors list</a> and performs a Pull Request/Merge Request on the entered repository with the modifications that have been made and a summary of the corrected errors located in the description.
 		</p>
 		<header>
-			<h1 id="use_guide">GUÍA DE USO</h1>
+			<h1 id="use_guide">USE GUIDE</h1>
 			<hr>
 		</header>
-		<p>PEP8-Analyzer está divido en las siguientes páginas:
+		<p>PEP8-Analyzer is divided into the following pages:
 			<ul>
-				<li><a href="#start">Inicio</a></li>
-				<li><a href="#repo_list">Lista de repositorios</a></li>
-				<li><a href="#error_list">Lista de errores</a></li>
-				<li><a href="#guide">Guía</a></li>
-				<li><a href="#contact">Contacto</a></li>
+				<li><a href="#start">Home</a></li>
+				<li><a href="#repo_list">Pull-Requests</a></li>
+				<li><a href="#error_list">Errors</a></li>
+				<li><a href="#guide">Guide</a></li>
+				<li><a href="#contact">Contact</a></li>
 			</ul>
 		</p>
 		<header>
-			<h3 id="start" style="margin-left: 5%">Inicio</h3>
+			<h3 id="start" style="margin-left: 5%">Home</h3>
 			<hr style="margin-left: 5%">
 		</header>
 		<p style="margin-left: 5%">
-			Desde la página de Inicio se muestra un único formulario en el que se puede introducir el enlace al proyecto que se quiere analizar.
-			<br>Para analizar un proyecto éste debe estar alojado en un repositorio de GitHub o del GitLab de la ETSIT de la URJC.
-			<br>Una vez introducido el enlace al repositorio que contiene el proyecto, se muestra un breve resumen de los datos del repositorio, indicando su nombre, propietario, descripción y enlace, y un botón para ejecutar el análisis con Pylint.
-			<br>Tras ejecutar Pylint, se muestra el resultado del análisis, pudiendo escoger visualizar todos los errores detectados por Pylint o filtrarlos para ver sólo los que son corregibles por la aplicación web, y un botón con el que corregir dichos errores.
-			<br>Después de corregir los errores, se realiza la Pull Request/Merge Request y se muestran los datos del repositorio junto al enlace a la Pull Request/Merge Request que se ha realizado.
-			<br>Dicha Pull Request/Merge Request deberá ser aceptada o cancelada por el usuario propietario del repositorio original.
+			On the Home page there is a single form where the link to the project to be analyzed can be entered.
+			<br>To analyze a project it must be hosted in a GitHub or URJC ETSIT GitLab repository.
+			<br>Once the link to the repository containing the project is entered, a brief summary of the repository data is displayed, indicating its name, owner, description and URL, and a button to run the Pylint analysis.
+			<br>After running Pylint, the result of the analysis is displayed with the possibility of viewing all the errors detected by Pylint or filter them to see only those that can be corrected by the web application, and a button to correct those errors.
+			<br>After correcting the errors, the Pull Request/Merge Request is commited and the repository data is displayed together with the link to the Pull Request/Merge Request that has been commited.
+			<br>Such Pull Request/Merge Request must be accepted or cancelled by the original repository owner.
 		</p>
 		<header>
-			<h3 id="repo_list" style="margin-left: 5%">Lista de repositorios</h3>
+			<h3 id="repo_list" style="margin-left: 5%">Pull-Requests</h3>
 			<hr style="margin-left: 5%">
 		</header>
 		<p style="margin-left: 5%">
-			En Lista de repositorios se muestra un listado de las Pull Requests/Merge Requests realizadas desde la aplicación y que están pendientes de aprobación por parte del propietario del repositorio.
+			Pull-Requests shows a list of Pull Requests/Merge Requests commited by the application and pending approval by the repository owner.
 		</p>
 		<header>
-			<h3 id="error_list" style="margin-left: 5%">Lista de errores</h3>
+			<h3 id="error_list" style="margin-left: 5%">Errors</h3>
 			<hr style="margin-left: 5%">
 		</header>
 		<p style="margin-left: 5%">
-			En Lista de errores se muestran dos gráficas.
-			<br>La primera gráfica muestra el número de veces que se ha producido cada uno de los errores que se han corregido en los repositorios analizados.
-			<br>La segunda gráfica muestra el número de repositorios analizados y los separa según el estado en el que se encuentre la Pull Request/Merge Request realizada.
+			Two graphs are shown in the Error List.
+			<br>The first graph shows the number of times that each fixed error that have occurred in the analyzed repositories .
+			<br>The second graph shows the number of analyzed repositories and separates them according to the status of the Pull Request/Merge Request.
 		</p>
 		<header>
-			<h3 id="guide" style="margin-left: 5%">Guía</h3>
+			<h3 id="guide" style="margin-left: 5%">Guide</h3>
 			<hr style="margin-left: 5%">
 		</header>
 		<p style="margin-left: 5%">
-			Página que contiene un resumen sobre la aplicación, una breve guía de uso definiendo cada una de las páginas y una tabla con los errores detectados por Pylint que son corregibles por la aplicación.
+			This page contains a summary of the application, a brief user guide defining each of the pages and a table with the errors detected by Pylint that can be fixed by the application.
 		</p>
 		<header>
-			<h3 id="contact" style="margin-left: 5%">Contacto</h3>
+			<h3 id="contact" style="margin-left: 5%">Contact</h3>
 			<hr style="margin-left: 5%">
 		</header>
 		<p style="margin-left: 5%">
-			Datos de contacto.
+			Contact data.
 		</p>
 		<header>
-			<h1 id="errors">ERRORES CORREGIBLES</h1>
+			<h1 id="errors">FIXABLE ERRORS</h1>
 			<hr>
 		</header>
 		<div class='table-responsive'>
