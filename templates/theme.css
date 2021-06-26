@@ -164,24 +164,20 @@ body {
 	font-size: 12px;
 }
 
-.nav-item {
-	background-color: #2a2828;
-	border: none;
-	color: white;
-	font-size: 16px;
-	padding: 8px 20px;
-	margin-top: 5px;
-	margin-left: 5px;
-	cursor: pointer;
+.nav-tabs .nav-link {
+    color: gray;
+    border: 0;
+    border-bottom: 1px solid grey;
 }
 
-.nav-link.active {
-	background-color: grey;
-	border: none;
-	color: white;
-	font-size: 16px;
-	padding: 8px 20px;
-	margin-top: 5px;
-	margin-left: 5px;
-	cursor: pointer;
+.nav-tabs .nav-link:hover {
+    border: 0;
+    border-bottom: 1px solid grey;
+}
+
+.nav-tabs .nav-link.active {
+    color: #000000;
+    border: 0;
+    border-radius: 0;
+    border-bottom: 2px solid blue;
 }
