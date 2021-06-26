@@ -175,10 +175,11 @@ body {
 	color: grey;
 	border-radius: 0;
 	border: 1px solid #282c34;
+	border-bottom: 1px solid grey;
 }
 
 .nav-tabs .nav-link.active {
-	color: #000000;
+	color: white;
 	border: 0;
 	border-radius: 0;
 }
