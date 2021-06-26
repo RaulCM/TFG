@@ -179,7 +179,7 @@ body {
 }
 
 .nav-tabs .nav-link.active {
-	color: white;
+	color: #282c34;
 	border: 0;
 	border-radius: 0;
 }
