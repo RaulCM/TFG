@@ -164,7 +164,7 @@ body {
 	font-size: 12px;
 }
 
-.nav-link .active {
+.nav-tabs {
 	background-color: white;
 	border: none;
 	color: #2a2828;
