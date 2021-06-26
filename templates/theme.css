@@ -167,7 +167,8 @@ body {
 .nav-tabs .nav-link {
 		background-color: #2a2828;
 		color: white;
-		border: 0;
+		border: 1px;
+		border-color: #282c34;
 		border-bottom: 1px solid grey;
 }
 
