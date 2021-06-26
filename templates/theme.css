@@ -174,3 +174,14 @@ body {
 	margin-left: 5px;
 	cursor: pointer;
 }
+
+.nav-link.active {
+	background-color: grey;
+	border: none;
+	color: white;
+	font-size: 16px;
+	padding: 8px 20px;
+	margin-top: 5px;
+	margin-left: 5px;
+	cursor: pointer;
+}
