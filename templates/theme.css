@@ -80,6 +80,12 @@ body {
 	background-color: #2a2828;
 }
 
+.intro {
+	padding-left: 20px;
+	margin-left: 50px;
+	color: white;
+}
+
 ::placeholder {
 	color: grey;
 }
