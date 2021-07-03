@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import psycopg2
+import dj_database_url
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -40,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'analyzerapp',
+    'after_response',
 )
 
 MIDDLEWARE = (
@@ -51,6 +54,7 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 )
 
 ROOT_URLCONF = 'tfg.urls'
@@ -76,6 +80,7 @@ WSGI_APPLICATION = 'tfg.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
+# https://devcenter.heroku.com/articles/heroku-postgresql#connecting-in-python
 
 DATABASES = {
     'default': {
@@ -84,6 +89,9 @@ DATABASES = {
     }
 }
 
+DATABASE_URL = os.environ['DATABASE_URL']
+
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -107,3 +115,5 @@ STATIC_URL = '/templates/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'templates')
 ]
+
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
