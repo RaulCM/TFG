@@ -16,7 +16,8 @@ import after_response
 import time
 from django.utils.translation import LANGUAGE_SESSION_KEY
 
-pull_body_header = ('Your code has been analyzed by PEP-Analyzer using Pylint tool' +
+pull_body_header = ('Your code has been analyzed by [PEP-Analyzer]' +
+            '(https://pep-analyzer.herokuapp.com/) using Pylint tool' +
             ' to adapt it to [PEP8, the Python style guide]' +
             '(https://www.python.org/dev/peps/pep-0008/).  \n' +
             'These are the pylint errors fixed in your code:  \n')
