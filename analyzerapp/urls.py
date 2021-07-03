@@ -9,7 +9,7 @@ urlpatterns = [
 	url(r'^error-list$', views.error_list),
 	url(r'^guide$', views.guide),
 	url(r'^contact$', views.contact),
-	url(r'^search$', views.github_search),
+	# url(r'^search$', views.github_search),
 	url(r'^repo/(\d+)$', views.repo),
     #url(r'^pylint$', views.runPylint),
 ]
