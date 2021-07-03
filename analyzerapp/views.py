@@ -297,7 +297,10 @@ def update():
             repo_data = r.json()
             if r.json()['state'] != 'opened':
                 delete_fork(repo)
-        repo.pull_url_status = r.json()['state']
+        if r.json()['merged'] == 'true':
+            repo.pull_url_status = 'accepted'
+        else:
+            repo.pull_url_status = r.json()['state']
         repo.save()
 
 def store_data(json_data): #TODO Borrar
