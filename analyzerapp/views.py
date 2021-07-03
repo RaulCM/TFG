@@ -254,7 +254,7 @@ def error_list(request):
             pull_status_data[0] = pull_status_data[0] + 1
         elif repository.pull_url_status == 'closed':
             pull_status_data[1] = pull_status_data[1] + 1
-        elif repository.pull_url_status == 'accepted':
+        elif repository.pull_url_status == 'merged':
             pull_status_data[2] = pull_status_data[2] + 1
     if language == 'en':
         return render(request, 'en/error_list.html', {'errors_labels': errors_labels, 'errors_data': errors_data, 'pull_status_labels': pull_status_labels, 'pull_status_data': pull_status_data})
@@ -297,10 +297,7 @@ def update():
             repo_data = r.json()
             if r.json()['state'] != 'opened':
                 delete_fork(repo)
-        if r.json()['merged'] == 'true':
-            repo.pull_url_status = 'accepted'
-        else:
-            repo.pull_url_status = r.json()['state']
+        repo.pull_url_status = r.json()['state']
         repo.save()
 
 def store_data(json_data): #TODO Borrar
