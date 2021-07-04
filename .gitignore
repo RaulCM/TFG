@@ -1,10 +1,4 @@
-/token
-/tokengitlab
-/username
-/password
 /pylint
 /db.sqlite3
-/usernamegitlab
-/passwordgitlab
 /run.sh
 /dockerfile
