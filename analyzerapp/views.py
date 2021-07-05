@@ -466,6 +466,8 @@ def count_fixed_error(error):
         error_count.error_id = Errors.objects.get(error_id=error.code)
         error_count.count = 1
         error_count.save()
+    except Errors.DoesNotExist:
+        pass
 
 def count_error(error):
     try:
@@ -477,6 +479,8 @@ def count_error(error):
         error_count.error_id = Errors.objects.get(error_id=error.code)
         error_count.count = 1
         error_count.save()
+    except Errors.DoesNotExist:
+        pass
 
 def commit(repository):
     name = repository.full_name
