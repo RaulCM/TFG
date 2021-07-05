@@ -445,7 +445,7 @@ def add_fixed_error(error, repository):
         error_count.identifier = Repository.objects.filter(pull_url_status='Null').get(identifier=repository.identifier)
         error_count.save()
     except Errors.DoesNotExist:
-        error_count.save()
+        pass
 
 def add_error(error, repository):
     try:
@@ -454,7 +454,7 @@ def add_error(error, repository):
         error_count.identifier = Repository.objects.filter(pull_url_status='Null').get(identifier=repository.identifier)
         error_count.save()
     except Errors.DoesNotExist:
-        error_count.save()
+        pass
 
 def count_fixed_error(error):
     try:
