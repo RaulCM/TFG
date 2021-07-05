@@ -439,16 +439,22 @@ def fix_errors(repository, level):
         pylint_errors.check_placeholders(file)
 
 def add_fixed_error(error, repository):
-    error_count = Fixed_errors_repo()
-    error_count.error_id = Errors.objects.get(error_id=error.code)
-    error_count.identifier = Repository.objects.filter(pull_url_status='Null').get(identifier=repository.identifier)
-    error_count.save()
+    try:
+        error_count = Fixed_errors_repo()
+        error_count.error_id = Errors.objects.get(error_id=error.code)
+        error_count.identifier = Repository.objects.filter(pull_url_status='Null').get(identifier=repository.identifier)
+        error_count.save()
+    except Errors.DoesNotExist:
+        error_count.save()
 
 def add_error(error, repository):
-    error_count = All_errors_repo()
-    error_count.error_id = Errors.objects.get(error_id=error.code)
-    error_count.identifier = Repository.objects.filter(pull_url_status='Null').get(identifier=repository.identifier)
-    error_count.save()
+    try:
+        error_count = All_errors_repo()
+        error_count.error_id = Errors.objects.get(error_id=error.code)
+        error_count.identifier = Repository.objects.filter(pull_url_status='Null').get(identifier=repository.identifier)
+        error_count.save()
+    except Errors.DoesNotExist:
+        error_count.save()
 
 def count_fixed_error(error):
     try:
