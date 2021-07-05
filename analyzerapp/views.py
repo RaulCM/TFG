@@ -366,8 +366,17 @@ def github_clone_fork(item):
     current_dir = os.getcwd()
     os.system('rm -rfv ' + '/tmp/projects/' + name)
     if 'github' in url:
-        os.system('git clone ' + url + ' /tmp/projects/' + name)
-        os.chdir('/tmp/projects/' + name)
+        url = url.split('https://')[1]
+        print(url)
+        os.system('git clone https://' + os.environ['token'] +'@' + url + ' /tmp/projects/' + name)
+        # os.system('git clone ' + url + ' /tmp/projects/' + name)
+        if os.path.isdir('/tmp/projects/' + name):
+            os.chdir('/tmp/projects/' + name)
+        else:
+            if language == 'en':
+                return render(request, 'en/error.html', {'error_message': 'Repository could not be donwloaded'})
+            else:
+                return render(request, 'error.html', {'error_message': 'El repositorio no ha podido ser descargado'})
         os.system('git checkout -b pylint_errors')
     elif 'gitlab.etsit.urjc.es' in url:
         url = url.split('https://')[1]
