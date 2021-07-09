@@ -284,8 +284,7 @@ def print_data(): #TODO Borrar
     return(datos)
 
 def update():
-    # repositories = Repository.objects.filter(pull_url_status__in=['open', 'opened'])
-    repositories = Repository.objects.filter(pull_url_status__in=['open', 'opened', 'closed'])
+    repositories = Repository.objects.filter(pull_url_status__in=['open', 'opened'])
     for repo in repositories:
         pull_api_url = repo.pull_api_url
         if 'github' in pull_api_url:
@@ -298,7 +297,6 @@ def update():
             repo_data = r.json()
             if r.json()['state'] != 'opened':
                 delete_fork(repo)
-        print(r.json()['merged'])
         if r.json()['merged'] == True:
             repo.pull_url_status = 'accepted'
         else:
