@@ -148,11 +148,6 @@ def placeholder_split(line):
         first = line[:column].rstrip()[:-1]
         second = indent(first) + line[column:]
         line = first + "\n" + second
-    # TODO if y sentencia en la misma linea
-    # elif lines[i][column -2:column - 1] == ":":
-    #     first = lines[i][:column].rstrip()[:-1]
-    #     second = lines[i][column:]
-    #     lines[i] = first + ":\n    " + second
     return line
 
 def placeholder_top(lines, line_number):

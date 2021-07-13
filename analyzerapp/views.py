@@ -278,11 +278,6 @@ def contact(request):
     else:
         return render(request, 'contact.html')
 
-def print_data(): #TODO Borrar
-    datos = Repository.objects.filter(pull_url_status__in=['open', 'opened'])
-    # datos = Repository.objects.all()
-    return(datos)
-
 def update():
     repositories = Repository.objects.filter(pull_url_status__in=['open', 'opened'])
     for repo in repositories:
@@ -303,13 +298,9 @@ def update():
             repo.pull_url_status = r.json()['state']
         repo.save()
 
-def store_data(json_data): #TODO Borrar
-    for item in json_data:
-        store_individual_data(item)
-
 def store_individual_data(item):
     try:
-        repository = Repository.objects.filter(pull_url_status='Null').get(identifier=item['id']) #TODO SI EL STATUS ES DISTINTO DE NULL, SE ALMACENA NUEVO
+        repository = Repository.objects.filter(pull_url_status='Null').get(identifier=item['id'])
     except Repository.DoesNotExist:
         repository = Repository()
         repository.identifier = item['id']
@@ -322,13 +313,9 @@ def store_individual_data(item):
         repository.api_url = item['url']
         repository.save()
 
-def store_data_gitlab(json_data): #TODO Borrar
-    for item in json_data:
-        store_individual_data_gitlab(item)
-
 def store_individual_data_gitlab(item):
     try:
-        repository = Repository.objects.filter(pull_url_status='Null').get(identifier=item['id']) #TODO SI EL STATUS ES DISTINTO DE NULL, SE ALMACENA NUEVO
+        repository = Repository.objects.filter(pull_url_status='Null').get(identifier=item['id'])
     except Repository.DoesNotExist:
         repository = Repository()
         repository.identifier = item['id']
@@ -342,12 +329,6 @@ def store_individual_data_gitlab(item):
         api_url = 'https://gitlab.etsit.urjc.es/api/v4/projects/' + item['web_url'].split('gitlab.etsit.urjc.es/')[-1].rstrip('/').replace('/', '%2F')
         repository.api_url = api_url
         repository.save()
-
-def github_clone(): #TODO Borrar
-    datos = Repository.objects.all()
-    #datos = Repository.objects.all().filter(corrected=0)
-    for item in datos:
-        github_clone_individual(item)
 
 def github_clone_individual(item):
     url = item.html_url + '.git'
@@ -527,15 +508,6 @@ def analyze_repo(item):
         os.environ.pop('PYLINTRC')
     return pylint_output
 
-def read_file(filename): #TODO Borrar
-    # https://developer.github.com/v3/#rate-limiting
-    if os.path.isfile(filename):
-        s = open(filename, 'r').read()
-        string = s.rstrip()
-    else:
-        string = ''
-    return string
-
 def make_fork(repository):
     # https://developer.github.com/v3/repos/forks/
     # https://docs.gitlab.com/ee/api/projects.html#fork-project
@@ -586,25 +558,6 @@ def create_pull(repository):
         r = s.post(url, data, headers={'PRIVATE-TOKEN': os.environ['tokengitlab']})
         pull_url = r.json()['web_url']
     return pull_url
-
-def github_search(request): #TODO Borrar
-    url = 'https://api.github.com/search/repositories'
-    #https://developer.github.com/v3/search/#search-repositories
-    #https://help.github.com/articles/understanding-the-search-syntax/
-    queries = '?access_token=' + os.environ['token']
-    queries += '+q=python3'      #Que contengan el string "python3"
-    queries += '+language:python'    #Solo lenguaje Python
-    queries += '+archived:false'    #Repositorios no archivados
-    queries += '+created:>2018-06-01'    #Fecha posterior a YYYY:MM:DD
-    queries += '+topics:>3'            #Numero de topics mayor a X
-    queries += '&sort=updated'        #Ordenados por fecha de actualizacion
-    url = url + queries
-    r = requests.get(url)
-    json_data = r.json()
-    json_data = json_data['items']
-    store_data(json_data)
-    json_pretty = json.dumps(json_data, sort_keys=True, indent=4)
-    return HttpResponse(json_pretty,content_type="text/json")
 
 def delete_fork(repository):
     url = repository.fork_api_url
